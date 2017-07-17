@@ -1,0 +1,93 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  padding-bottom: 80px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+}
+
+
+/* HEADER */
+
+header {
+  height: 80px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.header-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 18px 30px 20px;
+}
+
+.logo {
+  display: block;
+  height: 40px;
+  object-fit: cover;
+  float: left;
+  margin-right: 50px;
+}
+
+nav {
+  font-size: 16px;
+  padding: 10px 0 14px;
+  height: 40px;
+  font-weight: 500;
+}
+
+nav a {
+  margin: 0 26px 0 0;
+  color: rgba(10, 10, 10, 1);
+}
+
+nav a.router-link-active {
+  color: red;
+}
+
+.black {
+  color: #000;
+}
+
+
+/* PAGES */
+
+section {
+  display: block;
+  width: 1200px;
+  margin: 100px auto;
+}
+
+
+.projects {
+  background-color: rgba(242, 199, 48, 1);
+}
+
+
+/* Каталог */
+.catalog{
+  background-color: #FFF;
+}
+
+.catalog h2 {
+  margin: 0px;
+  font-size: 20px;
+  color: black;
+  display: block;
+  width: 150px;
+  float: left;
+}

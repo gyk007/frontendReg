@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>vue-router</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+
+  	<div id="app">
+
+      <header>
+        <div class="header-wrapper">
+          <div class="logo">Регион 50</div>
+
+          <nav>
+            <router-link to="/main" active-class="black">Главная</router-link>
+            <router-link to="/catalog">Каталог продукции</router-link>
+            <router-link to="/orders">Заказы</router-link>
+            <router-link to="/stock">Акции</router-link>
+            <router-link to="/contacts">Обратная связь</router-link>
+          </nav>
+        </div>
+      </header>
+
+      <router-view></router-view>
+
+    </div>
+
+    <script src="build/bundle.js"></script>
+  </body>
+</html>
