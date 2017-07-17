@@ -1,7 +1,7 @@
 {
-  "name": "vuejs-tutorials",
+  "name": "reg50 Frontend",
   "description": "Vue.js проект",
-  "author": "Arhey <free.arhey@gmail.com>",
+  "author": "Andrey Zhuk",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --hot",
