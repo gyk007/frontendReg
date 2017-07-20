@@ -1,7 +1,6 @@
 import Vue         from 'vue'
 import Vuex        from 'vuex'
 import VueResource from 'vue-resource'
-import $           from 'jquery'
 import Conf        from '../conf/conf.js'
 
 Vue.use(Vuex)
@@ -12,6 +11,7 @@ const catalogStore = new Vuex.Store({
 		catalogTree : [],
 		productList : [],
 		category    : {},
+		idActive    : undefined,
 	},
 	getters: {
 		catalogTree(state) {
@@ -22,6 +22,9 @@ const catalogStore = new Vuex.Store({
 		},
 		category(state) {
 			return state.category
+		},
+		idActive(state){
+			return state.idActive
 		}
 	},
 	mutations: {
@@ -39,7 +42,7 @@ const catalogStore = new Vuex.Store({
 		relodCatalogTree(state) {
 			Vue.http.get(Conf.url.catalog).then(
 				response => {
-					let body = JSON.parse(response.body);
+					let body = response.body;
 					state.catalogTree = body.catalog.child
 				},
 				error => {
@@ -49,7 +52,6 @@ const catalogStore = new Vuex.Store({
 		}
 	},
 	actions: {
-
 		addCategory({commit}, category) {
 			let arg = {
 				params:{
@@ -60,23 +62,20 @@ const catalogStore = new Vuex.Store({
 					action                 : 'add'
 				},
 				headers: {
-					//'Content-Type': 'application/json'
+					'Content-Type': 'text/plain'
 				}
 			}
 
 			Vue.http.post(Conf.url.category, null,  arg).then(
 				response => {
-					let id = JSON.parse(response.body);
-					category.id = id;
-					commit('addItemToArry', {type: 'catalogTree', item: category});
-
+					let body = response.body
+					commit('relodCatalogTree')
 				},
 				error => {
 					console.log(error);
 				}
 			)
 		},
-
 		editCategory ({commit}, category) {
 			let arg = {
 				params:{
@@ -84,16 +83,17 @@ const catalogStore = new Vuex.Store({
 					'category.name'        : category.name,
         			'category.description' : category.description,
                     'category.visible'     : category.visible,
+                    'category.face'        : category.face,
 					action                 : 'edit'
 				},
 				headers: {
-					//'Content-Type': 'application/json'
+					'Content-Type': 'text/plain'
 				}
 			}
 
 			Vue.http.post(Conf.url.category, null,  arg).then(
 				response => {
-					let data = JSON.parse(response.body);
+					let body = response.body;
 					commit('relodCatalogTree');
 				},
 				error => {
@@ -101,11 +101,10 @@ const catalogStore = new Vuex.Store({
 				}
 			)
 		},
-
 		getCatalogTree({commit}) {
 			Vue.http.get(Conf.url.catalog).then(
 				response => {
-					let body = JSON.parse(response.body);
+					let body = response.body;
 					commit('set', {type: 'catalogTree', items: body.catalog.child})
 				},
 				error => {
@@ -113,7 +112,6 @@ const catalogStore = new Vuex.Store({
 				}
 			)
 		},
-
 		getProductList({commit}, idCategory) {
 			let result;
 
@@ -128,19 +126,17 @@ const catalogStore = new Vuex.Store({
 
 			Vue.http.get(Conf.url.catalog, arg).then(
 				response => {
-					let body = JSON.parse(response.body);
-
+					let body = response.body
 					// Очищаем список продуктов
-					commit('set', {type: 'productList', items: null});
+					commit('set', {type: 'productList', items: null})
 					if (body.category.extend.products.elements.length)
-						commit('set', {type: 'productList', items: body.category.extend.products.elements});
+						commit('set', {type: 'productList', items: body.category.extend.products.elements})
 				},
 				error => {
 					console.log(error);
 				}
 			)
 		},
-
 		deleteCategory({commit}, idCategory) {
 			let arg = {
 				params:{
@@ -154,20 +150,93 @@ const catalogStore = new Vuex.Store({
 
 			Vue.http.get(Conf.url.category, arg).then(
 				response => {
-					let data = JSON.parse(response.body);
-					console.log(idCategory)
-					commit('deleteItemFromArry', {type: 'catalogTree', key: 'id', value: idCategory});
-
+					let body = response.body;
+					if (body.ERROR) {
+						console.log(body.ERROR)
+					} else {
+						commit('relodCatalogTree');
+						commit('set', {type: 'category', items: null})
+					};
 				},
 				error => {
 					console.log(error);
 				}
 			)
 		},
+		// Так как это дероево - влево означает поднять вверх в интерфейсе
+		leftCategory({commit}, idCategory) {
+			let arg = {
+				params:{
+                   	id     : idCategory,
+					action : 'left'
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+			Vue.http.post(Conf.url.category, null, arg).then(
+				response => {
+					let body = response.body;
+					commit('relodCatalogTree');
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		// Так как это дероево - вправо означает опустить вниз в интерфейсе
+		rightInCategory({commit}, idCategory) {
+			let arg = {
+				params:{
+                   	id     : idCategory,
+					action : 'rdown'
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
 
+			Vue.http.post(Conf.url.category, null, arg).then(
+				response => {
+					let body = response.body;
+					commit('relodCatalogTree');
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		// Так как это дероево - вправо означает опустить вниз в интерфейсе
+		rightCategory({commit}, idCategory) {
+			let arg = {
+				params:{
+                   	id     : idCategory,
+					action : 'right'
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.category, null, arg).then(
+				response => {
+					let body = response.body;
+					commit('relodCatalogTree');
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
 		selectCategory({commit}, category) {
-			commit('set', {type: 'category', items: category});
-		}
+			commit('set', {type: 'category', items: category})
+			if (category)
+				commit('set', {type: 'idActive', items: category.id})
+			else
+				commit('set', {type: 'idActive', items: undefined})
+
+		},
+
 	}
 })
 

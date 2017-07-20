@@ -1,32 +1,64 @@
 <template>
- <section class="new_category">
-	<button class='new_category_button' v-on:click="addCategory()">Добавить</button>
-	<button class='new_category_button' v-on:click="editCategory()">Редактировать</button>
-	<input v-model="category.face" placeholder="face">
-	<input v-model="category.name" placeholder="name">
-	<textarea v-model="category.description" placeholder="description"></textarea>
-	<input type="checkbox" v-model="visible">
- </section>
+	<section class="popup popup__category" id="popup__category">
+	<div class="popup__hdr">Добавить категорию</div>
+	<div class="popup__category-form">
+		<div class="popup__product-form--holder">
+		<label>
+			<span style="font-size: 15px">Название Категории</span>
+			<input v-model="category.name" placeholder="Название Категории" class="input">
+		</label>
+		</div>
+		<div class="popup__product-form--holder">
+		<label>
+			<span style="font-size: 15px" >Описание Категории</span>
+			<textarea v-model="category.description" placeholder="Описание Категории"></textarea>
+		</label>
+		</div>
+		<div class="popup__product-form--holder">
+			<label>
+				<input type="checkbox" class="checkbox" v-model="category.visible">
+				<span style="font-size: 15px">Показать в публичной части</span>
+			</label>
+		</div>
+
+		<button class="btn" v-on:click="addCategory"  v-if="!category.name">Добавить</button>
+		<button class="btn" v-on:click="editCategory" v-if="category.name">Редактировать</button>
+
+	</div>
+</section>
 </template>
 
 
 <script>
-  import store from '../../store/catalog.js'
+  import store  from '../../store/catalog.js'
+  import $      from 'jquery'
 
   export default {
 	computed: {
-  		category() {
-        	return this.$store.getters.category
-        },
-    },
+		category() {
+			return this.$store.getters.category
+				? this.$store.getters.category
+				: {
+					name        : '',
+					description : '',
+					visible     : false
+				}
+		},
+	},
 	methods: {
 		addCategory() {
-			this.$store.dispatch('addCategory', this.category);
+			this.$store.dispatch('addCategory', this.category)
+			this.$store.dispatch('selectCategory', null)
+			$('.js-catalog-category a').removeClass('active')
+			$.fancybox.close()
 		},
 		editCategory() {
-			this.$store.dispatch('editCategory', this.category);
+			this.$store.dispatch('editCategory', this.category)
+			this.$store.dispatch('selectCategory', null)
+			$('.js-catalog-category a').removeClass('active')
+			$.fancybox.close()
 		}
-	}
+	},
   }
 </script>
 

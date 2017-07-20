@@ -35,9 +35,11 @@ module.exports = {
   plugins: [
     new webpack.LoaderOptionsPlugin({
       vue: {
-        loaders: {
-          sass: 'vue-style-loader!css-loader!sass?indentedSyntax'
-        }
+        loaders: [
+          {sass: 'vue-style-loader!css-loader!sass?indentedSyntax'},
+          {test: /jquery-mousewheel/, loader: "imports?define=>false&this=>window"},
+          {test: /malihu-custom-scrollbar-plugin/, loader: "imports?define=>false&this=>window"}
+        ]
       }
     })
   ],

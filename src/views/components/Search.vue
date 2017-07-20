@@ -1,8 +1,15 @@
 <template>
-	<div class='Search'>
-		<input type="text" name="search" class='Search_input' v-model='query'>
-		<button class='Search_button'>Найти</button>
-	</div>
+	<section class="a-catalog__hdr-search">
+	    <div class="search">
+	        <input type="text" class="input search__input" placeholder="Введите название, артикул" v-model='query'>
+	        <button  class="search__submit"></button>
+	        <div class="search__icon">
+	            <svg>
+	                <use xlink:href="#glass"></use>
+	            </svg>
+	        </div>
+	    </div>
+    </section>
 </template>
 
 <script>

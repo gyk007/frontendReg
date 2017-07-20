@@ -1,48 +1,75 @@
 <template>
-  <section class="catalog_tree">
-  <ul>
-  	<li v-for="category in catalogTree">
-  		<div  v-on:click="getProductList(category.id)"  v-on:mouseover="hoverCategory(category)">{{category.name}}</div>
-  		<button class='delete_category_button' v-on:click="deleteCategory(category.id)">Удалить</button>
-  		<button class='edit_category_button'   v-on:click="selectCategory(category)">Редактировать</button>
-  		<ul v-if="category.child">
-  			<li v-for="cat in category.child">
-  				<div    v-on:click="getProductList(cat.id)" v-on:mouseover="hoverCategory(cat.id)">{{cat.name}}</div>
-  				<button class='delete_category_button' v-on:click="deleteCategory(cat.id)">Удалить</button>
-  				<button class='edit_category_button'   v-on:click="selectCategory(cat)">Редактировать</button>
-  			</li>
-  		</ul>
-  	</li>
-  </ul>
-  </section>
+	<section class="catalog__nav">
+		<div class="catalog__nav-close">X</div>
+		<ul class="catalog__nav-list" id="catalog-nav">
+				<li  class="catalog__nav-item" v-for="category1 in catalogTree">
+
+						<a v-on:click="getProductList(category1)" :class="[idActive == category1.id ? 'active' : '']">{{category1.name}}</a>
+
+						<div class="catalog__nav-btn js-catalog-btn-trigger" v-if="category1.child.length" v-on:click="showSubCategory"></div>
+
+						<ul class="catalog__nav-sub"  v-if="category1.child">
+
+								<li v-bind:class="{ 'catalog__nav-category js-catalog-category': !category2.child.length }" v-for="category2 in category1.child">
+
+										<a v-on:click="getProductList(category2)"  :class="[idActive == category2.id ? 'active' : '']">{{category2.name}}</a>
+
+										<div class="catalog__nav-btn js-catalog-btn-trigger" v-if="category2.child.length" v-on:click="showSubCategory"></div>
+
+										<ul class="catalog__nav-sub" v-if="category2.child">
+
+												<li v-bind:class="{ 'catalog__nav-category js-catalog-category': !category3.child.length }" v-for="category3 in category2.child">
+
+														<a v-on:click="getProductList(category3)"  :class="[idActive == category3.id ? 'active' : '']">{{category3.name}}</a>
+
+														<div class="catalog__nav-btn js-catalog-btn-trigger" v-if="category3.child.length" v-on:click="showSubCategory"></div>
+
+														<ul class="catalog__nav-sub" v-if="category3.child">
+
+																<li class="catalog__nav-category js-catalog-category" v-for="category4 in category3.child">
+
+																	<a  v-on:click="getProductList(category4)"  :class="[idActive == category4.id ? 'active' : '']" style='padding-left:10px'>{{category4.name}}</a>
+
+																</li>
+														</ul>
+												</li>
+										</ul>
+								</li>
+						</ul>
+				</li>
+		</ul>
+	</section>
 </template>
 
 <script>
-  import store from '../../store/catalog.js'
+	import store from '../../store/catalog.js'
+	import $     from 'jquery'
 
-  export default {
-  	computed: {
-  		catalogTree() {
-        	return this.$store.getters.catalogTree
-      	},
-  	},
-  	methods: {
-  		getProductList(idCat) {
-  			this.$store.dispatch('getProductList', idCat)
-  		},
-  		hoverCategory(idCat) {
-  			// console.log(idCat)
-  		},
-  		deleteCategory(idCat) {
-  			this.$store.dispatch('deleteCategory', idCat)
-  		},
-  		selectCategory(category) {
-  			this.$store.dispatch('selectCategory', category)
-  		},
-  	},
-  	created: function() {
-  		this.$store.dispatch('getCatalogTree')
-  	}
-  }
+	export default {
+		computed: {
+			catalogTree() {
+					return this.$store.getters.catalogTree
+				},
+				idActive() {
+					return this.$store.getters.idActive
+				}
+		},
+		methods: {
+			getProductList(category) {
+				this.$store.dispatch('getProductList', category.id)
+				this.$store.dispatch('selectCategory', category)
+			 	$('.jq-scroll').mCustomScrollbar();
+			},
+			showSubCategory(){
+			 	let btn = $(event.target);
+			 	btn.next('.catalog__nav-sub')
+	        .slideToggle(200, function () {
+	          btn.toggleClass('active')
+	      });
+			}
+		},
+		created: function() {
+			this.$store.dispatch('getCatalogTree')
+		}
+	}
 </script>
-
