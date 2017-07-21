@@ -1,7 +1,5 @@
-var Vue = require('vue')
-
+import Vue       from 'vue'
 import VueRouter from 'vue-router'
-
 import Main      from './views/Main.vue'
 import Catalog   from './views/Catalog.vue'
 import Orders    from './views/Orders.vue'
