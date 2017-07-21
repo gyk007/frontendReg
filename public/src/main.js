@@ -2,15 +2,15 @@ var Vue = require('vue')
 
 import VueRouter from 'vue-router'
 
-var Main      = require('./views/Main.vue')
-var Catalog   = require('./views/Catalog.vue')
-var Orders    = require('./views/Orders.vue')
-var Promotion = require('./views/Promotion.vue')
-var Contacts  = require('./views/Contacts.vue')
-var Card      = require('./views/Card.vue')
-var $         = require('jquery')
-require('malihu-custom-scrollbar-plugin')
-require("jquery-mousewheel")
+import Main      from './views/Main.vue'
+import Catalog   from './views/Catalog.vue'
+import Orders    from './views/Orders.vue'
+import Promotion from './views/Promotion.vue'
+import Contacts  from './views/Contacts.vue'
+import Card      from './views/Card.vue'
+import $         from 'jquery'
+import 'malihu-custom-scrollbar-plugin'
+import 'jquery-mousewheel'
 
 Vue.use(VueRouter)
 
