@@ -2,7 +2,7 @@
 	<section class="p-card__data">
 		<div class="p-card__data-title">Ваши данные</div>
 
-		<form action="#" class="p-card__data-form">
+		<div class="p-card__data-form">
 			<div class="input-field">
 				<input id="personal-card-company-name" type="text" class="input" value="Азбука Вкуса">
 				<label for="personal-card-company-name">Название компании</label>
@@ -31,7 +31,7 @@
 
 			<button type="submit" class="btn btn--checkout p-card__data-submit">Оформить</button>
 
-		</form>
+		</div>
 
 	</section>
 </template>
@@ -63,7 +63,26 @@
 				});
 			}
 		},
-		created: function() {
+		mounted: function() {
+		 	materializeInput();
 		}
 	}
+
+	 //materialize input
+	function materializeInput() {
+		$('.input-field input').focus(function () {
+			$(this).next('label').addClass('active');
+		});
+		$('.input-field input').blur(function () {
+			if( !($(this).val()) ) {
+				$(this).next('label').removeClass('active');
+			}
+		});
+		$('.input-field input').each(function () {
+			if( ($(this).val()) ) {
+				$(this).next('label').addClass('active');
+			}
+		});
+	}
+
 </script>
