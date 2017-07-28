@@ -34475,9 +34475,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 "use strict";
 const conf = {
 	url: {
-		catalog: 'http://localhost:9888/alko/catalog/',
-		category: 'http://localhost:9888/alko/catalog/category/',
-		clients: 'http://localhost:9888/alko/client/'
+		catalog: 'http://reg50.nixteam.ru/alko/catalog/',
+		category: 'http://reg50.nixteam.ru/alko/catalog/category/',
+		clients: 'http://reg50.nixteam.ru/alko/client/'
 	}
 };
 
