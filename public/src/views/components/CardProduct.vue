@@ -198,12 +198,9 @@
 
 	export default {
 		computed: {
-			catalogTree() {
-					return this.$store.getters.catalogTree
-				},
-				idActive() {
-					return this.$store.getters.idActive
-				}
+			card() {
+				return this.$store.getters.card
+			},
 		},
 		methods: {
 			getProductList(category) {
@@ -220,6 +217,7 @@
 			}
 		},
 		created: function() {
+			console.log(this.card)
 		}
 	}
 </script>

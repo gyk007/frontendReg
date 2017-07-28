@@ -198,7 +198,7 @@
 </template>
 
 <script>
-  import store from '../../store/promotion.js'
+  import store from '../../store/catalog.js'
   import $     from "jquery"
 
   export default {

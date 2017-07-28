@@ -58,14 +58,14 @@
 			getProductList(category) {
 				this.$store.dispatch('getProductList', category.id)
 				this.$store.dispatch('selectCategory', category)
-			 	$('.jq-scroll').mCustomScrollbar();
+				$('.jq-scroll').mCustomScrollbar();
 			},
 			showSubCategory(){
-			 	let btn = $(event.target);
-			 	btn.next('.catalog__nav-sub')
-	        .slideToggle(200, function () {
-	          btn.toggleClass('active')
-	      });
+				let btn = $(event.target);
+				btn.next('.catalog__nav-sub')
+			.slideToggle(200, function () {
+			  btn.toggleClass('active')
+		  });
 			}
 		},
 		created: function() {

@@ -6,12 +6,16 @@ import Conf        from '../conf/conf.js'
 Vue.use(Vuex)
 Vue.use(VueResource)
 
-const catalogStore = new Vuex.Store({
+const store = new Vuex.Store({
 	state: {
-		catalogTree : [],
-		productList : [],
-		category    : {},
-		idActive    : undefined,
+		catalogTree    : [],
+		productList    : [],
+		category       : null,
+		product        : null,
+		idActiveCat    : undefined,
+		clientsList    : [],
+		client         : null,
+		idActiveClient : undefined,
 	},
 	getters: {
 		catalogTree(state) {
@@ -23,9 +27,22 @@ const catalogStore = new Vuex.Store({
 		category(state) {
 			return state.category
 		},
-		idActive(state){
-			return state.idActive
+		product(state){
+			return state.product
+		},
+		idActiveCat(state){
+			return state.idActiveCat
+		},
+		clientsList(state) {
+			return  state.clientsList
+		},
+		client(state) {
+			return state.client
+		},
+		idActiveClient(state){
+			return state.idActiveClient
 		}
+
 	},
 	mutations: {
 		set(state, {type, items}) {
@@ -46,6 +63,17 @@ const catalogStore = new Vuex.Store({
 					state.catalogTree = body.catalog.child
 				},
 				error => {
+					console.log(error);
+				}
+			)
+		},
+		relodClientList(state) {
+			Vue.http.get(Conf.url.clients).then(
+				response => {
+					let body = response.body;
+					state.clientsList = body.clients
+				},
+				error => {
 				 	console.log(error);
 				}
 			)
@@ -56,9 +84,9 @@ const catalogStore = new Vuex.Store({
 			let arg = {
 				params:{
 					'category.name'        : category.name,
-        			'category.description' : category.description,
-                    'category.visible'     : category.visible,
-                    'category.face'        : category.face,
+					'category.description' : category.description,
+					'category.visible'     : category.visible,
+					'category.face'        : category.face,
 					action                 : 'add'
 				},
 				headers: {
@@ -81,9 +109,9 @@ const catalogStore = new Vuex.Store({
 				params:{
 					'category.id'          : category.id,
 					'category.name'        : category.name,
-        			'category.description' : category.description,
-                    'category.visible'     : category.visible,
-                    'category.face'        : category.face,
+					'category.description' : category.description,
+					'category.visible'     : category.visible,
+					'category.face'        : category.face,
 					action                 : 'edit'
 				},
 				headers: {
@@ -108,7 +136,7 @@ const catalogStore = new Vuex.Store({
 					commit('set', {type: 'catalogTree', items: body.catalog.child})
 				},
 				error => {
-				 	console.log(error);
+					console.log(error);
 				}
 			)
 		},
@@ -117,14 +145,14 @@ const catalogStore = new Vuex.Store({
 
 			let arg = {
 				params:{
-					category: idCategory
+					id: idCategory
 				},
 				headers: {
 					//'Content-Type': 'application/json'
 				}
 			}
 
-			Vue.http.get(Conf.url.catalog, arg).then(
+			Vue.http.get(Conf.url.category, arg).then(
 				response => {
 					let body = response.body
 					// Очищаем список продуктов
@@ -140,7 +168,7 @@ const catalogStore = new Vuex.Store({
 		deleteCategory({commit}, idCategory) {
 			let arg = {
 				params:{
-                   	id     : idCategory,
+					id     : idCategory,
 					action : 'delete'
 				},
 				headers: {
@@ -167,7 +195,7 @@ const catalogStore = new Vuex.Store({
 		leftCategory({commit}, idCategory) {
 			let arg = {
 				params:{
-                   	id     : idCategory,
+					id     : idCategory,
 					action : 'left'
 				},
 				headers: {
@@ -188,7 +216,7 @@ const catalogStore = new Vuex.Store({
 		rightInCategory({commit}, idCategory) {
 			let arg = {
 				params:{
-                   	id     : idCategory,
+					id     : idCategory,
 					action : 'rdown'
 				},
 				headers: {
@@ -210,8 +238,30 @@ const catalogStore = new Vuex.Store({
 		rightCategory({commit}, idCategory) {
 			let arg = {
 				params:{
-                   	id     : idCategory,
+					id     : idCategory,
 					action : 'right'
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.category, null, arg).then(
+				response => {
+					let body = response.body;
+					commit('relodCatalogTree');
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		// Переместить в нижнюю категорию
+		inCategory({commit}, idCategory) {
+			let arg = {
+				params:{
+					id     : idCategory,
+					action : 'rdown'
 				},
 				headers: {
 					'Content-Type': 'text/plain'
@@ -236,8 +286,129 @@ const catalogStore = new Vuex.Store({
 				commit('set', {type: 'idActive', items: undefined})
 
 		},
+		selectProduct({commit}, product) {
+			if (product.properties.elements)
+				product.properties = product.properties.elements[0].extend.properties.elements
+			commit('set', {type: 'product', items: product})
+		},
+		addClient({commit}, client) {
+			let arg = {
+				params:{
+					'client.name'                  : client.name,
+					'client.person'                : client.person,
+					'client.delivery_address'      : client.delivery_address,
+					'client.legal_address'         : client.legal_address,
+					'client.phone'                 : client.phone,
+					'client.email'                 : client.email,
+					'client.password'              : client.password,
+					'client.logo'                  : client.logo,
+					'client.bank'                  : client.bank,
+					'client.account_number'        : client.account_number,
+					'client.correspondent_account' : client.correspondent_account,
+					'client.bik'                   : client.bik,
+					'client.inn'                   : client.inn,
+					'client.kpp'                   : client.kpp,
+					'client.ogrn'                  : client.ogrn,
+					action                         : 'add'
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.clients, null,  arg).then(
+				response => {
+					let body = response.body
+					commit('relodClientList')
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		editClient ({commit}, client) {
+			let arg = {
+				params:{
+					'client.id'                  : client.id,
+					'client.name'                  : client.name,
+					'client.person'                : client.person,
+					'client.delivery_address'      : client.delivery_address,
+					'client.legal_address'         : client.legal_address,
+					'client.phone'                 : client.phone,
+					'client.email'                 : client.email,
+					'client.password'              : client.password,
+					'client.logo'                  : client.logo,
+					'client.bank'                  : client.bank,
+					'client.account_number'        : client.account_number,
+					'client.correspondent_account' : client.correspondent_account,
+					'client.bik'                   : client.bik,
+					'client.inn'                   : client.inn,
+					'client.kpp'                   : client.kpp,
+					'client.ogrn'                  : client.ogrn,
+					action                         : 'edit'
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+			console.log(arg);
+			Vue.http.post(Conf.url.clients, null,  arg).then(
+				response => {
+					let body = response.body;
+					commit('relodClientList');
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		getClientList({commit}) {
+			Vue.http.get(Conf.url.clients).then(
+				response => {
+					let body = response.body;
+					console.log(body)
+					commit('set', {type: 'clientsList', items: body.clients})
+				},
+				error => {
+				 	console.log(error);
+				}
+			)
+		},
+		deleteClient({commit}, idClient) {
+			let arg = {
+				params:{
+                   	id     : idClient,
+					action : 'delete'
+				},
+				headers: {
+					//'Content-Type': 'application/json'
+				}
+			}
+
+			Vue.http.get(Conf.url.clients, arg).then(
+				response => {
+					let body = response.body;
+					if (body.ERROR) {
+						console.log(body.ERROR)
+					} else {
+						commit('relodClientList');
+						commit('set', {type: 'client', items: null})
+					};
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		selectClient({commit}, client) {
+			commit('set', {type: 'client', items: client})
+			if (client)
+				commit('set', {type: 'idActive', items: client.id})
+			else
+				commit('set', {type: 'idActive', items: undefined})
+		},
 
 	}
 })
 
-export default catalogStore
+export default store

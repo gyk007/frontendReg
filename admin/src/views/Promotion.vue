@@ -16,13 +16,13 @@
 
 import Search        from './components/Search.vue'
 import PromotionList from './components/PromotionList.vue'
-import Store         from '../store/promotion.js'
+import store         from '../store/catalog.js'
 import $             from 'jquery'
 
 export default {
 	name: 'catalog',
 	components: {Search, PromotionList},
-	store: Store,
+	store: store,
 	computed: {
 		category() {
 				return this.$store.getters.category

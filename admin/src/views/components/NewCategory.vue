@@ -1,6 +1,9 @@
 <template>
 	<section class="popup popup__category" id="popup__category">
-	<div class="popup__hdr">Добавить категорию</div>
+
+	<div class="popup__hdr" v-if="!category.name">Добавить категорию</div>
+	<div class="popup__hdr" v-if="category.name">Редактировать категорию</div>
+
 	<div class="popup__category-form">
 		<div class="popup__product-form--holder">
 		<label>
@@ -30,7 +33,7 @@
 
 
 <script>
-  import store  from '../../store/catalog.js'
+  import store from '../../store/catalog.js'
   import $      from 'jquery'
 
   export default {

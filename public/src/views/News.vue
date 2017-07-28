@@ -1,5 +1,5 @@
 <template>
   <section class="projects">
-    <h2>Обратная связь</h2>
+    <h2>Новости</h2>
   </section>
 </template>

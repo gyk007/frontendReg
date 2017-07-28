@@ -22,12 +22,10 @@
 		deleteCategory() {
 			this.$store.dispatch('deleteCategory', this.category.id)
 			this.$store.dispatch('selectCategory', null)
-			$('.js-catalog-category a').removeClass('active')
 			$.fancybox.close()
 		},
 		closeWnd() {
 			this.$store.dispatch('selectCategory', null)
-			$('.js-catalog-category a').removeClass('active')
 			$.fancybox.close()
 		}
 	},

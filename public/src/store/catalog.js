@@ -10,18 +10,26 @@ const catalogStore = new Vuex.Store({
 	state: {
 		catalogTree : [],
 		productList : [],
-		category    : {},
+		category    : null,
+		product     : null,
 		idActive    : undefined,
+		card        : null
 	},
 	getters: {
 		catalogTree(state) {
 			return  state.catalogTree
+		},
+		card(state) {
+			return  state.card
 		},
 		productList(state) {
 			return state.productList
 		},
 		category(state) {
 			return state.category
+		},
+		product(state){
+			return state.product
 		},
 		idActive(state){
 			return state.idActive
@@ -46,7 +54,7 @@ const catalogStore = new Vuex.Store({
 					state.catalogTree = body.catalog.child
 				},
 				error => {
-				 	console.log(error);
+					console.log(error);
 				}
 			)
 		}
@@ -56,9 +64,9 @@ const catalogStore = new Vuex.Store({
 			let arg = {
 				params:{
 					'category.name'        : category.name,
-        			'category.description' : category.description,
-                    'category.visible'     : category.visible,
-                    'category.face'        : category.face,
+					'category.description' : category.description,
+					'category.visible'     : category.visible,
+					'category.face'        : category.face,
 					action                 : 'add'
 				},
 				headers: {
@@ -81,9 +89,9 @@ const catalogStore = new Vuex.Store({
 				params:{
 					'category.id'          : category.id,
 					'category.name'        : category.name,
-        			'category.description' : category.description,
-                    'category.visible'     : category.visible,
-                    'category.face'        : category.face,
+					'category.description' : category.description,
+					'category.visible'     : category.visible,
+					'category.face'        : category.face,
 					action                 : 'edit'
 				},
 				headers: {
@@ -108,7 +116,7 @@ const catalogStore = new Vuex.Store({
 					commit('set', {type: 'catalogTree', items: body.catalog.child})
 				},
 				error => {
-				 	console.log(error);
+					console.log(error);
 				}
 			)
 		},
@@ -117,14 +125,14 @@ const catalogStore = new Vuex.Store({
 
 			let arg = {
 				params:{
-					category: idCategory
+					id: idCategory
 				},
 				headers: {
 					//'Content-Type': 'application/json'
 				}
 			}
 
-			Vue.http.get(Conf.url.catalog, arg).then(
+			Vue.http.get(Conf.url.category, arg).then(
 				response => {
 					let body = response.body
 					// Очищаем список продуктов
@@ -140,7 +148,7 @@ const catalogStore = new Vuex.Store({
 		deleteCategory({commit}, idCategory) {
 			let arg = {
 				params:{
-                   	id     : idCategory,
+					id     : idCategory,
 					action : 'delete'
 				},
 				headers: {
@@ -167,7 +175,7 @@ const catalogStore = new Vuex.Store({
 		leftCategory({commit}, idCategory) {
 			let arg = {
 				params:{
-                   	id     : idCategory,
+					id     : idCategory,
 					action : 'left'
 				},
 				headers: {
@@ -188,7 +196,7 @@ const catalogStore = new Vuex.Store({
 		rightInCategory({commit}, idCategory) {
 			let arg = {
 				params:{
-                   	id     : idCategory,
+					id     : idCategory,
 					action : 'rdown'
 				},
 				headers: {
@@ -210,8 +218,30 @@ const catalogStore = new Vuex.Store({
 		rightCategory({commit}, idCategory) {
 			let arg = {
 				params:{
-                   	id     : idCategory,
+					id     : idCategory,
 					action : 'right'
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.category, null, arg).then(
+				response => {
+					let body = response.body;
+					commit('relodCatalogTree');
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		// Переместить в нижнюю категорию
+		inCategory({commit}, idCategory) {
+			let arg = {
+				params:{
+					id     : idCategory,
+					action : 'rdown'
 				},
 				headers: {
 					'Content-Type': 'text/plain'
@@ -235,6 +265,60 @@ const catalogStore = new Vuex.Store({
 			else
 				commit('set', {type: 'idActive', items: undefined})
 
+		},
+		selectProduct({commit}, product) {
+			if (product.properties.elements)
+				product.properties = product.properties.elements[0].extend.properties.elements
+			commit('set', {type: 'product', items: product})
+		},
+
+		// Добавить в корзину
+		addToCard({state, commit}, idClinet, product, count) {
+			let arg = {
+				params: {
+				   action          : 'add',
+				   'client.id'     : 1,
+				   'product.id'    : 20,
+				   'product.price' : 1000,
+				   'product.count' : 2,
+				   'card.id'       : state.card ? state.card.id : undefined
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.card, null, arg).then(
+				response => {
+					let body = response.body;
+					commit('set', {type: 'card', items: body.card})
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+
+		// Получить корзину
+		getCard({state, commit}, idClinet, product, count) {
+			let arg = {
+				params:{
+				   'card.id' : state.card ? state.card.id : undefined
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.card, null, arg).then(
+				response => {
+					let body = response.body;
+					commit('set', {type: 'card', items: body.card})
+				},
+				error => {
+					console.log(error);
+				}
+			)
 		},
 
 	}
