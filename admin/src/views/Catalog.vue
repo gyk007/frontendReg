@@ -16,13 +16,13 @@
 						<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if="category">
 								<a data-fancybox data-src="#popup__category" href="javascript:;" class="btn btn--edit">Редактировать</a>
 						</div>
-						<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if="category">
+						<div class="a-catalog__hdr-controls down_category" style="margin-right:10px" v-if="isHidden()">
 							<button class="btn btn--edit" v-on:click="downCategoory(category)" v-if="!category.child.length" >&#8595;</button>
 						</div>
-						<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if="category">
+						<div class="a-catalog__hdr-controls up_category" style="margin-right:10px" v-if="isHidden()">
 							<button class="btn btn--edit" v-on:click="upCategoory(category)" v-if="!category.child.length">&#8593;</button>
 						</div>
-						<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if="category">
+						<div class="a-catalog__hdr-controls in_category" style="margin-right:10px" v-if="isHidden()">
 							<button class="btn btn--edit" v-on:click="inCategoory(category)" v-if="!category.child.length">&#8594;</button>
 						</div>
 				</div>
@@ -68,10 +68,21 @@ export default {
 		},
 		inCategoory(category) {
 			this.$store.dispatch('inCategory', category.id)
+		},
+		isHidden() {
+			if ($(window).width() < 1100)
+				return false
+			if (this.category)
+				return true
+			return false
 		}
 	},
 	created: function() {
 		this.$store.dispatch('selectCategory', null)
+	},
+	mounted: function() {
+		if ($(window).width() < 1200)
+			$('.a-catalog__hdr-search').css('width', '280px')
 	}
 }
 

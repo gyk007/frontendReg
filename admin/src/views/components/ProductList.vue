@@ -58,8 +58,8 @@
 					$('body').css('overflow', 'hidden')
 			});
 			$('.catalog__nav-close').click(function () {
-					$('.catalog__nav').fadeOut(200);
-					$('body').css('overflow', 'auto')
+				$('.catalog__nav').fadeOut(200);
+				$('body').css('overflow', 'auto')
 			});
 		}
 	}

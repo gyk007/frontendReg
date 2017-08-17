@@ -59,7 +59,7 @@
 
 import CardProduct from './components/CardProduct.vue'
 import CardAddress from './components/CardAddress.vue'
-import Store       from '../store/promotion.js'
+import Store       from '../store/catalog.js'
 import $           from 'jquery'
 
 export default {

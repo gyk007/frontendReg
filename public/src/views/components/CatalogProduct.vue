@@ -2,13 +2,13 @@
 <section class="shop__data">
 <ul class="shop__nav">
    <!--  <li class="active"><a href="#">Элитные напитки</a></li> -->
-	<li v-for="category in catalogTree" :class="[idActive == category.id ? 'active' : '']" ><a v-on:click="getCategory(category)">{{category.name}}</a></li>
+	<li v-for="category in catalogTree" :class="[idActiveCat == category.id ? 'active' : '']" ><a v-on:click="getCategory(category)">{{category.name}}</a></li>
 </ul>
 
 <div class="shop__data-body">
 	<ul class="shop__sub-nav">
 		<div v-if='category'>
-			<li  v-for="cat in category.child" :class="[idActive == cat.id ? 'active' : '']" ><a    v-on:click="getProductList(cat)">{{cat.name}}</a></li>
+			<li  v-for="cat in category.child" :class="[idActiveCat == cat.id ? 'active' : '']" ><a    v-on:click="getProductList(cat)">{{cat.name}}</a></li>
 		</div>
 	</ul>
 
@@ -30,7 +30,7 @@
 
 
 
-	<div class="shop__row js-t-row normal"   v-for='product in  productList'>
+	<div class="shop__row js-t-row normal"   v-for='product in  productList' v-if="product.visible && product.filterPrice && product.filterAlko">
 
 	<div class="shop__cell shop__cell-name">
 		<div class="shop__cell-img"><a href="#"><img src="pic/products/abrau_brut.png" alt="product"></a></div>
@@ -54,15 +54,15 @@
 
 		</div>
 	</div>
-	<div class="shop__cell shop__cell-availability"><span class='js-availability'>Много в наличии</span></div>
+	<div class="shop__cell shop__cell-availability"><span class='js-availability'>{{product.properties[7].value}}</span></div>
 	<div class="shop__cell shop__cell-benefit"><span class="js-benefit">14%</span></div>
 	<div class="shop__cell shop__cell-a"><span class="js-a">46798456213456</span></div>
-	<div class="shop__cell shop__cell-price"><span class="js-price">740&nbsp;<i class="rub">a</i></span></div>
+	<div class="shop__cell shop__cell-price"><span class="js-price">{{product.properties[0].value}}&nbsp;<i class="rub">a</i></span></div>
 	<div class="shop__cell shop__cell-order">
 		<div class="js-order">
-			<input type="text" class="input" value="2000">
+			<input type="text" class="input"  v-model="product.cartQuantity">
 			<span class="shop__cell-order--txt">шт</span>
-			<a v-on:click="addToCard" class='btn__sell'> <span>+</span>&nbsp;<svg><use xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='#bag'></use></svg></a>
+			<a v-on:click="addToCart(product)" class='btn__sell'> <span>+</span>&nbsp;<svg><use xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='#bag'></use></svg></a>
 
 		</div>
 	</div>
@@ -90,6 +90,9 @@
 				return this.$store.getters.category
 			},
 			productList() {
+				this.$store.getters.productList.forEach(function(key){
+					key.cartQuantity = 1
+				})
 				return this.$store.getters.productList
 			},
 		},
@@ -100,11 +103,10 @@
 			},
 			getProductList(category) {
 				this.$store.dispatch('getProductList', category.id)
-				$('.jq-scroll').mCustomScrollbar();
+				console.log(this.productList)
 			},
-			addToCard(){
-				console.log('addToCard')
-				this.$store.dispatch('addToCard')
+			addToCart(product){
+				this.$store.dispatch('addToCart', product)
 			}
 		},
 		created: function() {

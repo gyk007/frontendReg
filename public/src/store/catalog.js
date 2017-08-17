@@ -11,16 +11,21 @@ const catalogStore = new Vuex.Store({
 		catalogTree : [],
 		productList : [],
 		category    : null,
+		filterPrice : null,
 		product     : null,
 		idActive    : undefined,
-		card        : null
+		cart        : null,
+		cartPrice   : 0,
 	},
 	getters: {
 		catalogTree(state) {
 			return  state.catalogTree
 		},
-		card(state) {
-			return  state.card
+		cart(state) {
+			return  state.cart
+		},
+		cartPrice(state){
+			return parseFloat(state.cartPrice.toFixed(2))
 		},
 		productList(state) {
 			return state.productList
@@ -31,8 +36,11 @@ const catalogStore = new Vuex.Store({
 		product(state){
 			return state.product
 		},
-		idActive(state){
+		idActiveCat(state){
 			return state.idActive
+		},
+		filterPrice(state){
+			return state.filterPrice
 		}
 	},
 	mutations: {
@@ -57,6 +65,14 @@ const catalogStore = new Vuex.Store({
 					console.log(error);
 				}
 			)
+		},
+		calculateCartPrice(state, {products}) {
+			state.cartPrice = 0;
+			if (products)
+				products.forEach(function(key){
+					if (key.product.price)
+						state.cartPrice +=	key.quantity * key.product.price
+				})
 		}
 	},
 	actions: {
@@ -137,8 +153,23 @@ const catalogStore = new Vuex.Store({
 					let body = response.body
 					// Очищаем список продуктов
 					commit('set', {type: 'productList', items: null})
+					commit('set', {type: 'filters',     items: null})
+					console.log(body.category.extend.products.elements.length);
 					if (body.category.extend.products.elements.length)
+						body.category.extend.products.elements.forEach(function(key) {
+							// Добавляем фильтры
+							key.filterPrice = true;
+							key.filterAlko  = true;
+							// Свойства, делаем удобнее
+							key.properties = key.properties.elements[0].extend.properties.elements
+						})
 						commit('set', {type: 'productList', items: body.category.extend.products.elements})
+					if (body.category.filter) {
+						body.category.filter.elements.forEach(function(key){
+							if(key.name == 'Цена')
+								commit('set', {type: 'filterPrice', items:key.filterarg})
+						})
+					}
 				},
 				error => {
 					console.log(error);
@@ -171,155 +202,91 @@ const catalogStore = new Vuex.Store({
 				}
 			)
 		},
-		// Так как это дероево - влево означает поднять вверх в интерфейсе
-		leftCategory({commit}, idCategory) {
-			let arg = {
-				params:{
-					id     : idCategory,
-					action : 'left'
-				},
-				headers: {
-					'Content-Type': 'text/plain'
-				}
-			}
-			Vue.http.post(Conf.url.category, null, arg).then(
-				response => {
-					let body = response.body;
-					commit('relodCatalogTree');
-				},
-				error => {
-					console.log(error);
-				}
-			)
-		},
-		// Так как это дероево - вправо означает опустить вниз в интерфейсе
-		rightInCategory({commit}, idCategory) {
-			let arg = {
-				params:{
-					id     : idCategory,
-					action : 'rdown'
-				},
-				headers: {
-					'Content-Type': 'text/plain'
-				}
-			}
-
-			Vue.http.post(Conf.url.category, null, arg).then(
-				response => {
-					let body = response.body;
-					commit('relodCatalogTree');
-				},
-				error => {
-					console.log(error);
-				}
-			)
-		},
-		// Так как это дероево - вправо означает опустить вниз в интерфейсе
-		rightCategory({commit}, idCategory) {
-			let arg = {
-				params:{
-					id     : idCategory,
-					action : 'right'
-				},
-				headers: {
-					'Content-Type': 'text/plain'
-				}
-			}
-
-			Vue.http.post(Conf.url.category, null, arg).then(
-				response => {
-					let body = response.body;
-					commit('relodCatalogTree');
-				},
-				error => {
-					console.log(error);
-				}
-			)
-		},
-		// Переместить в нижнюю категорию
-		inCategory({commit}, idCategory) {
-			let arg = {
-				params:{
-					id     : idCategory,
-					action : 'rdown'
-				},
-				headers: {
-					'Content-Type': 'text/plain'
-				}
-			}
-
-			Vue.http.post(Conf.url.category, null, arg).then(
-				response => {
-					let body = response.body;
-					commit('relodCatalogTree');
-				},
-				error => {
-					console.log(error);
-				}
-			)
-		},
 		selectCategory({commit}, category) {
 			commit('set', {type: 'category', items: category})
 			if (category)
-				commit('set', {type: 'idActive', items: category.id})
+				commit('set', {type: 'idActiveCat', items: category.id})
 			else
-				commit('set', {type: 'idActive', items: undefined})
+				commit('set', {type: 'idActiveCat', items: undefined})
 
 		},
 		selectProduct({commit}, product) {
-			if (product.properties.elements)
-				product.properties = product.properties.elements[0].extend.properties.elements
 			commit('set', {type: 'product', items: product})
 		},
 
 		// Добавить в корзину
-		addToCard({state, commit}, idClinet, product, count) {
+		addToCart({state, commit}, product) {
 			let arg = {
 				params: {
-				   action          : 'add',
-				   'client.id'     : 1,
-				   'product.id'    : 20,
-				   'product.price' : 1000,
-				   'product.count' : 2,
-				   'card.id'       : state.card ? state.card.id : undefined
+				   action             : 'add',
+				   'product.id'       : product.id,
+				   'product.quantity' : product.cartQuantity,
 				},
 				headers: {
 					'Content-Type': 'text/plain'
 				}
 			}
 
-			Vue.http.post(Conf.url.card, null, arg).then(
+			Vue.http.post(Conf.url.cart, null, arg).then(
 				response => {
 					let body = response.body;
-					commit('set', {type: 'card', items: body.card})
+					commit('set', {type: 'cart', items: body.cart})
+					if (body.cart)
+						commit('calculateCartPrice', {products: body.cart.products.elements})
 				},
 				error => {
 					console.log(error);
 				}
 			)
 		},
-
 		// Получить корзину
-		getCard({state, commit}, idClinet, product, count) {
+		getCart({state, commit}, idClinet, product, count) {
+			let arg = {
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.cart, null, arg).then(
+				response => {
+					let body = response.body;
+					commit('set', {type: 'cart', items: body.cart})
+					if (body.cart) {
+						commit('calculateCartPrice', {products: body.cart.products.elements})
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		// Удалить продукт из корзины
+		deletProdInCart({state, commit}, idProduct) {
 			let arg = {
 				params:{
-				   'card.id' : state.card ? state.card.id : undefined
+					action       : 'delete',
+				    'product.id' : idProduct,
 				},
 				headers: {
 					'Content-Type': 'text/plain'
 				}
 			}
 
-			Vue.http.post(Conf.url.card, null, arg).then(
+			Vue.http.post(Conf.url.cart, null, arg).then(
 				response => {
 					let body = response.body;
-					commit('set', {type: 'card', items: body.card})
+					commit('set', {type: 'cart', items: body.cart})
+					if (body.cart)
+						commit('calculateCartPrice', {products: body.cart.products.elements})
 				},
 				error => {
 					console.log(error);
 				}
 			)
 		},
+		calculateCartPrice({state, commit}) {
+			commit('calculateCartPrice', {products: state.cart.products.elements})
+		}
 
 	}
 })

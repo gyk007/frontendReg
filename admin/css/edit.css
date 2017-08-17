@@ -183,3 +183,6 @@ select:focus::placeholder,
   text-align: center;
 }
 
+.hidden_block {
+  display: none !important;
+}

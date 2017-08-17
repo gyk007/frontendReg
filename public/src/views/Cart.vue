@@ -2,22 +2,22 @@
  <div class="p-card">
  	<div class="p-card__container">
 	<div class="page-title">Корзина</div>
-	<CardAddress></CardAddress>
-	<CardProduct></CardProduct>
+	<CartAddress></CartAddress>
+	<CartProduct></CartProduct>
 	</div>
 </div>
 </template>
 
 <script>
 
-import CardProduct from './components/CardProduct.vue'
-import CardAddress from './components/CardAddress.vue'
-import Store       from '../store/promotion.js'
+import CartProduct from './components/CartProduct.vue'
+import CartAddress from './components/CartAddress.vue'
+import Store       from '../store/catalog.js'
 import $           from 'jquery'
 
 export default {
 	name: 'card',
-	components: {CardAddress, CardProduct},
+	components: {CartAddress, CartProduct},
 	store: Store,
 	computed: {
 		category() {

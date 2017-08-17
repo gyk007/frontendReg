@@ -5,7 +5,15 @@
 	<div class="aa-order__filter-item">
 		<div class="aa-order__filter-hdr">Стоимость</div>
 		</br>
-		<vueSlider ref="price" v-bind="slider" v-model="slider.value"></vueSlider>
+		<vueSlider ref="price" v-bind="priceSlider" v-model="priceSlider.value" @callback="priceFilter"></vueSlider>
+	</div>
+
+	<div class="aa-order__filter-item">
+		<div class="aa-order__filter-hdr">Крепость</div>
+		</br>
+		<vueSlider ref="alko" v-bind="alkoSlider" v-model="alkoSlider.value" @callback="alkoFilter"></vueSlider>
+		</br>
+		</div>
 	</div>
 
 
@@ -76,50 +84,6 @@
 		</div>
 	</div>
 	<div class="aa-order__filter-item">
-		<div class="aa-order__filter-hdr">Крепость</div>
-		<div class="shop__filter-col">
-			<div class="aa-order__filter-chb">
-				<label>
-					<input type="checkbox" class="checkbox">
-					<span>5%</span>
-				</label>
-			</div>
-			<div class="aa-order__filter-chb">
-				<label>
-					<input type="checkbox" class="checkbox">
-					<span>7%</span>
-				</label>
-			</div>
-			<div class="aa-order__filter-chb">
-				<label>
-					<input type="checkbox" class="checkbox">
-					<span>16%</span>
-				</label>
-			</div>
-		</div>
-		<div class="shop__filter-col">
-			<div class="aa-order__filter-chb">
-				<label>
-					<input type="checkbox" class="checkbox">
-					<span>25%</span>
-				</label>
-			</div>
-			<div class="aa-order__filter-chb">
-				<label>
-					<input type="checkbox" class="checkbox">
-					<span>40%</span>
-				</label>
-			</div>
-			<div class="aa-order__filter-chb">
-				<label>
-					<input type="checkbox" class="checkbox">
-					<span>60%</span>
-				</label>
-			</div>
-		</div>
-
-	</div>
-	<div class="aa-order__filter-item">
 		<div class="aa-order__filter-hdr">Особенности</div>
 
 		<div class="aa-order__filter-chb">
@@ -182,16 +146,16 @@
 	import $     from 'jquery'
 
 	export default {
-		components: { vueSlider},
+		components: {vueSlider},
 		data () {
 			return {
-				slider: {
+				priceSlider: {
 					value: [0, 100],
 					width: '100%',
 					height: 8,
 					dotSize: 16,
 					min: 0,
-					max: 500,
+					max: 20000,
 					disabled: false,
 					show: true,
 					tooltip: 'always',
@@ -207,21 +171,69 @@
 					processStyle: {
 						backgroundColor: '#999'
 					}
+				},
+				alkoSlider: {
+					value: [0, 100],
+					width: '100%',
+					height: 8,
+					dotSize: 16,
+					min: 0,
+					max: 100,
+					disabled: false,
+					show: true,
+					tooltip: 'always',
+					formatter: '%{value}',
+					bgStyle: {
+						backgroundColor: '#fff',
+						boxShadow: 'inset 0.5px 0.5px 3px 1px rgba(0,0,0,.36)'
+					},
+					tooltipStyle: {
+						backgroundColor: '#666',
+						borderColor: '#666'
+					},
+					processStyle: {
+						backgroundColor: '#999'
+					}
 				}
 			}
 		},
 		computed: {
-			filtersData() {
-				return this.$store.getters.catalogTree
+			filterPrice() {
+				return this.$store.getters.filterPrice
 			},
+			productList() {
+				return this.$store.getters.productList
+			}
 		},
 		methods: {
 			getProductList() {
-				console.log(this.$data.slider.value)
+
+			},
+			priceFilter(val){
+				let minPrice = val[0]
+				let maxPrice = val[1]
+
+				this.productList.forEach(function(key) {
+					if (key.properties[0].value < minPrice || key.properties[0].value > maxPrice)
+						key.filterPrice = false
+					else
+						key.filterPrice = true
+				})
+			},
+			alkoFilter(val){
+				let minAlko = val[0]
+				let maxAlko = val[1]
+
+				this.productList.forEach(function(key) {
+					if (key.properties[4].value < minAlko || key.properties[4].value > maxAlko)
+						key.filterAlko = false
+					else
+						key.filterAlko = true
+				})
 			}
 		},
-		created: function() {
-			this.$store.dispatch('getCatalogTree')
+		created: function () {
+
 		}
 	}
 

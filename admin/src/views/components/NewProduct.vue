@@ -32,7 +32,7 @@
 					<span v-if="prop.name == 'Крепость'" class="product_prop_value"> (об. %)</span>
 					<span v-if="prop.name == 'Литраж'"   class="product_prop_value"> (л.)</span>
 				</span>
-				<input v-model="prop.value" v-placeholder="prop.name" class="input" disabled>
+				<input v-model="prop.value" placeholder="" class="input" disabled>
 			</label>
 		</div>
 		<div class='clear'></div>

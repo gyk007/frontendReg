@@ -281,9 +281,9 @@ const store = new Vuex.Store({
 		selectCategory({commit}, category) {
 			commit('set', {type: 'category', items: category})
 			if (category)
-				commit('set', {type: 'idActive', items: category.id})
+				commit('set', {type: 'idActiveCat', items: category.id})
 			else
-				commit('set', {type: 'idActive', items: undefined})
+				commit('set', {type: 'idActiveCat', items: undefined})
 
 		},
 		selectProduct({commit}, product) {
@@ -403,9 +403,9 @@ const store = new Vuex.Store({
 		selectClient({commit}, client) {
 			commit('set', {type: 'client', items: client})
 			if (client)
-				commit('set', {type: 'idActive', items: client.id})
+				commit('set', {type: 'idActiveClient', items: client.id})
 			else
-				commit('set', {type: 'idActive', items: undefined})
+				commit('set', {type: 'idActiveClient', items: undefined})
 		},
 
 	}
