@@ -33,36 +33,10 @@
 
 			<div class="header__user">
 					<div class="header__user--holder">
-							<div class="header__user-bell active js-notification">
-									<svg><use xlink:href="#bell"></use></svg>
-									<div class="header__drop jq-scroll">
-											<div class="header__drop-row">
-													<span class="status status--delivered">Новое</span>
-													<span class="header__drop-txt">Вы получили скидку в 15%</span>
-											</div>
-											<div class="header__drop-row">
-													<span class="status status--delivered">Новое</span>
-													<span class="header__drop-txt">Ваш заказ готовится к отправке</span>
-											</div>
 
-											<div class="header__drop-row">
-													<span class="header__drop-txt">Добавлена возможность покупки</span>
-											</div>
-											<div class="header__drop-row">
-													<span class="header__drop-txt">Добавлена сопроводительная документация на продукцию: Вино ARLINE 742<br>
-															<a href="#" class="header__drop-txt--link">Скачать PDF</a>
-
-													</span>
-											</div>
-											<div class="header__drop-row">
-													<span class="header__drop-txt"><a href="#" class="header__drop-txt--link-more">Все уведомления</a></span>
-											</div>
-									</div>
-							</div>
 							<div class="header__user-container">
 									<div class="header__user-name">
 											<span>Олег Владимирович</span>
-											<div class="header__user-name--btn">&gt;</div>
 									</div>
 									<div class="header__user-logo">
 											<img src="pic/icon/name-logo.png" alt="logo">

@@ -4,33 +4,30 @@
 
 		<div class="p-card__data-form">
 			<div class="input-field">
-				<input id="personal-card-company-name" type="text" class="input" value="Азбука Вкуса">
-				<label for="personal-card-company-name">Название компании</label>
+				<v-select  :on-change="selectShop" :value.sync="selected" :options="shops" placeholder="Выберите торговую точку"></v-select>
 			</div>
 			<div class="input-field">
-				<input id="personal-card-tel" type="text" class="input" value="+7 (497) 468-89-78">
+				<input id="personal-card-tel" type="text" class="input" v-model='orderData.phone'>
 				<label for="personal-card-tel">Телефон получателя<span class="accent">*</span></label>
 			</div>
 			<div class="input-field">
-				<input id="personal-card-addr" type="text" class="input" value="г. Москва, ул. Силикатная, владение 55-B">
+				<input id="personal-card-addr" type="text" class="input" v-model='orderData.address'>
 				<label for="personal-card-addr">Адрес доставки<span class="accent">*</span></label>
 			</div>
 			<div class="input-field">
-				<input id="personal-card-name" type="text" class="input" value="Иванович Сергей Михайлович">
+				<input id="personal-card-name" type="text" class="input" v-model='orderData.name'>
 				<label for="personal-card-name">Имя получателя<span class="accent">*</span></label>
 			</div>
 			<div class="input-field">
-				<input id="personal-card-email" type="email" class="input" value="product@azbuka.com">
+				<input id="personal-card-email" type="email" class="input" v-model='orderData.email'>
 				<label for="personal-card-email">Эл.почта<span class="accent">*</span></label>
 			</div>
 
 			<div class="p-card__data-form--txt">
 				<span>Пожелания по доставке</span>
-				<textarea name="personal-card-message">Доставить на третий склад</textarea>
+				<textarea name="personal-card-message"  v-model='orderData.remark'></textarea>
 			</div>
-
-			<button type="submit" class="btn btn--checkout p-card__data-submit">Оформить</button>
-
+			<button type="submit" class="btn btn--checkout p-card__data-submit" @click='addOrder'>Оформить</button>
 		</div>
 
 	</section>
@@ -39,29 +36,49 @@
 <script>
 	import store from '../../store/catalog.js'
 	import $     from 'jquery'
+	import vSelect from "vue-select"
 
 	export default {
-		computed: {
-			catalogTree() {
-					return this.$store.getters.catalogTree
-				},
-				idActive() {
-					return this.$store.getters.idActive
-				}
+		components: {vSelect},
+		data() {
+    		return {
+    			selected : null,
+	    		orderData  : {
+	    			name   : '',
+	    			phone  : '',
+	    			address: '',
+	    			email  : '',
+	    			remark : '',
+	    			idShop : null
+    			}
+    		}
+  		},
+  		computed: {
+			shops() {
+				let shops = [];
+				if(this.$store.getters.shops.length)
+					this.$store.getters.shops.forEach((key) => {
+						let shop = {
+							id    : key.id,
+							label : key.official.name
+						}
+						shops.push(shop)
+					})
+				return shops
+			},
 		},
 		methods: {
-			getProductList(category) {
-				this.$store.dispatch('getProductList', category.id)
-				this.$store.dispatch('selectCategory', category)
-				$('.jq-scroll').mCustomScrollbar();
+			selectShop(shop){
+				this.$data.orderData.idShop = shop.id
 			},
-			showSubCategory(){
-				let btn = $(event.target);
-				btn.next('.catalog__nav-sub')
-					.slideToggle(200, function () {
-						btn.toggleClass('active')
-				});
+			addOrder(selectedShop) {
+				this.$store.dispatch('addOrder', this.$data.orderData);
 			}
+		},
+		watch: {
+			selectedShop: function (val) {
+     			this.$data.selectedShop = val
+    		},
 		},
 		mounted: function() {
 		 	materializeInput();

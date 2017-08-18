@@ -16,6 +16,8 @@ const catalogStore = new Vuex.Store({
 		idActive    : undefined,
 		cart        : null,
 		cartPrice   : 0,
+		shops       : [],
+		order       : null,
 	},
 	getters: {
 		catalogTree(state) {
@@ -41,6 +43,12 @@ const catalogStore = new Vuex.Store({
 		},
 		filterPrice(state){
 			return state.filterPrice
+		},
+		shops(state){
+			return state.shops
+		},
+		order(state){
+			return state.order
 		}
 	},
 	mutations: {
@@ -69,7 +77,7 @@ const catalogStore = new Vuex.Store({
 		calculateCartPrice(state, {products}) {
 			state.cartPrice = 0;
 			if (products)
-				products.forEach(function(key){
+				products.forEach((key) => {
 					if (key.product.price)
 						state.cartPrice +=	key.quantity * key.product.price
 				})
@@ -100,6 +108,41 @@ const catalogStore = new Vuex.Store({
 				}
 			)
 		},
+		addOrder({state, commit}, orderData){
+			let arg = {
+				params:{
+					'order.phone'      : orderData.phone,
+					'order.address'    : orderData.address,
+					'order.name'       : orderData.name,
+					'order.remark'     : orderData.remark,
+					'order.email'      : orderData.email,
+					'order.id_shop'    : orderData.idShop,
+					'cart.id_merchant' : state.cart.id_merchant,
+					'cart.n'           : state.cart.n,
+					action             :  'add',
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.order, null,  arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR)
+					} else {
+						console.log(body.order)
+						commit('set', {type: 'order', items: body.order})
+						document.location = '/#/order'
+					};
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+
 		editCategory ({commit}, category) {
 			let arg = {
 				params:{
@@ -154,7 +197,6 @@ const catalogStore = new Vuex.Store({
 					// Очищаем список продуктов
 					commit('set', {type: 'productList', items: null})
 					commit('set', {type: 'filters',     items: null})
-					console.log(body.category.extend.products.elements.length);
 					if (body.category.extend.products.elements.length)
 						body.category.extend.products.elements.forEach(function(key) {
 							// Добавляем фильтры
@@ -250,7 +292,8 @@ const catalogStore = new Vuex.Store({
 			Vue.http.post(Conf.url.cart, null, arg).then(
 				response => {
 					let body = response.body;
-					commit('set', {type: 'cart', items: body.cart})
+					commit('set', {type: 'shops', items: body.shops})
+					commit('set', {type: 'cart',  items: body.cart})
 					if (body.cart) {
 						commit('calculateCartPrice', {products: body.cart.products.elements})
 					}

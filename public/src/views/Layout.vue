@@ -25,9 +25,10 @@
 
 import Vue       from 'vue'
 import VueRouter from 'vue-router'
+import VTooltip  from 'v-tooltip'
 import Main      from './Main.vue'
 import Catalog   from './Catalog.vue'
-import Orders    from './Orders.vue'
+import Order     from './Order.vue'
 import Contacts  from './Contacts.vue'
 import Cart      from './Cart.vue'
 import HeadareEl from './Header.vue'
@@ -36,12 +37,13 @@ import 'malihu-custom-scrollbar-plugin'
 import 'jquery-mousewheel'
 
 Vue.use(VueRouter)
+Vue.use(VTooltip)
 
 var router = new VueRouter({
 	routes: [
 		{ path: '/main',      component: Main },
 		{ path: '/catalog',   component: Catalog },
-		{ path: '/orders',    component: Orders },
+		{ path: '/order',     component: Order },
 		{ path: '/contacts',  component: Contacts },
 		{ path: '/cart',      component: Cart },
 	]
