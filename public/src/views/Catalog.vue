@@ -13,7 +13,7 @@
 
 <script>
 
-import Search       from './components/Search.vue'
+import Search       from './components/SearchProduct.vue'
 import Filters      from './components/Filters.vue'
 import Catalog      from './components/CatalogProduct.vue'
 import Store        from '../store/catalog.js'

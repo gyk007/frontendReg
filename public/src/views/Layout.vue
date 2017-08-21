@@ -29,6 +29,7 @@ import VTooltip  from 'v-tooltip'
 import Main      from './Main.vue'
 import Catalog   from './Catalog.vue'
 import Order     from './Order.vue'
+import Orders    from './Orders.vue'
 import Contacts  from './Contacts.vue'
 import Cart      from './Cart.vue'
 import HeadareEl from './Header.vue'
@@ -44,6 +45,7 @@ var router = new VueRouter({
 		{ path: '/main',      component: Main },
 		{ path: '/catalog',   component: Catalog },
 		{ path: '/order',     component: Order },
+		{ path: '/orders',    component: Orders },
 		{ path: '/contacts',  component: Contacts },
 		{ path: '/cart',      component: Cart },
 	]
