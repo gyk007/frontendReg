@@ -7,7 +7,7 @@
 				<li class="marked">Документы</li>
 			</ul>
 			<!--tabs content-->
-			<div class="tabs__content order-ls__info active">
+			<div class="tabs__content order-ls__info">
 				<ul class="order-ls__info-list">
 					<li class="order-ls__info-title">Название компании</li>
 					<li class="order-ls__info-txt">
@@ -77,7 +77,7 @@
 				</ul>
 			</div>
 
-			<div class="tabs__content">
+			<div class="tabs__content ">
 				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda consequatur dolorum eaque fugit repellendus. Accusamus animi
 					culpa dolorem, ducimus ea eius error fugiat in minus molestiae nihil possimus quam quidem quis repellat, repellendus tempore
 					vitae? Accusamus adipisci eius molestiae! Ad alias at beatae culpa incidunt ipsam, maiores maxime omnis ullam!</p>
@@ -186,7 +186,7 @@
 	function tabs() {
 		if($('.tabs').length) {
 			$('ul.tabs__caption').on('click', 'li:not(.active)', function() {
-				 console.log($(this));
+				console.log($(this));
 				$(this)
 					.addClass('active').siblings().removeClass('active')
 					.closest('div.tabs').find('div.tabs__content').removeClass('active').eq($(this).index()).addClass('active');

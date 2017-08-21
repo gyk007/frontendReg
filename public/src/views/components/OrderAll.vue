@@ -12,13 +12,14 @@
 			</div>
 
 
-			<div class="order__row js-t-row">
+			<div class="order__row js-t-row" v-for='order in orders'>
 				<div class="order__cell order__number">
 					<div class="js-status-clone"></div>
-					<sapn class="order__num">
-						<a href="#">#458TFE-897-89</a>
+					<span class="order__num">
+						<span v-if='order.num'>{{order.num}}</span>
+						<span v-if='!order.num'>В обработке</span>
 						<div class="js-cost-clone"></div>
-					</sapn>
+					</span>
 					<span  class="order__date">14 июня, 2017</span>
 					<div class="order__invoice-mob">
 						<div class="order__invoice-mob--item js-invoice-clone">
@@ -32,14 +33,22 @@
 						<div class="js-representative-title-clone"></div>
 					</div>
 				</div>
-				<div class="order__cell order__invoice"><span class="order__title js-invoice">ТТН-4678-89-73 (14.05.17)</span></div>
-				<div class="order__cell order__representative">
-					<sapn class="order__title order__title js-representative">Александр Сергеевич</sapn>
-					<span class="order__tel js-representative">+7 (468) 456-86-81</span>
+				<div class="order__cell order__invoice">
+					<span class="order__title js-invoice" v-if='order.ttn_number'>{{order.ttn_number}}({{order.ttn_date}})</span>
+					<span class="order__title js-invoice" v-if='!order.ttn_number'>В обработке</span>
 				</div>
-				<div class="order__cell order__e"><span class="order__title js-e">AMT-467-86-210</span></div>
-				<div class="order__cell order__cost"><span class="js-cost">740 000 <i class="rub">a</i></span></div>
-				<div class="order__cell order__status"><span class="js-status"><span class='status status--accepted'>Принят в обработку</span></span></div>
+				<div class="order__cell order__representative">
+					<span class="order__title order__title js-representative" v-if='order.sales_name'>{{order.sales_name}}</span>
+					<span class="order__tel js-representative" v-if='order.sales_phone'>{{order.sales_phone}}</span>
+					<span class="order__title order__title js-representative" v-if='!order.sales_name'>В обработке</span>
+					<span class="order__tel js-representative" v-if='!order.sales_phone'>В обработке</span>
+				</div>
+				<div class="order__cell order__e">
+					<span class="order__title js-e" v-if='order.latch_number'>{{order.latch_number}}</span>
+					<span class="order__title js-e" v-if='!order.latch_number'>В обработке</span>
+				</div>
+				<div class="order__cell order__cost"><span class="js-cost">{{}} <i class="rub">a</i></span></div>
+				<div class="order__cell order__status"><span class="js-status"><span class='status status--accepted' v-tooltip="order.status.description">{{order.status.name}}</span></span></div>
 			</div>
 
 		</div>
@@ -52,17 +61,12 @@
 
 	export default {
 		computed: {
-			order() {
-				return this.$store.getters.order
-			},
-			orderPrice() {
-				let orderPrice = 0;
-				if (this.$store.getters.order.products.elements.length)
-					this.$store.getters.order.products.elements.forEach(key => {
-						orderPrice += parseFloat((key.price * key.qty).toFixed(2))
-					})
-				return orderPrice
+			orders() {
+				return this.$store.getters.orders
 			}
-		}
+		},
+		created: function() {
+			this.$store.dispatch('getOrders')
+		},
 	}
 </script>

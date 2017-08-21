@@ -18,6 +18,7 @@ const catalogStore = new Vuex.Store({
 		cartPrice   : 0,
 		shops       : [],
 		order       : null,
+		orders      : [],
 	},
 	getters: {
 		catalogTree(state) {
@@ -49,7 +50,10 @@ const catalogStore = new Vuex.Store({
 		},
 		order(state){
 			return state.order
-		}
+		},
+		orders(state){
+			return state.orders
+		},
 	},
 	mutations: {
 		set(state, {type, items}) {
@@ -142,7 +146,6 @@ const catalogStore = new Vuex.Store({
 				}
 			)
 		},
-
 		editCategory ({commit}, category) {
 			let arg = {
 				params:{
@@ -173,6 +176,18 @@ const catalogStore = new Vuex.Store({
 				response => {
 					let body = response.body;
 					commit('set', {type: 'catalogTree', items: body.catalog.child})
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		getOrders({commit}) {
+			Vue.http.get(Conf.url.order).then(
+				response => {
+					let body = response.body
+				 	commit('set', {type: 'orders', items: body.orders});
+				 	console.log(body.orders)
 				},
 				error => {
 					console.log(error);
