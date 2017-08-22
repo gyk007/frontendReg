@@ -8,13 +8,13 @@
 		<div class="popup__product-form--holder">
 		<label>
 			<span style="font-size: 15px">Название Категории</span>
-			<input v-model="category.name" placeholder="Название Категории" class="input">
+			<input v-model="category.name" placeholder="" class="input">
 		</label>
 		</div>
 		<div class="popup__product-form--holder">
 		<label>
 			<span style="font-size: 15px" >Описание Категории</span>
-			<textarea v-model="category.description" placeholder="Описание Категории"></textarea>
+			<textarea v-model="category.description" placeholder=""></textarea>
 		</label>
 		</div>
 		<div class="popup__product-form--holder">

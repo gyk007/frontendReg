@@ -17,13 +17,13 @@
 								<a data-fancybox data-src="#popup__category" href="javascript:;" class="btn btn--edit">Редактировать</a>
 						</div>
 						<div class="a-catalog__hdr-controls down_category" style="margin-right:10px" v-if="isHidden()">
-							<button class="btn btn--edit" v-on:click="downCategoory(category)" v-if="!category.child.length" >&#8595;</button>
+							<button class="btn btn--edit" title="Переместить категорию внизу" v-on:click="downCategoory(category)" v-if="!category.child.length" >&#8595;</button>
 						</div>
 						<div class="a-catalog__hdr-controls up_category" style="margin-right:10px" v-if="isHidden()">
-							<button class="btn btn--edit" v-on:click="upCategoory(category)" v-if="!category.child.length">&#8593;</button>
+							<button class="btn btn--edit" title="Переместить категорию вверх" v-on:click="upCategoory(category)" v-if="!category.child.length">&#8593;</button>
 						</div>
 						<div class="a-catalog__hdr-controls in_category" style="margin-right:10px" v-if="isHidden()">
-							<button class="btn btn--edit" v-on:click="inCategoory(category)" v-if="!category.child.length">&#8594;</button>
+							<button class="btn btn--edit" title="Поместить категорию внутрь следующей категории" v-on:click="inCategoory(category)" v-if="!category.child.length">&#8594;</button>
 						</div>
 				</div>
 		</div>

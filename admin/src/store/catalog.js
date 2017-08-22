@@ -157,8 +157,13 @@ const store = new Vuex.Store({
 					let body = response.body
 					// Очищаем список продуктов
 					commit('set', {type: 'productList', items: null})
-					if (body.category.extend.products.elements.length)
-						commit('set', {type: 'productList', items: body.category.extend.products.elements})
+					if (body.category.extend.products.elements.length) {
+						body.category.extend.products.elements.forEach(function(key) {
+							// Свойства, делаем удобнее
+							key.properties = key.properties.elements[0].extend.properties.elements
+						});
+						commit('set', {type: 'productList', items: body.category.extend.products.elements});
+					}
 				},
 				error => {
 					console.log(error);
@@ -407,7 +412,6 @@ const store = new Vuex.Store({
 			else
 				commit('set', {type: 'idActiveClient', items: undefined})
 		},
-
 	}
 })
 
