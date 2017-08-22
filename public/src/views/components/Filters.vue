@@ -61,6 +61,7 @@
 		</div>
 
 	</div>
+
 	<div class="aa-order__filter-item">
 		<div class="aa-order__filter-hdr">Страна</div>
 
@@ -83,6 +84,7 @@
 			</label>
 		</div>
 	</div>
+
 	<div class="aa-order__filter-item">
 		<div class="aa-order__filter-hdr">Особенности</div>
 
@@ -127,12 +129,6 @@
 					<span>Lorem ipsum dolor.</span>
 				</label>
 			</div>
-		</div>
-		<div class="shop__filter-show--holder">
-			<div class="shop__filter-show js-more-options">Больше параметров</div>
-		</div>
-		<div class="shop__filter-submit">
-			<button class="btn" v-on:click="getProductList">Подробрать</button>
 		</div>
 	</div>
 </div>

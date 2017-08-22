@@ -12,7 +12,7 @@
 			</div>
 
 
-			<div class="order__row js-t-row" v-for='order in orders'>
+			<div class="order__row js-t-row" v-for='order in orders' @click='getOrder(order.id)'>
 				<div class="order__cell order__number">
 					<div class="js-status-clone"></div>
 					<span class="order__num">
@@ -20,7 +20,7 @@
 						<span v-if='!order.num'>В обработке</span>
 						<div class="js-cost-clone"></div>
 					</span>
-					<span  class="order__date">14 июня, 2017</span>
+					<span  class="order__date">{{order.ctime.toLocaleDateString("ru-RU")}}</span>
 					<div class="order__invoice-mob">
 						<div class="order__invoice-mob--item js-invoice-clone">
 							<div class="js-invoice-title-clone"></div>
@@ -47,7 +47,7 @@
 					<span class="order__title js-e" v-if='order.latch_number'>{{order.latch_number}}</span>
 					<span class="order__title js-e" v-if='!order.latch_number'>В обработке</span>
 				</div>
-				<div class="order__cell order__cost"><span class="js-cost">{{}} <i class="rub">a</i></span></div>
+				<div class="order__cell order__cost"><span class="js-cost">{{order.price}} <i class="rub">a</i></span></div>
 				<div class="order__cell order__status"><span class="js-status"><span class='status status--accepted' v-tooltip="order.status.description">{{order.status.name}}</span></span></div>
 			</div>
 
@@ -64,6 +64,11 @@
 			orders() {
 				return this.$store.getters.orders
 			}
+		},
+		methods: {
+			getOrder(orderId) {
+			 	 this.$store.dispatch('getOrder', orderId)
+			},
 		},
 		created: function() {
 			this.$store.dispatch('getOrders')

@@ -2,6 +2,7 @@ import Vue       from 'vue'
 import VueRouter from 'vue-router'
 import Catalog   from './views/Catalog.vue'
 import Orders    from './views/Orders.vue'
+import Order     from './views/Order.vue'
 import Promotion from './views/Promotion.vue'
 import Client    from './views/Client.vue'
 import $         from 'jquery'
@@ -15,6 +16,7 @@ var router = new VueRouter({
 		{ path: '/',          redirect: '/catalog' },
 		{ path: '/catalog',   component: Catalog },
 		{ path: '/orders',    component: Orders },
+		{ path: '/order',     component: Order },
 		{ path: '/promotion', component: Promotion },
 		{ path: '/client',    component: Client }
 	]

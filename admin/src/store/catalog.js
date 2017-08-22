@@ -16,6 +16,9 @@ const store = new Vuex.Store({
 		clientsList    : [],
 		client         : null,
 		idActiveClient : undefined,
+		order          : null,
+		orders         : [],
+		documents      : [],
 	},
 	getters: {
 		catalogTree(state) {
@@ -41,7 +44,16 @@ const store = new Vuex.Store({
 		},
 		idActiveClient(state){
 			return state.idActiveClient
-		}
+		},
+		order(state){
+			return state.order
+		},
+		orders(state){
+			return state.orders
+		},
+		documents(state){
+			return state.documents
+		},
 
 	},
 	mutations: {
@@ -123,6 +135,49 @@ const store = new Vuex.Store({
 				response => {
 					let body = response.body;
 					commit('relodCatalogTree');
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		getOrders({commit}) {
+			Vue.http.get(Conf.url.order).then(
+				response => {
+					let body = response.body
+					if (body.orders)
+						body.orders.forEach(key => {
+				 			key.ctime = new Date(key.ctime)
+				 		});
+
+				 	commit('set', {type: 'orders', items: body.orders});
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		getOrder({commit}, orderId) {
+			let arg = {
+				params:{
+					'order.id' : orderId,
+					action     : 'order',
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.order, null,  arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR)
+					} else {
+						commit('set', {type: 'order', items: body.order})
+						commit('set', {type: 'documents', items: body.documents})
+						document.location = '/#/order'
+					};
 				},
 				error => {
 					console.log(error);

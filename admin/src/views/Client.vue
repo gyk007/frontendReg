@@ -2,10 +2,10 @@
 <section class="b-catalog">
 	<div class="a-catalog__hdr">
 		<div class="a-catalog__hdr-title">Клиенты</div>
-		<Search></Search>
-		<div class="a-catalog__hdr-controls">
+
+		<!-- <div class="a-catalog__hdr-controls">
 			<a data-fancybox data-src="#popup__client" href="javascript:;" class="btn btn--checkout" v-on:click="unselectClient">Новый магазин</a>
-		</div>
+		</div> -->
 		<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if="client">
 			<a data-fancybox  data-src="#popup__client" href="javascript:;" class="btn btn--edit">Редактировать</a>
 		</div>
@@ -21,7 +21,7 @@
 
 <script>
 
-import Search        from './components/Search.vue'
+
 import ClientList    from './components/ClientList.vue'
 import NewClient     from './components/NewClient.vue'
 import DeleteWnd     from './components/DeleteClient.vue'
@@ -30,7 +30,7 @@ import $             from 'jquery'
 
 export default {
 	name: 'users',
-	components: {Search, ClientList, NewClient, DeleteWnd},
+	components: {ClientList, NewClient, DeleteWnd},
 	store: store,
 	computed: {
 		client() {

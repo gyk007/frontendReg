@@ -27,13 +27,26 @@
 		<div class="product_prop_hdr">Параметры</div>
 		<div class="popup__product-form--holder_prop" v-for="prop in product.properties" :class="[prop.name == 'Старна производитель' ? 'big_prop' : '']">
 			<label>
-				<span style="font-size: 15px">{{prop.name}}
-					<span v-if="prop.name == 'Цена'"     class="product_prop_value"> (&#8381;)</span>
-					<span v-if="prop.name == 'Крепость'" class="product_prop_value"> (об. %)</span>
-					<span v-if="prop.name == 'Литраж'"   class="product_prop_value"> (л.)</span>
+				<span style="font-size: 15px">
+					<span v-if="prop.name == 'Price'"        class="product_prop_value">Цена (&#8381;)</span>
+					<span v-if="prop.name == 'Alko'"         class="product_prop_value"> (об. %)</span>
+					<span v-if="prop.name == 'Litr'"         class="product_prop_value">Объем (л.)</span>
+					<span v-if="prop.name == 'Pack'"         class="product_prop_value">Количесво в упаковке</span>
+					<span v-if="prop.name == 'Brand'"        class="product_prop_value">Бренд</span>
+					<span v-if="prop.name == 'Made in'"      class="product_prop_value">Объем (л.)</span>
+					<span v-if="prop.name == 'Manufacturer'" class="product_prop_value">Объем (л.)</span>
+					<span v-if="prop.name == 'Qty'"          class="product_prop_value">Объем (л.)</span>
 				</span>
 				<input v-model="prop.value" placeholder="" class="input" disabled>
 			</label>
+
+
+
+
+
+
+Made in
+Manufacturer
 		</div>
 		<div class='clear'></div>
 		<button class="btn" v-on:click="addProduct"  v-if="!product.name">Добавить</button>

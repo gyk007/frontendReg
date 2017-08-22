@@ -26,8 +26,8 @@ export default {
 	store: Store,
 	computed: {
 		category() {
-				return this.$store.getters.category
-			},
+			return this.$store.getters.category
+		},
 	},
 	methods: {
 		unselectCategoory(){

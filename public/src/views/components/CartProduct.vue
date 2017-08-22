@@ -19,7 +19,7 @@
 	</div>
 
 	<div class="product__cell product__quantity">
-		<input type="text" class="input" v-model="el.quantity" @keypress ='calculateCartPrice'>
+		<input type="text" class="input" v-model="el.quantity" @keyup ='calculateCartPrice'>
 		<span>шт</span>
 	</div>
 

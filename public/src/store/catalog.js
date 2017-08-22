@@ -19,6 +19,7 @@ const catalogStore = new Vuex.Store({
 		shops       : [],
 		order       : null,
 		orders      : [],
+		documents   : [],
 	},
 	getters: {
 		catalogTree(state) {
@@ -53,6 +54,9 @@ const catalogStore = new Vuex.Store({
 		},
 		orders(state){
 			return state.orders
+		},
+		documents(state){
+			return state.documents
 		},
 	},
 	mutations: {
@@ -121,6 +125,7 @@ const catalogStore = new Vuex.Store({
 					'order.remark'     : orderData.remark,
 					'order.email'      : orderData.email,
 					'order.id_shop'    : orderData.idShop,
+					'order.price'      : state.cartPrice,
 					'cart.id_merchant' : state.cart.id_merchant,
 					'cart.n'           : state.cart.n,
 					action             :  'add',
@@ -136,9 +141,61 @@ const catalogStore = new Vuex.Store({
 					if (body.ERROR) {
 						console.log(body.ERROR)
 					} else {
-						console.log(body.order)
 						commit('set', {type: 'order', items: body.order})
+						commit('set', {type: 'documents', items: body.documents})
 						document.location = '/#/order'
+					};
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		addDocument({state, commit}, name){
+			let arg = {
+				params:{
+					'document.name': name,
+					'order.id'     : state.order.id,
+					action         : 'add_document',
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.order, null,  arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR)
+					} else {
+						commit('set', {type: 'documents', items: body.documents})
+					};
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		deleteDocument({state, commit}, name){
+			let arg = {
+				params:{
+					'document.name': name,
+					'order.id'     : state.order.id,
+					action         : 'delete_document',
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.order, null,  arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR)
+					} else {
+						commit('set', {type: 'documents', items: body.documents})
 					};
 				},
 				error => {
@@ -186,8 +243,39 @@ const catalogStore = new Vuex.Store({
 			Vue.http.get(Conf.url.order).then(
 				response => {
 					let body = response.body
+					if (body.orders)
+						body.orders.forEach(key => {
+				 			key.ctime = new Date(key.ctime)
+				 		});
+
 				 	commit('set', {type: 'orders', items: body.orders});
-				 	console.log(body.orders)
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		getOrder({commit}, orderId) {
+			let arg = {
+				params:{
+					'order.id' : orderId,
+					action     : 'order',
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.order, null,  arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR)
+					} else {
+						commit('set', {type: 'order', items: body.order})
+						commit('set', {type: 'documents', items: body.documents})
+						document.location = '/#/order'
+					};
 				},
 				error => {
 					console.log(error);
