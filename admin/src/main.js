@@ -17,7 +17,7 @@ var router = new VueRouter({
 		{ path: '/catalog',   component: Catalog },
 		{ path: '/orders',    component: Orders },
 		{ path: '/order',     component: Order },
-		{ path: '/promotion', component: Promotion },
+		// { path: '/promotion', component: Promotion },
 		{ path: '/client',    component: Client }
 	]
 })

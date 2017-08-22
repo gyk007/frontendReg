@@ -1,6 +1,7 @@
 <template>
 <section class="delete_wnd" id="popup__delete_category">
 	<div class="delete_wnd_hdr">Удалить категорию</div>
+	<div><p>Вы действительно хотите удалить выбранную категорию?</p></div>
 	<div class="btn_delete_wnd_form">
 		<button class="btn_delete_wnd_ok" v-on:click="deleteCategory">Удалить</button>
 		<button class="btn_delete_wnd_cancel" v-on:click="closeWnd">Отмена</button>
