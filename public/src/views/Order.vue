@@ -5,7 +5,7 @@
 		<div class="a-catalog__hdr-title">Заказ
 			<span class="order-ls__num" v-if='order.num'>{{order.num}}</span>
 			<span class="order-ls__num" v-if='!order.num'>Обрабатывается</span>
-			<span class="order-ls__status"><span class="status status--accepted" v-tooltip="order.status.description">{{order.status.name}}</span></span>
+			<span class="order-ls__status"><span class="status status--accepted">{{order.status.description}}</span></span>
 		</div>
 
 		<div class="a-order__balance">

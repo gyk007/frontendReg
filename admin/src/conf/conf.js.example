@@ -3,7 +3,7 @@ const conf = {
 		catalog  : 'http://reg50.nixteam.ru/alko/catalog/',
 		category : 'http://reg50.nixteam.ru/alko/catalog/category/',
 		clients  : 'http://reg50.nixteam.ru/alko/client/',
-		order    : 'http://localhost:9888/alko/order/',
+		order    : 'http://reg50.nixteam.ru/alko/order/',
 	}
 }
 

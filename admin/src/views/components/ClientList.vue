@@ -5,20 +5,16 @@
 			<div class="b-catalog__row js-t-row">
 				<div class="b-catalog__cell b-catalog__table-hdr">Название</div>
 				<div class="b-catalog__cell b-catalog__table-hdr">Имя представителя</div>
-				<div class="b-catalog__cell b-catalog__table-hdr">&nbsp;</div>
-				<div class="b-catalog__cell b-catalog__table-hdr">&nbsp;</div>
-				<div class="b-catalog__cell b-catalog__table-hdr">&nbsp;</div>
+				<div class="b-catalog__cell b-catalog__table-hdr">Телефон</div>
 			</div>
 
 			<div class="b-catalog__row js-t-row" v-for='client in clientsList' v-on:click="selectClient(client)">
-				<div class="b-catalog__cell b-catalog__table-title">
-					<div class="b-catalog__table-title--img"><img src="pic/icon/name-logo.png" alt="logo"></div>
-					<span>{{client.name}}</span>
+				<div class="b-catalog__cell b-catalog__table-name">
+					<!-- <div class="b-catalog__table-title--img"><img src="pic/icon/name-logo.png" alt="logo"></div> -->
+					<span>{{client.official.name}}</span>
 				</div>
-				<div class="b-catalog__cell b-catalog__table-name"><a href="#">{{client.person}}</a></div>
-				<div class="b-catalog__cell b-catalog__table-history"><a href="#">История заказов</a></div>
-				<div class="b-catalog__cell b-catalog__table-stat"><a href="#">Статистика</a></div>
-				<div class="b-catalog__cell b-catalog__table-doc"><a href="#">Документы</a></div>
+				<div class="b-catalog__cell b-catalog__table-title">{{client.official.person}}</div>
+				<div class="b-catalog__cell b-catalog__table-history">{{client.official.phone}}</div>
 			</div>
 
 		</div>

@@ -18,7 +18,7 @@
 					<li><router-link to="/main" active-class="black">Главная</router-link></li>
 					<li><router-link to="/catalog">Каталог продукции</router-link></li>
 					<li><router-link to="/orders">Заказы</router-link></li>
-					<li><router-link to="/contacts">Обратная связь</router-link></li>
+					<li><a data-fancybox data-src="#popup__contact" href="javascript:;">Обратная связь</a></li>
 				</ul>
 			</nav>
 

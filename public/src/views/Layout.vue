@@ -18,6 +18,7 @@
 			</div>
 		</div>
 	</div>
+	<Contact></Contact>
 </section>
 </template>
 
@@ -33,6 +34,7 @@ import Orders    from './Orders.vue'
 import Contacts  from './Contacts.vue'
 import Cart      from './Cart.vue'
 import HeadareEl from './Header.vue'
+import Contact   from './components/Contact.vue'
 import $         from 'jquery'
 import 'malihu-custom-scrollbar-plugin'
 import 'jquery-mousewheel'
@@ -47,14 +49,13 @@ var router = new VueRouter({
 		{ path: '/catalog',   component: Catalog },
 		{ path: '/order',     component: Order },
 		{ path: '/orders',    component: Orders },
-		{ path: '/contacts',  component: Contacts },
 		{ path: '/cart',      component: Cart },
 	]
 })
 
 export default  {
 	router: router,
-	components: {HeadareEl},
+	components: {HeadareEl, Contact},
 	created: function() {
 		let minHeight = $(window).outerHeight() - $('.js-footer').outerHeight()
 		$('.wrapper').css('min-height', minHeight + 'px')

@@ -3,7 +3,7 @@
 <div class="p-card__products--inner">
 	<div class="p-card__products-header">
 		<span>Продукция на сумму: {{cartPrice}} &nbsp;<i class="rub">a</i></span>
-		<router-link to="/catalog" class="btn btn--add">Добавить товар</router-link>
+		<!-- <router-link to="/catalog" class="btn btn--add">Добавить товар</router-link> -->
 	</div>
 <div v-if='cart && cart.products'>
 <div class="product"  v-for='el in cart.products.elements'>

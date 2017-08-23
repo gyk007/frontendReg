@@ -351,82 +351,11 @@ const store = new Vuex.Store({
 				product.properties = product.properties.elements[0].extend.properties.elements
 			commit('set', {type: 'product', items: product})
 		},
-		addClient({commit}, client) {
-			let arg = {
-				params:{
-					'client.name'                  : client.name,
-					'client.person'                : client.person,
-					'client.delivery_address'      : client.delivery_address,
-					'client.legal_address'         : client.legal_address,
-					'client.phone'                 : client.phone,
-					'client.email'                 : client.email,
-					'client.password'              : client.password,
-					'client.logo'                  : client.logo,
-					'client.bank'                  : client.bank,
-					'client.account_number'        : client.account_number,
-					'client.correspondent_account' : client.correspondent_account,
-					'client.bik'                   : client.bik,
-					'client.inn'                   : client.inn,
-					'client.kpp'                   : client.kpp,
-					'client.ogrn'                  : client.ogrn,
-					action                         : 'add'
-				},
-				headers: {
-					'Content-Type': 'text/plain'
-				}
-			}
-
-			Vue.http.post(Conf.url.clients, null,  arg).then(
-				response => {
-					let body = response.body
-					commit('relodClientList')
-				},
-				error => {
-					console.log(error);
-				}
-			)
-		},
-		editClient ({commit}, client) {
-			let arg = {
-				params:{
-					'client.id'                  : client.id,
-					'client.name'                  : client.name,
-					'client.person'                : client.person,
-					'client.delivery_address'      : client.delivery_address,
-					'client.legal_address'         : client.legal_address,
-					'client.phone'                 : client.phone,
-					'client.email'                 : client.email,
-					'client.password'              : client.password,
-					'client.logo'                  : client.logo,
-					'client.bank'                  : client.bank,
-					'client.account_number'        : client.account_number,
-					'client.correspondent_account' : client.correspondent_account,
-					'client.bik'                   : client.bik,
-					'client.inn'                   : client.inn,
-					'client.kpp'                   : client.kpp,
-					'client.ogrn'                  : client.ogrn,
-					action                         : 'edit'
-				},
-				headers: {
-					'Content-Type': 'text/plain'
-				}
-			}
-			console.log(arg);
-			Vue.http.post(Conf.url.clients, null,  arg).then(
-				response => {
-					let body = response.body;
-					commit('relodClientList');
-				},
-				error => {
-					console.log(error);
-				}
-			)
-		},
 		getClientList({commit}) {
 			Vue.http.get(Conf.url.clients).then(
 				response => {
 					let body = response.body;
-					console.log(body)
+					console.log(body.clients)
 					commit('set', {type: 'clientsList', items: body.clients})
 				},
 				error => {

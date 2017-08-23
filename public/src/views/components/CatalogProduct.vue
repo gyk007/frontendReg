@@ -35,7 +35,7 @@
 	<div class="shop__cell shop__cell-name">
 		<div class="shop__cell-img"><!-- <a href="#"><img src="pic/products/abrau_brut.png" alt="product"></a> --></div>
 		<div class="shop__cell-main">
-			<span class="shop__cell-n"><a href="#">{{product.name}}</a></span>
+			<span class="shop__cell-n">{{product.name}}</span>
 			<div class="shop__cell-status">&nbsp;</div>
 			<div class="js-availability-clone"></div>
 		</div>
