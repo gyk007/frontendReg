@@ -13,7 +13,6 @@ const catalogStore = new Vuex.Store({
 		category    : null,
 		filterPrice : null,
 		product     : null,
-		idActive    : undefined,
 		cart        : null,
 		cartPrice   : 0,
 		shops       : [],
@@ -39,9 +38,6 @@ const catalogStore = new Vuex.Store({
 		},
 		product(state){
 			return state.product
-		},
-		idActiveCat(state){
-			return state.idActive
 		},
 		filterPrice(state){
 			return state.filterPrice
@@ -349,11 +345,6 @@ const catalogStore = new Vuex.Store({
 		},
 		selectCategory({commit}, category) {
 			commit('set', {type: 'category', items: category})
-			if (category)
-				commit('set', {type: 'idActiveCat', items: category.id})
-			else
-				commit('set', {type: 'idActiveCat', items: undefined})
-
 		},
 		selectProduct({commit}, product) {
 			commit('set', {type: 'product', items: product})

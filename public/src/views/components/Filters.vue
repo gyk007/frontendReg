@@ -17,7 +17,7 @@
 	</div>
 
 
-	<div class="aa-order__filter-item">
+<!-- 	<div class="aa-order__filter-item">
 		<div class="aa-order__filter-hdr">Бренд</div>
 		<div class="shop__filter-col">
 			<div class="aa-order__filter-chb">
@@ -130,7 +130,7 @@
 				</label>
 			</div>
 		</div>
-	</div>
+	</div> -->
 </div>
 </section>
 </template>

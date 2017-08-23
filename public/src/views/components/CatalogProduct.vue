@@ -2,13 +2,13 @@
 <section class="shop__data">
 <ul class="shop__nav">
    <!--  <li class="active"><a href="#">Элитные напитки</a></li> -->
-	<li v-for="category in catalogTree" :class="[idActiveCat == category.id ? 'active' : '']" ><a v-on:click="getCategory(category)">{{category.name}}</a></li>
+	<li v-for="category in catalogTree"><a v-on:click="getCategory(category)">{{category.name}}</a></li>
 </ul>
 
 <div class="shop__data-body">
 	<ul class="shop__sub-nav">
 		<div v-if='category'>
-			<li  v-for="cat in category.child" :class="[idActiveCat == cat.id ? 'active' : '']" ><a    v-on:click="getProductList(cat)">{{cat.name}}</a></li>
+			<li  v-for="cat in category.child"><a v-on:click="getCategory(cat)">{{cat.name}}</a></li>
 		</div>
 	</ul>
 
@@ -30,7 +30,7 @@
 
 
 
-	<div class="shop__row js-t-row normal"   v-for='product in  productList' v-if="product.visible && product.filterPrice && product.filterAlko">
+	<div class="shop__row js-t-row normal" v-for='product in  productList' v-if="product.visible && product.filterPrice && product.filterAlko">
 
 	<div class="shop__cell shop__cell-name">
 		<div class="shop__cell-img"><!-- <a href="#"><img src="pic/products/abrau_brut.png" alt="product"></a> --></div>
@@ -82,10 +82,7 @@
 	export default {
 		computed: {
 			catalogTree() {
-					return this.$store.getters.catalogTree
-				},
-			idActive() {
-				return this.$store.getters.idActive
+				return this.$store.getters.catalogTree
 			},
 			category() {
 				return this.$store.getters.category
@@ -98,13 +95,11 @@
 			},
 		},
 		methods: {
-			getCategory(pharentCategory) {
-				this.$store.dispatch('selectCategory', pharentCategory)
-				this.$store.dispatch('getProductList', pharentCategory.id)
-			},
-			getProductList(category) {
+			getCategory(category) {
+				$('.shop__nav li').removeClass('active');
+				$(event.target).parent().addClass('active');
+				this.$store.dispatch('selectCategory', category)
 				this.$store.dispatch('getProductList', category.id)
-				console.log(this.productList)
 			},
 			addToCart(product){
 				this.$store.dispatch('addToCart', product)
