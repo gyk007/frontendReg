@@ -42,7 +42,8 @@ Vue.use(VTooltip)
 
 var router = new VueRouter({
 	routes: [
-		{ path: '/main',      component: Main },
+		{ path: '/',          redirect: '/orders' },
+		{ path: '/main',      redirect: '/orders' },
 		{ path: '/catalog',   component: Catalog },
 		{ path: '/order',     component: Order },
 		{ path: '/orders',    component: Orders },

@@ -23,8 +23,6 @@
 					<span style="font-size: 15px">Показать в публичной части</span>
 				</label>
 			</div>
-
-
 			<div class="product_prop_hdr">Параметры</div>
 			<div class="popup__product-form--holder_prop holder-third" v-for="prop in product.properties" :class="[prop.name == 'Старна производитель' ? '' : '']">
 				<label>

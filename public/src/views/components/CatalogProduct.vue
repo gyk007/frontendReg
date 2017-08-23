@@ -22,7 +22,7 @@
 			<div class="shop__cell shop__table-hdr--name"><span>Название</span></div>
 			<div class="shop__cell shop__cell-availability"><span>Наличие</span></div>
 			<div class="shop__cell"><span>Ваша скидка</span></div>
-			<div class="shop__cell"><span>Артикул</span></div>
+			<!-- <div class="shop__cell"><span>Артикул</span></div> -->
 			<div class="shop__cell shop__cell-price"><span>Цена</span></div>
 
 			<div class="shop__cell shop__cell-order">&nbsp;</div>
@@ -33,7 +33,7 @@
 	<div class="shop__row js-t-row normal"   v-for='product in  productList' v-if="product.visible && product.filterPrice && product.filterAlko">
 
 	<div class="shop__cell shop__cell-name">
-		<div class="shop__cell-img"><a href="#"><img src="pic/products/abrau_brut.png" alt="product"></a></div>
+		<div class="shop__cell-img"><!-- <a href="#"><img src="pic/products/abrau_brut.png" alt="product"></a> --></div>
 		<div class="shop__cell-main">
 			<span class="shop__cell-n"><a href="#">{{product.name}}</a></span>
 			<div class="shop__cell-status">&nbsp;</div>
@@ -55,8 +55,9 @@
 		</div>
 	</div>
 	<div class="shop__cell shop__cell-availability"><span class='js-availability'>{{product.properties[7].value}}</span></div>
-	<div class="shop__cell shop__cell-benefit"><span class="js-benefit">14%</span></div>
-	<div class="shop__cell shop__cell-a"><span class="js-a">46798456213456</span></div>
+	<!-- <div class="shop__cell shop__cell-benefit"><span class="js-benefit">14%</span></div> -->
+	<div class="shop__cell shop__cell-a"><span class="js-a">14%</span></div>
+	<!-- <div class="shop__cell shop__cell-a"><span class="js-a">46798456213456</span></div> -->
 	<div class="shop__cell shop__cell-price"><span class="js-price">{{product.properties[0].value}}&nbsp;<i class="rub">a</i></span></div>
 	<div class="shop__cell shop__cell-order">
 		<div class="js-order">
