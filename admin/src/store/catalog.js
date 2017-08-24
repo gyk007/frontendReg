@@ -19,6 +19,7 @@ const store = new Vuex.Store({
 		order          : null,
 		orders         : [],
 		documents      : [],
+		allProducts    : [],
 	},
 	getters: {
 		catalogTree(state) {
@@ -54,7 +55,9 @@ const store = new Vuex.Store({
 		documents(state){
 			return state.documents
 		},
-
+		allProducts(state){
+			return state.allProducts
+		},
 	},
 	mutations: {
 		set(state, {type, items}) {
@@ -116,6 +119,100 @@ const store = new Vuex.Store({
 				}
 			)
 		},
+		addProdToCat({state, commit}, idProd) {
+			let arg = {
+				params:{
+					id_category : state.idActiveCat,
+					id_product  : idProd,
+					action      : 'add_product'
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.category, null,  arg).then(
+				response => {
+					let body = response.body
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		deleteCategory({state, commit}, idCategory) {
+			let arg = {
+				params:{
+					id     : idCategory,
+					action : 'delete'
+				},
+				headers: {
+					//'Content-Type': 'application/json'
+				}
+			}
+
+			Vue.http.get(Conf.url.category, arg).then(
+				response => {
+					let body = response.body;
+					if (body.ERROR) {
+						console.log(body.ERROR)
+					} else {
+						commit('relodCatalogTree');
+						commit('set', {type: 'category', items: null})
+					};
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		deleteProdInCat({state, commit}, idProd) {
+			let arg = {
+				params:{
+					id_category : state.idActiveCat,
+					id_product  : idProd,
+					action      : 'delete_product'
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.category, null,  arg).then(
+				response => {
+					let body = response.body
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		deleteClient({commit}, idClient) {
+			let arg = {
+				params:{
+                   	id     : idClient,
+					action : 'delete'
+				},
+				headers: {
+					//'Content-Type': 'application/json'
+				}
+			}
+
+			Vue.http.get(Conf.url.clients, arg).then(
+				response => {
+					let body = response.body;
+					if (body.ERROR) {
+						console.log(body.ERROR)
+					} else {
+						commit('relodClientList');
+						commit('set', {type: 'client', items: null})
+					};
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
 		editCategory ({commit}, category) {
 			let arg = {
 				params:{
@@ -141,19 +238,45 @@ const store = new Vuex.Store({
 				}
 			)
 		},
-		getOrders({commit}) {
-			Vue.http.get(Conf.url.order).then(
+		getAllProducts({commit}) {
+			let arg = {
+				params:{
+					action : 'all_product'
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+			Vue.http.get(Conf.url.category, arg).then(
 				response => {
-					let body = response.body
-					if (body.orders)
-						body.orders.forEach(key => {
-				 			key.ctime = new Date(key.ctime)
-				 		});
-
-				 	commit('set', {type: 'orders', items: body.orders});
+					let body = response.body;
+					commit('set', {type: 'allProducts', items: body.products})
 				},
 				error => {
 					console.log(error);
+				}
+			)
+		},
+		getCatalogTree({commit}) {
+			Vue.http.get(Conf.url.catalog).then(
+				response => {
+					let body = response.body;
+					commit('set', {type: 'catalogTree', items: body.catalog.child})
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		getClientList({commit}) {
+			Vue.http.get(Conf.url.clients).then(
+				response => {
+					let body = response.body;
+					console.log(body.clients)
+					commit('set', {type: 'clientsList', items: body.clients})
+				},
+				error => {
+				 	console.log(error);
 				}
 			)
 		},
@@ -184,11 +307,16 @@ const store = new Vuex.Store({
 				}
 			)
 		},
-		getCatalogTree({commit}) {
-			Vue.http.get(Conf.url.catalog).then(
+		getOrders({commit}) {
+			Vue.http.get(Conf.url.order).then(
 				response => {
-					let body = response.body;
-					commit('set', {type: 'catalogTree', items: body.catalog.child})
+					let body = response.body
+					if (body.orders)
+						body.orders.forEach(key => {
+				 			key.ctime = new Date(key.ctime)
+				 		});
+
+				 	commit('set', {type: 'orders', items: body.orders});
 				},
 				error => {
 					console.log(error);
@@ -225,26 +353,22 @@ const store = new Vuex.Store({
 				}
 			)
 		},
-		deleteCategory({commit}, idCategory) {
+		// Переместить в нижнюю категорию
+		inCategory({commit}, idCategory) {
 			let arg = {
 				params:{
 					id     : idCategory,
-					action : 'delete'
+					action : 'rdown'
 				},
 				headers: {
-					//'Content-Type': 'application/json'
+					'Content-Type': 'text/plain'
 				}
 			}
 
-			Vue.http.get(Conf.url.category, arg).then(
+			Vue.http.post(Conf.url.category, null, arg).then(
 				response => {
 					let body = response.body;
-					if (body.ERROR) {
-						console.log(body.ERROR)
-					} else {
-						commit('relodCatalogTree');
-						commit('set', {type: 'category', items: null})
-					};
+					commit('relodCatalogTree');
 				},
 				error => {
 					console.log(error);
@@ -262,28 +386,6 @@ const store = new Vuex.Store({
 					'Content-Type': 'text/plain'
 				}
 			}
-			Vue.http.post(Conf.url.category, null, arg).then(
-				response => {
-					let body = response.body;
-					commit('relodCatalogTree');
-				},
-				error => {
-					console.log(error);
-				}
-			)
-		},
-		// Так как это дероево - вправо означает опустить вниз в интерфейсе
-		rightInCategory({commit}, idCategory) {
-			let arg = {
-				params:{
-					id     : idCategory,
-					action : 'rdown'
-				},
-				headers: {
-					'Content-Type': 'text/plain'
-				}
-			}
-
 			Vue.http.post(Conf.url.category, null, arg).then(
 				response => {
 					let body = response.body;
@@ -316,27 +418,12 @@ const store = new Vuex.Store({
 				}
 			)
 		},
-		// Переместить в нижнюю категорию
-		inCategory({commit}, idCategory) {
-			let arg = {
-				params:{
-					id     : idCategory,
-					action : 'rdown'
-				},
-				headers: {
-					'Content-Type': 'text/plain'
-				}
-			}
-
-			Vue.http.post(Conf.url.category, null, arg).then(
-				response => {
-					let body = response.body;
-					commit('relodCatalogTree');
-				},
-				error => {
-					console.log(error);
-				}
-			)
+		selectClient({commit}, client) {
+			commit('set', {type: 'client', items: client})
+			if (client)
+				commit('set', {type: 'idActiveClient', items: client.id})
+			else
+				commit('set', {type: 'idActiveClient', items: undefined})
 		},
 		selectCategory({commit}, category) {
 			commit('set', {type: 'category', items: category})
@@ -350,51 +437,6 @@ const store = new Vuex.Store({
 			if (product.properties.elements)
 				product.properties = product.properties.elements[0].extend.properties.elements
 			commit('set', {type: 'product', items: product})
-		},
-		getClientList({commit}) {
-			Vue.http.get(Conf.url.clients).then(
-				response => {
-					let body = response.body;
-					console.log(body.clients)
-					commit('set', {type: 'clientsList', items: body.clients})
-				},
-				error => {
-				 	console.log(error);
-				}
-			)
-		},
-		deleteClient({commit}, idClient) {
-			let arg = {
-				params:{
-                   	id     : idClient,
-					action : 'delete'
-				},
-				headers: {
-					//'Content-Type': 'application/json'
-				}
-			}
-
-			Vue.http.get(Conf.url.clients, arg).then(
-				response => {
-					let body = response.body;
-					if (body.ERROR) {
-						console.log(body.ERROR)
-					} else {
-						commit('relodClientList');
-						commit('set', {type: 'client', items: null})
-					};
-				},
-				error => {
-					console.log(error);
-				}
-			)
-		},
-		selectClient({commit}, client) {
-			commit('set', {type: 'client', items: client})
-			if (client)
-				commit('set', {type: 'idActiveClient', items: client.id})
-			else
-				commit('set', {type: 'idActiveClient', items: undefined})
 		},
 	}
 })

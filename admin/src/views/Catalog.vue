@@ -32,6 +32,7 @@
 		<NewCategory></NewCategory>
 		<NewProduct></NewProduct>
 		<DeleteWnd></DeleteWnd>
+		<ProductTable></ProductTable>
 	</section>
 </template>
 
@@ -43,12 +44,13 @@ import NewProduct   from './components/NewProduct.vue'
 import CatalogTree  from './components/CatalogTree.vue'
 import ProductList  from './components/ProductList.vue'
 import DeleteWnd    from './components/DeleteCategory.vue'
+import ProductTable from './components/ProductTable.vue'
 import store        from '../store/catalog.js'
 import $            from 'jquery'
 
 export default {
 	name: 'catalog',
-	components: { Search, CatalogTree,  NewCategory, ProductList, DeleteWnd, NewProduct},
+	components: { Search, CatalogTree,  NewCategory, ProductList, DeleteWnd, NewProduct, ProductTable},
 	store: store,
 	computed: {
 		category() {

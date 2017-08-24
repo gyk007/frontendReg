@@ -31,13 +31,13 @@
   import $      from 'jquery'
 
   export default {
-  	data() {
+	data() {
 		return {
 			login    : undefined,
-    		password : undefined
+			password : undefined
 		}
-  	},
-  	computed: {
+	},
+	computed: {
 		authError() {
 			return this.$store.getters.authError
 		},

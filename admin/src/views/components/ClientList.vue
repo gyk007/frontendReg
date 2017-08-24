@@ -6,6 +6,7 @@
 				<div class="b-catalog__cell b-catalog__table-hdr">Название</div>
 				<div class="b-catalog__cell b-catalog__table-hdr">Имя представителя</div>
 				<div class="b-catalog__cell b-catalog__table-hdr">Телефон</div>
+				<div class="b-catalog__cell b-catalog__table-hdr"></div>
 			</div>
 
 			<div class="b-catalog__row js-t-row" v-for='client in clientsList' v-on:click="selectClient(client)">
@@ -15,6 +16,7 @@
 				</div>
 				<div class="b-catalog__cell b-catalog__table-title">{{client.official.person}}</div>
 				<div class="b-catalog__cell b-catalog__table-history">{{client.official.phone}}</div>
+				<div class="b-catalog__cell b-catalog__table-history"><a data-fancybox  data-src="#popup__client" href="javascript:;" class="btn btn--edit">Просмотр</a></div>
 			</div>
 
 		</div>

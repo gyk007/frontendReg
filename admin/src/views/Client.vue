@@ -6,9 +6,9 @@
 		<!-- <div class="a-catalog__hdr-controls">
 			<a data-fancybox data-src="#popup__client" href="javascript:;" class="btn btn--checkout" v-on:click="unselectClient">Новый магазин</a>
 		</div> -->
-		<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if="client">
+		<!-- <div class="a-catalog__hdr-controls" style="margin-right:10px" v-if="client">
 			<a data-fancybox  data-src="#popup__client" href="javascript:;" class="btn btn--edit">Просмотр</a>
-		</div>
+		</div> -->
 		<!-- <div class="a-catalog__hdr-controls" style="margin-right:10px" v-if="client">
 			<a data-fancybox data-src="#popup__delete_client" href="javascript:;" class="btn btn--delete">Удалить</a>
 		</div> -->
