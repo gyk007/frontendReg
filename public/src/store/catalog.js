@@ -2,6 +2,7 @@ import Vue         from 'vue'
 import Vuex        from 'vuex'
 import VueResource from 'vue-resource'
 import Conf        from '../conf/conf.js'
+import Cookies     from 'js-cookie'
 
 Vue.use(Vuex)
 Vue.use(VueResource)
@@ -19,6 +20,8 @@ const catalogStore = new Vuex.Store({
 		order       : null,
 		orders      : [],
 		documents   : [],
+		authError   : false,
+		user        : null,
 	},
 	getters: {
 		catalogTree(state) {
@@ -54,6 +57,12 @@ const catalogStore = new Vuex.Store({
 		documents(state){
 			return state.documents
 		},
+		authError(state){
+			return state.authError
+		},
+		user(state){
+			return state.user
+		},
 	},
 	mutations: {
 		set(state, {type, items}) {
@@ -67,17 +76,6 @@ const catalogStore = new Vuex.Store({
 			let indexToRemove = state[type].findIndex(item => item[key] == value);
 			state[type].splice(indexToRemove , 1);
 		},
-		relodCatalogTree(state) {
-			Vue.http.get(Conf.url.catalog).then(
-				response => {
-					let body = response.body;
-					state.catalogTree = body.catalog.child
-				},
-				error => {
-					console.log(error);
-				}
-			)
-		},
 		calculateCartPrice(state, {products}) {
 			state.cartPrice = 0;
 			if (products)
@@ -88,24 +86,27 @@ const catalogStore = new Vuex.Store({
 		}
 	},
 	actions: {
-		addCategory({commit}, category) {
+		addDocument({state, commit}, name){
 			let arg = {
 				params:{
-					'category.name'        : category.name,
-					'category.description' : category.description,
-					'category.visible'     : category.visible,
-					'category.face'        : category.face,
-					action                 : 'add'
+					'document.name': name,
+					'order.id'     : state.order.id,
+					action         : 'add_document',
+					token          : Cookies.get('token'),
 				},
 				headers: {
 					'Content-Type': 'text/plain'
 				}
 			}
 
-			Vue.http.post(Conf.url.category, null,  arg).then(
+			Vue.http.post(Conf.url.order, null,  arg).then(
 				response => {
 					let body = response.body
-					commit('relodCatalogTree')
+					if (body.ERROR) {
+						console.log(body.ERROR)
+					} else {
+						commit('set', {type: 'documents', items: body.documents})
+					};
 				},
 				error => {
 					console.log(error);
@@ -125,6 +126,7 @@ const catalogStore = new Vuex.Store({
 					'cart.id_merchant' : state.cart.id_merchant,
 					'cart.n'           : state.cart.n,
 					action             :  'add',
+					token              : Cookies.get('token'),
 				},
 				headers: {
 					'Content-Type': 'text/plain'
@@ -147,214 +149,12 @@ const catalogStore = new Vuex.Store({
 				}
 			)
 		},
-		addDocument({state, commit}, name){
-			let arg = {
-				params:{
-					'document.name': name,
-					'order.id'     : state.order.id,
-					action         : 'add_document',
-				},
-				headers: {
-					'Content-Type': 'text/plain'
-				}
-			}
-
-			Vue.http.post(Conf.url.order, null,  arg).then(
-				response => {
-					let body = response.body
-					if (body.ERROR) {
-						console.log(body.ERROR)
-					} else {
-						commit('set', {type: 'documents', items: body.documents})
-					};
-				},
-				error => {
-					console.log(error);
-				}
-			)
-		},
-		deleteDocument({state, commit}, name){
-			let arg = {
-				params:{
-					'document.name': name,
-					'order.id'     : state.order.id,
-					action         : 'delete_document',
-				},
-				headers: {
-					'Content-Type': 'text/plain'
-				}
-			}
-
-			Vue.http.post(Conf.url.order, null,  arg).then(
-				response => {
-					let body = response.body
-					if (body.ERROR) {
-						console.log(body.ERROR)
-					} else {
-						commit('set', {type: 'documents', items: body.documents})
-					};
-				},
-				error => {
-					console.log(error);
-				}
-			)
-		},
-		editCategory ({commit}, category) {
-			let arg = {
-				params:{
-					'category.id'          : category.id,
-					'category.name'        : category.name,
-					'category.description' : category.description,
-					'category.visible'     : category.visible,
-					'category.face'        : category.face,
-					action                 : 'edit'
-				},
-				headers: {
-					'Content-Type': 'text/plain'
-				}
-			}
-
-			Vue.http.post(Conf.url.category, null,  arg).then(
-				response => {
-					let body = response.body;
-					commit('relodCatalogTree');
-				},
-				error => {
-					console.log(error);
-				}
-			)
-		},
-		getCatalogTree({commit}) {
-			Vue.http.get(Conf.url.catalog).then(
-				response => {
-					let body = response.body;
-					commit('set', {type: 'catalogTree', items: body.catalog.child})
-				},
-				error => {
-					console.log(error);
-				}
-			)
-		},
-		getOrders({commit}) {
-			Vue.http.get(Conf.url.order).then(
-				response => {
-					let body = response.body
-					if (body.orders)
-						body.orders.forEach(key => {
-				 			key.ctime = new Date(key.ctime)
-				 		});
-
-				 	commit('set', {type: 'orders', items: body.orders});
-				},
-				error => {
-					console.log(error);
-				}
-			)
-		},
-		getOrder({commit}, orderId) {
-			let arg = {
-				params:{
-					'order.id' : orderId,
-					action     : 'order',
-				},
-				headers: {
-					'Content-Type': 'text/plain'
-				}
-			}
-
-			Vue.http.post(Conf.url.order, null,  arg).then(
-				response => {
-					let body = response.body
-					if (body.ERROR) {
-						console.log(body.ERROR)
-					} else {
-						commit('set', {type: 'order', items: body.order})
-						commit('set', {type: 'documents', items: body.documents})
-						document.location = '/#/order'
-					};
-				},
-				error => {
-					console.log(error);
-				}
-			)
-		},
-		getProductList({commit}, idCategory) {
-			let result;
-
-			let arg = {
-				params:{
-					id: idCategory
-				},
-				headers: {
-					//'Content-Type': 'application/json'
-				}
-			}
-
-			Vue.http.get(Conf.url.category, arg).then(
-				response => {
-					let body = response.body
-					// Очищаем список продуктов
-					commit('set', {type: 'productList', items: null})
-					commit('set', {type: 'filters',     items: null})
-					if (body.category.extend.products.elements.length)
-						body.category.extend.products.elements.forEach(function(key) {
-							// Добавляем фильтры
-							key.filterPrice = true;
-							key.filterAlko  = true;
-							// Свойства, делаем удобнее
-							key.properties = key.properties.elements[0].extend.properties.elements
-						})
-						commit('set', {type: 'productList', items: body.category.extend.products.elements})
-					if (body.category.filter) {
-						body.category.filter.elements.forEach(function(key){
-							if(key.name == 'Цена')
-								commit('set', {type: 'filterPrice', items:key.filterarg})
-						})
-					}
-				},
-				error => {
-					console.log(error);
-				}
-			)
-		},
-		deleteCategory({commit}, idCategory) {
-			let arg = {
-				params:{
-					id     : idCategory,
-					action : 'delete'
-				},
-				headers: {
-					//'Content-Type': 'application/json'
-				}
-			}
-
-			Vue.http.get(Conf.url.category, arg).then(
-				response => {
-					let body = response.body;
-					if (body.ERROR) {
-						console.log(body.ERROR)
-					} else {
-						commit('relodCatalogTree');
-						commit('set', {type: 'category', items: null})
-					};
-				},
-				error => {
-					console.log(error);
-				}
-			)
-		},
-		selectCategory({commit}, category) {
-			commit('set', {type: 'category', items: category})
-		},
-		selectProduct({commit}, product) {
-			commit('set', {type: 'product', items: product})
-		},
-
 		// Добавить в корзину
 		addToCart({state, commit}, product) {
 			let arg = {
 				params: {
 				   action             : 'add',
+				   token              : Cookies.get('token'),
 				   'product.id'       : product.id,
 				   'product.quantity' : product.cartQuantity,
 				},
@@ -366,31 +166,77 @@ const catalogStore = new Vuex.Store({
 			Vue.http.post(Conf.url.cart, null, arg).then(
 				response => {
 					let body = response.body;
-					commit('set', {type: 'cart', items: body.cart})
-					if (body.cart)
-						commit('calculateCartPrice', {products: body.cart.products.elements})
+					if (body.ERROR) {
+						console.log(body.ERROR);
+						if (body.ERROR.AUTH)
+							document.location = '/#/auth'
+					} else {
+						commit('set', {type: 'cart', items: body.cart})
+						if (body.cart)
+							commit('calculateCartPrice', {products: body.cart.products.elements})
+					}
 				},
 				error => {
 					console.log(error);
 				}
 			)
 		},
-		// Получить корзину
-		getCart({state, commit}, idClinet, product, count) {
+		authorization({state, commit}, login, password) {
 			let arg = {
+				params: {
+				   'login'    : '111@mail.ru',
+				   'password' : '111',
+				},
 				headers: {
 					'Content-Type': 'text/plain'
 				}
 			}
 
-			Vue.http.post(Conf.url.cart, null, arg).then(
+			Vue.http.get(Conf.url.order, arg).then(
 				response => {
-					let body = response.body;
-					commit('set', {type: 'shops', items: body.shops})
-					commit('set', {type: 'cart',  items: body.cart})
-					if (body.cart) {
-						commit('calculateCartPrice', {products: body.cart.products.elements})
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR);
+						if (body.ERROR.AUTH)
+							commit('set', {type: 'authError', items: true});
+					} else {
+						if (body.TOKEN)
+							Cookies.set('token', body.TOKEN);
+
+						commit('set', {type: 'authError', items: true});
+
+					 	document.location = '/#/orders'
 					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		calculateCartPrice({state, commit}) {
+			commit('calculateCartPrice', {products: state.cart.products.elements})
+		},
+		deleteDocument({state, commit}, name){
+			let arg = {
+				params:{
+					'document.name': name,
+					'order.id'     : state.order.id,
+					action         : 'delete_document',
+					token          : Cookies.get('token'),
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.order, null,  arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR)
+					} else {
+						commit('set', {type: 'documents', items: body.documents})
+					};
 				},
 				error => {
 					console.log(error);
@@ -403,6 +249,7 @@ const catalogStore = new Vuex.Store({
 				params:{
 					action       : 'delete',
 				    'product.id' : idProduct,
+				    token        : Cookies.get('token'),
 				},
 				headers: {
 					'Content-Type': 'text/plain'
@@ -412,19 +259,216 @@ const catalogStore = new Vuex.Store({
 			Vue.http.post(Conf.url.cart, null, arg).then(
 				response => {
 					let body = response.body;
-					commit('set', {type: 'cart', items: body.cart})
-					if (body.cart)
-						commit('calculateCartPrice', {products: body.cart.products.elements})
+					if (body.ERROR) {
+						console.log(body.ERROR);
+						if (body.ERROR.AUTH)
+							document.location = '/#/auth'
+					} else {
+						commit('set', {type: 'cart', items: body.cart})
+						if (body.cart)
+							commit('calculateCartPrice', {products: body.cart.products.elements})
+					}
 				},
 				error => {
 					console.log(error);
 				}
 			)
 		},
-		calculateCartPrice({state, commit}) {
-			commit('calculateCartPrice', {products: state.cart.products.elements})
-		}
+		// Получить корзину
+		getCart({state, commit}, idClinet, product, count) {
+			let arg = {
+				params:{
+				    token : Cookies.get('token'),
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
 
+			Vue.http.post(Conf.url.cart, null, arg).then(
+				response => {
+					let body = response.body;
+					if (body.ERROR) {
+						console.log(body.ERROR);
+						if (body.ERROR.AUTH)
+							document.location = '/#/auth'
+					} else {
+						commit('set', {type: 'shops', items: body.shops})
+						commit('set', {type: 'cart',  items: body.cart})
+						if (body.cart) {
+							commit('calculateCartPrice', {products: body.cart.products.elements})
+						}
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		getCatalogTree({commit}) {
+			let arg = {
+				params:{
+					token : Cookies.get('token'),
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.get(Conf.url.catalog, arg).then(
+				response => {
+					let body = response.body;
+					if (body.ERROR) {
+						console.log(body.ERROR);
+						if (body.ERROR.AUTH)
+							document.location = '/#/auth'
+					} else {
+						commit('set', {type: 'catalogTree', items: body.catalog.child})
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		getOrder({commit}, orderId) {
+			let arg = {
+				params:{
+					'order.id' : orderId,
+					action     : 'order',
+					token      : Cookies.get('token'),
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.order, null,  arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR);
+						if (body.ERROR.AUTH)
+							document.location = '/#/auth'
+					} else {
+						commit('set', {type: 'order',     items: body.order})
+						commit('set', {type: 'documents', items: body.documents})
+						document.location = '/#/order'
+					};
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		getOrders({commit}) {
+			let arg = {
+				params:{
+					token : Cookies.get('token'),
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.get(Conf.url.order, arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR);
+						if (body.ERROR.AUTH)
+							document.location = '/#/auth'
+					} else {
+						if (body.orders)
+							body.orders.forEach(key => {
+					 			key.ctime = new Date(key.ctime)
+					 		});
+					 	commit('set', {type: 'orders', items: body.orders});
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		getProductList({commit}, idCategory) {
+			let result;
+
+			let arg = {
+				params:{
+					id    : idCategory,
+					token : Cookies.get('token'),
+				},
+				headers: {
+					//'Content-Type': 'application/json'
+				}
+			}
+
+			Vue.http.get(Conf.url.category, arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR);
+						if (body.ERROR.AUTH)
+							document.location = '/#/auth'
+					} else {
+						// Очищаем список продуктов
+						commit('set', {type: 'productList', items: null})
+						commit('set', {type: 'filters',     items: null})
+						if (body.category.extend.products.elements.length)
+							body.category.extend.products.elements.forEach(function(key) {
+								// Добавляем фильтры
+								key.filterPrice = true;
+								key.filterAlko  = true;
+								// Свойства, делаем удобнее
+								key.properties = key.properties.elements[0].extend.properties.elements
+							})
+							commit('set', {type: 'productList', items: body.category.extend.products.elements})
+						if (body.category.filter) {
+							body.category.filter.elements.forEach(function(key){
+								if(key.name == 'Цена')
+									commit('set', {type: 'filterPrice', items:key.filterarg})
+							})
+						}
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		getUser({commit}) {
+			let arg = {
+				params:{
+					token : Cookies.get('token'),
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.get(Conf.url.order, arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR);
+						if (body.ERROR.AUTH)
+							document.location = '/#/auth'
+					} else {
+						commit('set', {type: 'user',   items: body.USER});
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		selectCategory({commit}, category) {
+			commit('set', {type: 'category', items: category})
+		},
+		selectProduct({commit}, product) {
+			commit('set', {type: 'product', items: product})
+		},
 	}
 })
 

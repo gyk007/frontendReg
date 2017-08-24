@@ -20,7 +20,6 @@
 	},
 	methods: {
 		deleteClient() {
-			console.log(this.client);
 			this.$store.dispatch('deleteClient', this.client.id)
 			this.$store.dispatch('selectClient', null)
 

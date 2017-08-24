@@ -1,13 +1,13 @@
 <template>
 <section>
 	<div class="wrapper" style="padding-bottom: 64px;">
-		<HeadareEl></HeadareEl>
+		<HeadareEl  v-if="$route.fullPath != '/auth'"></HeadareEl>
 		<div class="container">
 			<router-view></router-view>
 		</div>
 	</div>
 
-	<div class="footer js-footer">
+	<div class="footer js-footer" v-if="$route.fullPath != '/auth'">
 		<div class="container">
 			<div class="footer__left">Московская область, г. Мытищи,<br>ул. Силикатная, владение 55-В</div>
 			<div class="footer__right">
@@ -33,8 +33,10 @@ import Order     from './Order.vue'
 import Orders    from './Orders.vue'
 import Contacts  from './Contacts.vue'
 import Cart      from './Cart.vue'
+import Auth      from './Auth.vue'
 import HeadareEl from './Header.vue'
 import Contact   from './components/Contact.vue'
+import Store     from '../store/catalog.js'
 import $         from 'jquery'
 import 'malihu-custom-scrollbar-plugin'
 import 'jquery-mousewheel'
@@ -50,10 +52,12 @@ var router = new VueRouter({
 		{ path: '/order',     component: Order },
 		{ path: '/orders',    component: Orders },
 		{ path: '/cart',      component: Cart },
+		{ path: '/auth',      component: Auth },
 	]
 })
 
 export default  {
+	store: Store,
 	router: router,
 	components: {HeadareEl, Contact},
 	created: function() {
@@ -85,6 +89,10 @@ export default  {
 				$('.header__drop').fadeOut(200);
 			});
 		}
+	},
+	beforeCreate: function() {
+		this.$store.dispatch('getUser')
+		this.$store.dispatch('getCart')
 	}
 }
 

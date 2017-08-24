@@ -36,11 +36,11 @@
 
 							<div class="header__user-container">
 									<div class="header__user-name">
-											<span>Олег Владимирович</span>
+											<span v-if='user'>{{user.name}}</span>
 									</div>
 									<div class="header__user-logo">
-											<img src="pic/icon/name-logo.png" alt="logo">
-											<span>Азбука Вкуса</span>
+											<!-- <img src="pic/icon/name-logo.png" alt="logo"> -->
+											<span  v-if='user'>{{user.net.official.name}}</span>
 									</div>
 							</div>
 
@@ -61,11 +61,12 @@
 		cartPrice() {
 			return this.$store.getters.cartPrice
 		},
+		user() {
+			return this.$store.getters.user
+		}
 	},
-	methods: {
-
-	},
-	created: function() {
+	beforeCreate: function() {
+		this.$store.dispatch('getUser')
 		this.$store.dispatch('getCart')
 	}
   }
