@@ -57,7 +57,6 @@ var router = new VueRouter({
 })
 
 export default  {
-	store: Store,
 	router: router,
 	components: {HeadareEl, Contact},
 	created: function() {
@@ -89,10 +88,6 @@ export default  {
 				$('.header__drop').fadeOut(200);
 			});
 		}
-	},
-	beforeCreate: function() {
-		this.$store.dispatch('getUser')
-		this.$store.dispatch('getCart')
 	}
 }
 

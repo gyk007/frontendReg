@@ -44,7 +44,7 @@
 	},
 	methods: {
 		auth() {
-			this.$store.dispatch('authorization')
+			this.$store.dispatch('authorization', this.$data)
 		},
 	},
 	mounted: function() {

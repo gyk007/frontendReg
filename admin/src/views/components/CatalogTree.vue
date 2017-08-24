@@ -49,10 +49,10 @@
 		computed: {
 			catalogTree() {
 					return this.$store.getters.catalogTree
-				},
-				idActiveCat() {
-					return this.$store.getters.idActiveCat
-				}
+			},
+			idActiveCat() {
+				return this.$store.getters.idActiveCat
+			}
 		},
 		methods: {
 			getProductList(category) {

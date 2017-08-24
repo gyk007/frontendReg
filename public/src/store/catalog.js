@@ -3,6 +3,8 @@ import Vuex        from 'vuex'
 import VueResource from 'vue-resource'
 import Conf        from '../conf/conf.js'
 import Cookies     from 'js-cookie'
+import $           from 'jquery'
+
 
 Vue.use(Vuex)
 Vue.use(VueResource)
@@ -181,11 +183,11 @@ const catalogStore = new Vuex.Store({
 				}
 			)
 		},
-		authorization({state, commit}, login, password) {
+		authorization({state, commit}, data) {
 			let arg = {
 				params: {
-				   'login'    : '111@mail.ru',
-				   'password' : '111',
+				   'login'    : data.login,
+				   'password' : data.password,
 				},
 				headers: {
 					'Content-Type': 'text/plain'
@@ -205,7 +207,10 @@ const catalogStore = new Vuex.Store({
 
 						commit('set', {type: 'authError', items: true});
 
-					 	document.location = '/#/orders'
+						$.fancybox.close()
+
+						document.location = '/#/orders'
+						window.location.reload()
 					}
 				},
 				error => {
