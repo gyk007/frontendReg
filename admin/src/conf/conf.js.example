@@ -1,9 +1,9 @@
 const conf = {
 	url: {
-		catalog  : 'http://reg50.nixteam.ru/alko/catalog/',
-		category : 'http://reg50.nixteam.ru/alko/catalog/category/',
-		clients  : 'http://reg50.nixteam.ru/alko/client/',
-		order    : 'http://reg50.nixteam.ru/alko/order/',
+		catalog  : 'http://reg50.nixteam.ru/alko/admin/catalog/',
+		category : 'http://reg50.nixteam.ru/alko/admin/catalog/category/',
+		clients  : 'http://reg50.nixteam.ru/alko/admin/client/',
+		order    : 'http://reg50.nixteam.ru/alko/admin/order/',
 	}
 }
 
