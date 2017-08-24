@@ -4,7 +4,7 @@
 				<li class="order_inf active" @click="tab('.order_inf')">Информация о заказе</li>
 				<li class='compani_inf'      @click="tab('.compani_inf')">Ваши данные</li>
 				<li class='sales_inf'        @click="tab('.sales_inf')">Доставка</li>
-				<li class='docs_inf marked'  @click="tab('.docs_inf')">Документы</li>
+				<li class='docs_inf'  @click="tab('.docs_inf')">Документы</li>
 			</ul>
 			<!--tabs content-->
 			<div class="tabs__content order-ls__info active order_inf">

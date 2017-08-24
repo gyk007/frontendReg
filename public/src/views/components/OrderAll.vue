@@ -4,11 +4,10 @@
 
 			<div class="order__row order__row-hdr">
 				<div class="order__cell order__number"><span class="order__row-hdr--title">Номер заказа</span></div>
-				<div class="order__cell order__invoice"><span class="order__row-hdr--title js-invoice-title">Транспортная накладная</span></div>
-				<div class="order__cell order__representative"><span class="js-representative-title order__row-hdr--title">Торговый представитель</span></div>
-				<div class="order__cell order__e"><span class="order__row-hdr--title js-e-title">ЕГАИС</span></div>
-				<div class="order__cell order__cost"><span class="order__row-hdr--title">Стоимость</span></div>
 				<div class="order__cell order__status"><span class="order__row-hdr--title">Статус</span></div>
+				<div class="order__cell order__representative"><span class="js-representative-title order__row-hdr--title">Торговый представитель</span></div>
+				<div class="order__cell order__e"><span class="order__row-hdr--title js-e-title">Номер фиксации в ЕГАИС</span></div>
+				<div class="order__cell order__cost"><span class="order__row-hdr--title">Стоимость</span></div>
 			</div>
 
 
@@ -33,22 +32,17 @@
 						<div class="js-representative-title-clone"></div>
 					</div>
 				</div>
-				<div class="order__cell order__invoice">
-					<span class="order__title js-invoice" v-if='order.ttn_number'>{{order.ttn_number}}({{order.ttn_date}})</span>
-					<span class="order__title js-invoice" v-if='!order.ttn_number'>В обработке</span>
-				</div>
+				<div class="order__cell order__status"><span class="js-status"><span class='status status--accepted' v-tooltip="order.status.description">{{order.status.name}}</span></span></div>
 				<div class="order__cell order__representative">
 					<span class="order__title order__title js-representative" v-if='order.sales_name'>{{order.sales_name}}</span>
 					<span class="order__tel js-representative" v-if='order.sales_phone'>{{order.sales_phone}}</span>
 					<span class="order__title order__title js-representative" v-if='!order.sales_name'>В обработке</span>
-					<span class="order__tel js-representative" v-if='!order.sales_phone'>В обработке</span>
 				</div>
 				<div class="order__cell order__e">
 					<span class="order__title js-e" v-if='order.latch_number'>{{order.latch_number}}</span>
 					<span class="order__title js-e" v-if='!order.latch_number'>В обработке</span>
 				</div>
 				<div class="order__cell order__cost"><span class="js-cost">{{order.price}} <i class="rub">a</i></span></div>
-				<div class="order__cell order__status"><span class="js-status"><span class='status status--accepted' v-tooltip="order.status.description">{{order.status.name}}</span></span></div>
 			</div>
 
 		</div>

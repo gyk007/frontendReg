@@ -1,25 +1,15 @@
 <template>
-<section>
-	<div class="wrapper" style="padding-bottom: 64px;">
-		<HeadareEl  v-if="$route.fullPath != '/auth'"></HeadareEl>
-		<div class="container">
-			<router-view></router-view>
-		</div>
-	</div>
-
-	<div class="footer js-footer" v-if="$route.fullPath != '/auth'">
-		<div class="container">
-			<div class="footer__left">Московская область, г. Мытищи,<br>ул. Силикатная, владение 55-В</div>
-			<div class="footer__right">
-				<a href="#" class="footer__logo">
-					<img class="footer__logo-img" src="pic/logo-nix.png" alt="logo">
-					<span class="footer__logo-txt">Разработано<br>в Nixteam</span>
-				</a>
+	<section>
+		<!-- <div class="wrapper" style="padding-bottom: 64px;"> -->
+			<HeadareEl  v-if="$route.fullPath != '/auth'"></HeadareEl>
+			<div class="container">
+				<router-view></router-view>
 			</div>
-		</div>
-	</div>
-	<Contact></Contact>
-</section>
+		<!-- </div> -->
+
+
+		<Contact></Contact>
+	</section>
 </template>
 
 <script>

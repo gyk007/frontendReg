@@ -3,7 +3,7 @@
 <div class="order-ls__product--holder">
 
 	<div class="p-card__products-header">
-		<span>Продукция на сумму: {{orderPrice}} &nbsp;<i class="rub">a</i></span>
+		<span>Сумма заказа: {{orderPrice}} &nbsp;<i class="rub">a</i></span>
 	</div>
 
 	<div class="product">
@@ -14,7 +14,7 @@
 					<!-- <a href="#"><img src="pic/products/abrau_brut.png" alt="product"></a> -->
 				</div>
 				<div class="product__name-title">
-					<a href="#">{{el.product.name}}</a>
+					{{el.product.name}}
 				</div>
 			</div>
 
