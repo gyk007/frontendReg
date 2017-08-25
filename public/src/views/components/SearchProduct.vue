@@ -1,7 +1,7 @@
 <template>
 	<section class="a-catalog__hdr-search">
 	    <div class="search">
-	        <input type="text" class="input search__input" placeholder="Введите название, артикул" v-model='query'>
+	        <input type="text" class="input search__input" placeholder="Введите название" @keyup ='search'>
 	        <button  class="search__submit"></button>
 	        <div class="search__icon">
 	            <svg>
@@ -15,11 +15,24 @@
 <script>
 
 export default {
-	data() {
-		return {
-			query: ''
+	computed: {
+		productList() {
+			return this.$store.getters.productList
 		}
-	}
+	},
+	methods: {
+		search() {
+			let searchStr = $(event.target).val()
+
+			this.productList.forEach(key => {
+				if (~key.name.indexOf(searchStr)) {
+					key.search = true
+				} else {
+					key.search = false
+				}
+			})
+		},
+	},
 }
 
 </script>

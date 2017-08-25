@@ -1,17 +1,8 @@
 <template>
 	<section class="a-catalog__hdr-search">
 		<div class="search">
-			<div v-if="$route.fullPath == '/client'">
-				<input type="text" class="input search__input" placeholder="Введите название компании" v-model='query'>
-			</div>
 			<div v-if="$route.fullPath == '/catalog'">
-				<input type="text" class="input search__input" placeholder="Введите название, артикул" v-model='query'>
-			</div>
-			<div v-if="$route.fullPath == '/promotion'">
-				<input type="text" class="input search__input" placeholder="Введите название акции" v-model='query'>
-			</div>
-			<div v-if="$route.fullPath == '/orders'">
-				<input type="text" class="input search__input" placeholder="Введите номер заказа" v-model='query'>
+				<input type="text" class="input search__input" placeholder="Введите название"  @keyup ='search'>
 			</div>
 			<button  class="search__submit"></button>
 			<div class="search__icon">
@@ -27,14 +18,24 @@
 import store from '../../store/catalog.js'
 
 export default {
-	data() {
-		return {
-			query: ''
+	computed: {
+		productList() {
+			return this.$store.getters.productList
 		}
 	},
-	created: function() {
-			console.log(this.$route.fullPath)
-		}
+	methods: {
+		search() {
+			let searchStr = $(event.target).val()
+
+			this.productList.forEach(key => {
+				if (~key.name.indexOf(searchStr)) {
+					key.search = true
+				} else {
+					key.search = false
+				}
+			})
+		},
+	},
 }
 
 </script>

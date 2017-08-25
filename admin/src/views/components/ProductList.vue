@@ -8,7 +8,7 @@
 							<svg><use xlink:href="#filter"></use></svg>
 					</div>
 
-					<div class="catalog__products-row js-t-row" v-on:click="getProduct(product)" v-for="product in productList">
+					<div class="catalog__products-row js-t-row" v-on:click="getProduct(product)" v-for="product in productList" v-if='product.search'>
 							<div class="catalog__products-col catalog__products-name">
 									<!-- <div class="catalog__products-name--img"> -->
 											<!-- <a href="#"><img src="pic/products/abrau_brut.png" alt="product"></a> -->

@@ -422,6 +422,8 @@ const catalogStore = new Vuex.Store({
 						commit('set', {type: 'filters',     items: null})
 						if (body.category.extend.products.elements.length)
 							body.category.extend.products.elements.forEach(function(key) {
+								// Добавляем поиск
+								key.search = true;
 								// Добавляем фильтры
 								key.filterPrice = true;
 								key.filterAlko  = true;

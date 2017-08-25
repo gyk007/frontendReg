@@ -68,7 +68,6 @@
 			if ($(event.target).is(':checked'))
 				this.$store.dispatch('addProdToCat', id)
 			else
-				console.log('dele')
 				this.$store.dispatch('deleteProdInCat', id)
 		},
 		search() {

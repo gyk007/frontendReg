@@ -8,18 +8,18 @@ Vue.use(VueResource)
 
 const store = new Vuex.Store({
 	state: {
-		catalogTree    : [],
-		productList    : [],
-		category       : null,
-		product        : null,
-		idActiveCat    : undefined,
-		clientsList    : [],
-		client         : null,
-		idActiveClient : undefined,
-		order          : null,
-		orders         : [],
-		documents      : [],
-		allProducts    : [],
+		catalogTree    : [],        // все категории (дерево категорий)
+		productList    : [],        // Продукты в категории
+		category       : null,      // выбранная категория
+		product        : null,      // выбранный продукт
+		idActiveCat    : undefined, // id выбранной категории
+		clientsList    : [],        // список клиентов
+		client         : null,      // выбранный клиент
+		idActiveClient : undefined, // id выбранного клиентв
+		order          : null,      // выбранный заказ
+		orders         : [],        // все заказы
+		documents      : [],        // документы в заказе
+		allProducts    : [],        // Все продукты, для добавления и удаления из категории
 	},
 	getters: {
 		catalogTree(state) {
@@ -337,7 +337,7 @@ const store = new Vuex.Store({
 					id: idCategory
 				},
 				headers: {
-					//'Content-Type': 'application/json'
+					'Content-Type': 'text/plain'
 				}
 			}
 
@@ -350,6 +350,8 @@ const store = new Vuex.Store({
 						body.category.extend.products.elements.forEach(function(key) {
 							// Свойства, делаем удобнее
 							key.properties = key.properties.elements[0].extend.properties.elements
+							// Переменная для поиска
+							key.search = true
 						});
 						commit('set', {type: 'productList', items: body.category.extend.products.elements});
 					}
