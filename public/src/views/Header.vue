@@ -36,11 +36,11 @@
 
 							<div class="header__user-container">
 									<div class="header__user-name">
-											<span v-if='user'>{{user.name}}</span>
+										<router-link to="/select_shop"><span  v-if='shop'>{{shop.official.name}}</span></router-link>
 									</div>
 									<div class="header__user-logo">
 											<!-- <img src="pic/icon/name-logo.png" alt="logo"> -->
-											<span  v-if='user'>{{user.net.official.name}}</span>
+											<span v-if='user'>{{user.name}}</span>
 									</div>
 							</div>
 
@@ -63,6 +63,9 @@
 		},
 		user() {
 			return this.$store.getters.user
+		},
+		shop() {
+			return this.$store.getters.shop
 		}
 	},
 	beforeCreate: function() {

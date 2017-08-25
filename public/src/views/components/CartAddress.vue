@@ -3,8 +3,8 @@
 		<div class="p-card__data-title">Ваши данные</div>
 
 		<div class="p-card__data-form">
-			<div class="input-field">
-				<v-select  :on-change="selectShop" :value.sync="selected" :options="shops" placeholder="Выберите торговую точку"></v-select>
+			<div class="input-field" v-if='shop'>
+				<div class="p-card__data-title"> {{shop.official.name}} </div>
 			</div>
 			<div class="input-field">
 				<input id="personal-card-tel" type="text" class="input" v-model='orderData.phone'>
@@ -36,13 +36,11 @@
 <script>
 	import store from '../../store/catalog.js'
 	import $     from 'jquery'
-	import vSelect from "vue-select"
+
 
 	export default {
-		components: {vSelect},
 		data() {
     		return {
-    			selected : null,
 	    		orderData  : {
 	    			name   : '',
 	    			phone  : '',
@@ -54,35 +52,18 @@
     		}
   		},
   		computed: {
-			shops() {
-				let shops = [];
-				if(this.$store.getters.shops.length)
-					this.$store.getters.shops.forEach((key) => {
-						let shop = {
-							id    : key.id,
-							label : key.official.name
-						}
-						shops.push(shop)
-					})
-				return shops
+			shop() {
+				return this.$store.getters.shop;
 			},
 		},
 		methods: {
-			selectShop(shop){
-				this.$data.orderData.idShop = shop.id
-			},
 			addOrder(selectedShop) {
 				this.$store.dispatch('addOrder', this.$data.orderData);
 			}
 		},
-		watch: {
-			selectedShop: function (val) {
-     			this.$data.selectedShop = val
-    		},
-		},
 		mounted: function() {
 		 	materializeInput();
-		}
+		},
 	}
 
 	 //materialize input

@@ -24,6 +24,7 @@ const catalogStore = new Vuex.Store({
 		documents   : [],
 		authError   : false,
 		user        : null,
+		shop        : null,
 	},
 	getters: {
 		catalogTree(state) {
@@ -64,6 +65,9 @@ const catalogStore = new Vuex.Store({
 		},
 		user(state){
 			return state.user
+		},
+		shop(state){
+			return state.shop
 		},
 	},
 	mutations: {
@@ -206,10 +210,12 @@ const catalogStore = new Vuex.Store({
 							Cookies.set('token', body.TOKEN);
 
 						commit('set', {type: 'authError', items: true});
+						commit('set', {type: 'user',      items: body.USER});
+						commit('set', {type: 'shops',     items: body.USER.shops});
 
 						$.fancybox.close()
 
-						document.location = '/#/orders'
+						document.location = '/#/select_shop'
 						window.location.reload()
 					}
 				},
@@ -298,7 +304,6 @@ const catalogStore = new Vuex.Store({
 						if (body.ERROR.AUTH)
 							document.location = '/#/auth'
 					} else {
-						commit('set', {type: 'shops', items: body.shops})
 						commit('set', {type: 'cart',  items: body.cart})
 						if (body.cart) {
 							commit('calculateCartPrice', {products: body.cart.products.elements})
@@ -454,7 +459,7 @@ const catalogStore = new Vuex.Store({
 				}
 			}
 
-			Vue.http.get(Conf.url.order, arg).then(
+			Vue.http.get(Conf.url.client, arg).then(
 				response => {
 					let body = response.body
 					if (body.ERROR) {
@@ -462,7 +467,11 @@ const catalogStore = new Vuex.Store({
 						if (body.ERROR.AUTH)
 							document.location = '/#/auth'
 					} else {
+						console.log(body)
+						commit('set', {type: 'shop',   items: body.SHOP})
 						commit('set', {type: 'user',   items: body.USER});
+						commit('set', {type: 'shops',  items: body.USER.shops})
+
 					}
 				},
 				error => {
@@ -475,6 +484,40 @@ const catalogStore = new Vuex.Store({
 		},
 		selectProduct({commit}, product) {
 			commit('set', {type: 'product', items: product})
+		},
+		selectShop({state, commit}, shopId) {
+			 let arg = {
+				params:{
+					token         : Cookies.get('token'),
+					'shop.id'     : shopId,
+					'merchant.id' : state.user.id,
+					action        : 'select_shop'
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.client, null, arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR);
+						if (body.ERROR.AUTH)
+							document.location = '/#/auth'
+					} else {
+						commit('set', {type: 'shop',  items: body.SHOP})
+
+						$.fancybox.close()
+
+						document.location = '/#/orders'
+						window.location.reload()
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
 		},
 	}
 })
