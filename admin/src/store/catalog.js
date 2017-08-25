@@ -250,6 +250,12 @@ const store = new Vuex.Store({
 			Vue.http.get(Conf.url.category, arg).then(
 				response => {
 					let body = response.body;
+					if (body.products) {
+						body.products.forEach(product => {
+							// Вводим переменную для поиска
+							product.search = true;
+						})
+					}
 					commit('set', {type: 'allProducts', items: body.products})
 				},
 				error => {
