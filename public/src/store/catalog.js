@@ -432,6 +432,9 @@ const catalogStore = new Vuex.Store({
 								// Добавляем фильтры
 								key.filterPrice = true;
 								key.filterAlko  = true;
+								key.filterOffer = true;
+								// Количесво в корзине по умолчанию
+								key.cartQuantity = 1;							 
 								// Свойства, делаем удобнее
 								key.properties = key.properties.elements[0].extend.properties.elements
 							})

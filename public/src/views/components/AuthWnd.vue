@@ -48,6 +48,7 @@
 		},
 	},
 	mounted: function() {
+		console.log($.fancybox)
 		$.fancybox.open({
 			src  : '#popup__auth',
 			type : 'inline',

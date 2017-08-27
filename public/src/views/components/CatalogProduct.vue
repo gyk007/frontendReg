@@ -8,9 +8,9 @@
 		<div class="shop__data-body">
 			<ul class="shop__sub-nav">
 				<div v-if='category'>
-					<li class="active"><a>Все</a></li>
+					<li class="active"><a v-on:click="offers(false)">Все</a></li>
 					<li v-for="cat in category.child"><a v-on:click="getCategory(cat)">{{cat.name}}</a></li>
-					<li class="accent"><a>Индивидуальные предложения</a></li>
+					<li class="accent"><a v-on:click="offers(true)">Индивидуальные предложения</a></li>
 				</div>
 			</ul>
 
@@ -29,7 +29,7 @@
 					<div class="shop__cell shop__cell-order">&nbsp;</div>
 				</div>
 
-				<div class="shop__row js-t-row normal" v-for='product in  productList' v-if="product.visible && product.filterPrice && product.filterAlko && product.search">
+				<div class="shop__row js-t-row normal" v-for='product in  productList' v-if="product.visible && product.filterPrice && product.filterAlko && product.search && product.filterOffer">
 					<div class="shop__cell shop__cell-name">
 						<div class="shop__cell-img"><!-- <a href="#"><img src="pic/products/abrau_brut.png" alt="product"></a> --></div>
 						<div class="shop__cell-main">
@@ -47,14 +47,14 @@
 					</div>
 					<div class="shop__cell shop__cell-availability"><span class='js-availability'>{{product.properties[7].value ? 'В наличии' : 'Нет в наличии' }}</span></div>
 					<div class="shop__cell shop__cell-benefit">
-						<span class="js-benefit">14%</span>
+						<span class="js-benefit" v-if='product.offer'>{{product.offer}}%</span>
 					</div>
 					<!-- <div class="shop__cell shop__cell-a"> -->
 						<!-- <span class="js-a">14%</span> -->
 					<!-- </div> -->
 					<!-- <div class="shop__cell shop__cell-a"><span class="js-a">46798456213456</span></div> -->
 					<div class="shop__cell shop__cell-price">
-						<span class="js-price">{{product.properties[0].value}}&nbsp;<i class="rub">a</i></span>
+						<span class="js-price">{{product.price}}&nbsp;<i class="rub">a</i></span>
 					</div>
 					<div class="shop__cell shop__cell-order">
 						<div class="js-order">
@@ -83,10 +83,7 @@
 			category() {
 				return this.$store.getters.category
 			},
-			productList() {
-				this.$store.getters.productList.forEach(function(key){
-					key.cartQuantity = 1
-				})
+			productList() {				 
 				return this.$store.getters.productList
 			},
 		},
@@ -99,7 +96,20 @@
 			},
 			addToCart(product){
 				this.$store.dispatch('addToCart', product)
-			}
+			},
+			offers(showOffer){
+				if(showOffer) {
+					this.productList.forEach(function(key){
+						if(!key.offer) {
+							key.filterOffer = false;
+						}
+					})
+				} else {
+					this.productList.forEach(function(key){						 
+						key.filterOffer = true;						 
+					})
+				}
+			},
 		},
 		created: function() {
 			this.$store.dispatch('getCatalogTree')
