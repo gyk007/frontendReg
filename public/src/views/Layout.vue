@@ -9,31 +9,39 @@
 
 
 		<Contact></Contact>
+		<ExitWnd></ExitWnd>
 	</section>
 </template>
 
 <script>
 
-import Vue        from 'vue'
-import VueRouter  from 'vue-router'
-import VTooltip   from 'v-tooltip'
-import Main       from './Main.vue'
-import Catalog    from './Catalog.vue'
-import Order      from './Order.vue'
-import Orders     from './Orders.vue'
-import Contacts   from './Contacts.vue'
-import Cart       from './Cart.vue'
-import Auth       from './Auth.vue'
-import HeadareEl  from './Header.vue'
-import SelectShop from './SelectShop.vue'
-import Contact    from './components/Contact.vue'
-import Store      from '../store/catalog.js'
-import $          from 'jquery'
+import Vue         from 'vue'
+import VueRouter   from 'vue-router'
+import VTooltip    from 'v-tooltip'
+import Main        from './Main.vue'
+import Catalog     from './Catalog.vue'
+import Order       from './Order.vue'
+import Orders      from './Orders.vue'
+import Contacts    from './Contacts.vue'
+import Cart        from './Cart.vue'
+import Auth        from './Auth.vue'
+import HeadareEl   from './Header.vue'
+import SelectShop  from './SelectShop.vue'
+import Contact     from './components/Contact.vue'
+import ExitWnd     from './components/ExitWnd.vue'
+import Store       from '../store/catalog.js'
+import $           from 'jquery'
+import VueLazyload from 'vue-lazyload'
 import 'malihu-custom-scrollbar-plugin'
 import 'jquery-mousewheel'
 
 Vue.use(VueRouter)
 Vue.use(VTooltip)
+Vue.use(VueLazyload, {
+  preLoad: 1.3,
+  loading: '../../pic/loading.gif',
+  attempt: 1
+})
 
 var router = new VueRouter({
 	routes: [
@@ -50,7 +58,7 @@ var router = new VueRouter({
 
 export default  {
 	router: router,
-	components: {HeadareEl, Contact},
+	components: {HeadareEl, Contact, ExitWnd},
 	computed: {
 		showHeader() {
 			let showHeader = true;

@@ -23,7 +23,7 @@
 				<div class="shop__row shop__table-hdr">
 					<div class="shop__cell shop__table-hdr--name"><span>Название</span></div>
 					<div class="shop__cell shop__cell-availability"><span>Наличие</span></div>
-					<div class="shop__cell ta_c"><span>Ваша скидка</span></div>
+					<div class="shop__cell ta_c"><span>Cкидка</span></div>
 					<!-- <div class="shop__cell"><span>Артикул</span></div> -->
 					<div class="shop__cell shop__cell-price"><span>Цена</span></div>
 					<div class="shop__cell shop__cell-order">&nbsp;</div>
@@ -48,6 +48,7 @@
 					<div class="shop__cell shop__cell-availability"><span class='js-availability'>{{product.properties[7].value ? 'В наличии' : 'Нет в наличии' }}</span></div>
 					<div class="shop__cell shop__cell-benefit">
 						<span class="js-benefit" v-if='product.offer'>{{product.offer}}%</span>
+						<span class="js-benefit" v-if='!product.offer'>нет</span>
 					</div>
 					<!-- <div class="shop__cell shop__cell-a"> -->
 						<!-- <span class="js-a">14%</span> -->
@@ -76,6 +77,13 @@
 	import $     from 'jquery'
 
 	export default {
+		data() {
+			return {
+				// true  - выбрана вкладка "Индивидуальные предложения"
+				// false - выбрана вкладка "Все"
+				selectOffer: false,
+			}
+		},
 		computed: {
 			catalogTree() {
 				return this.$store.getters.catalogTree
@@ -83,7 +91,7 @@
 			category() {
 				return this.$store.getters.category
 			},
-			productList() {				 
+			productList() {
 				return this.$store.getters.productList
 			},
 		},
@@ -105,8 +113,8 @@
 						}
 					})
 				} else {
-					this.productList.forEach(function(key){						 
-						key.filterOffer = true;						 
+					this.productList.forEach(function(key){
+						key.filterOffer = true;
 					})
 				}
 			},

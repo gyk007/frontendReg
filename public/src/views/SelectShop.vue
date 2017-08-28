@@ -13,6 +13,9 @@ export default {
 	name: 'slect_shop',
 	components: {SelectShopWnd},
 	store: Store,
+	beforeCreate: function() {
+		this.$store.dispatch('getUser')
+	}
 }
 
 </script>

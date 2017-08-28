@@ -53,3 +53,61 @@
 .btn__sell {
 	cursor: pointer;
 }
+
+.router-link-exact-active.active {
+    border-color: rgb(94, 151, 227);
+}
+
+.delete_wnd{
+	display: none;
+	width:  300px;
+	padding:  20px;
+}
+
+.btn_delete_wnd_ok{
+	font-family: "proxima-nova" !important;
+	cursor: pointer;
+	vertical-align: top;
+	font-weight: normal;
+	font-size: 15px;
+	line-height: 1;
+	padding: 12px 17px 13px;
+	background: #f44336;
+	color: #fff;
+	border: 0;
+	outline: 0;
+	border-radius: 20px;
+	position: relative;
+	-webkit-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+	width: 100px;
+	display: inline-block;
+	text-align: center;
+}
+
+.btn_delete_wnd_cancel{
+	font-family: "proxima-nova" !important;
+	cursor: pointer;
+	vertical-align: top;
+	font-weight: normal;
+	font-size: 15px;
+	line-height: 1;
+	padding: 12px 17px 13px;
+	background: #03a9f4;
+	color: #fff;
+	border: 0;
+	outline: 0;
+	border-radius: 20px;
+	position: relative;
+	-webkit-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+	width: 100px;
+	display: inline-block;
+	text-align: center;
+	margin-left: 20px;
+}
+
+.btn_delete_wnd_form{
+	width: 230px;
+	margin: 0 auto;
+}

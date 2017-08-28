@@ -2,8 +2,7 @@
 	<section class="popup popup__category" id="popup__auth">
 
 
-	<div class="popup__hdr" v-if='!auttError'>Авторизация</div>
-	<div class="popup__hdr" style='color:#f44336' v-if='auttError'>Непраильный логин или пароль</div>
+	<div class="popup__hdr">Авторизация</div>
 
 	<div class="popup__category-form">
 		<div class="popup__product-form--holder">
@@ -37,18 +36,12 @@
 			password : undefined
 		}
 	},
-	computed: {
-		authError() {
-			return this.$store.getters.authError
-		},
-	},
 	methods: {
 		auth() {
 			this.$store.dispatch('authorization', this.$data)
 		},
 	},
 	mounted: function() {
-		console.log($.fancybox)
 		$.fancybox.open({
 			src  : '#popup__auth',
 			type : 'inline',

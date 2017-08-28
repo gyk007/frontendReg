@@ -143,15 +143,24 @@
 
 	export default {
 		components: {vueSlider},
-		data () {
-			return {
-				priceSlider: {
-					value: [0, 100],
+		computed: {
+			filterPrice() {
+				console.log(this.$store.getters.filterPrice)
+				return this.$store.getters.filterPrice
+			},
+			productList() {
+				return this.$store.getters.productList
+			},
+			priceSlider() {
+				let min = this.$store.getters.filterPrice ? parseInt(this.$store.getters.filterPrice.min) : 0;
+				let max = this.$store.getters.filterPrice ? parseInt(this.$store.getters.filterPrice.max) : 20000;
+				let priceSlider = {
+					value: [min, max],
 					width: '100%',
 					height: 8,
 					dotSize: 16,
-					min: 0,
-					max: 20000,
+					min: min,
+					max: max,
 					disabled: false,
 					show: true,
 					tooltip: 'always',
@@ -167,14 +176,19 @@
 					processStyle: {
 						backgroundColor: '#999'
 					}
-				},
-				alkoSlider: {
-					value: [0, 100],
+				}
+				return priceSlider;
+			},
+			alkoSlider() {
+				let min = this.$store.getters.filterAlko ? parseInt(this.$store.getters.filterAlko.min) : 0;
+				let max = this.$store.getters.filterAlko ? parseInt(this.$store.getters.filterAlko.max) : 100;
+				let alkoSlider = {
+					value: [min, max],
 					width: '100%',
 					height: 8,
 					dotSize: 16,
-					min: 0,
-					max: 100,
+					min: min,
+					max: max,
 					disabled: false,
 					show: true,
 					tooltip: 'always',
@@ -191,20 +205,10 @@
 						backgroundColor: '#999'
 					}
 				}
-			}
-		},
-		computed: {
-			filterPrice() {
-				return this.$store.getters.filterPrice
+				return alkoSlider;
 			},
-			productList() {
-				return this.$store.getters.productList
-			}
 		},
 		methods: {
-			getProductList() {
-
-			},
 			priceFilter(val){
 				let minPrice = val[0]
 				let maxPrice = val[1]

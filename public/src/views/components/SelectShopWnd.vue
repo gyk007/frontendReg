@@ -60,9 +60,6 @@
 			modal : true
 		});
 	},
-	beforeCreate: function() {
-		this.$store.dispatch('getUser')
-	}
   }
 </script>
 

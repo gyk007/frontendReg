@@ -2,7 +2,7 @@
 	<section class="a-catalog__hdr-search">
 		<div class="search">
 			<div v-if="$route.fullPath == '/catalog'">
-				<input type="text" class="input search__input" placeholder="Введите название"  @keyup ='search'>
+				<input type="text" class="input search__input" placeholder="Введите название" @keyup ='search'>
 			</div>
 			<button  class="search__submit"></button>
 			<div class="search__icon">

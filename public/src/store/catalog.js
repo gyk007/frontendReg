@@ -15,6 +15,7 @@ const catalogStore = new Vuex.Store({
 		productList : [],
 		category    : null,
 		filterPrice : null,
+		filterAlko  : null,
 		product     : null,
 		cart        : null,
 		cartPrice   : 0,
@@ -22,9 +23,9 @@ const catalogStore = new Vuex.Store({
 		order       : null,
 		orders      : [],
 		documents   : [],
-		authError   : false,
 		user        : null,
 		shop        : null,
+		loader      : false, // отвечает за лоадер, если true - лодер включен
 	},
 	getters: {
 		catalogTree(state) {
@@ -48,6 +49,9 @@ const catalogStore = new Vuex.Store({
 		filterPrice(state){
 			return state.filterPrice
 		},
+		filterAlko(state){
+			return state.filterAlko
+		},
 		shops(state){
 			return state.shops
 		},
@@ -60,14 +64,14 @@ const catalogStore = new Vuex.Store({
 		documents(state){
 			return state.documents
 		},
-		authError(state){
-			return state.authError
-		},
 		user(state){
 			return state.user
 		},
 		shop(state){
 			return state.shop
+		},
+		loader(state){
+			return state.loader
 		},
 	},
 	mutations: {
@@ -187,7 +191,7 @@ const catalogStore = new Vuex.Store({
 				}
 			)
 		},
-		authorization({state, commit}, data) {
+		authorization({dispatch, commit}, data) {
 			let arg = {
 				params: {
 				   'login'    : data.login,
@@ -203,20 +207,15 @@ const catalogStore = new Vuex.Store({
 					let body = response.body
 					if (body.ERROR) {
 						console.log(body.ERROR);
-						if (body.ERROR.AUTH)
-							commit('set', {type: 'authError', items: true});
-					} else {
-						if (body.TOKEN)
-							Cookies.set('token', body.TOKEN);
+					} else if(body.SESSION) {
+						Cookies.set('token', body.SESSION.token);
 
-						commit('set', {type: 'authError', items: true});
-						commit('set', {type: 'user',      items: body.USER});
-						commit('set', {type: 'shops',     items: body.USER.shops});
+						dispatch('getUser')
 
 						$.fancybox.close()
-
 						document.location = '/#/select_shop'
 						window.location.reload()
+
 					}
 				},
 				error => {
@@ -402,8 +401,10 @@ const catalogStore = new Vuex.Store({
 			)
 		},
 		getProductList({commit}, idCategory) {
-			let result;
-
+			// Очищаем список продуктов
+			commit('set', {type: 'productList', items: []})
+			// Включаем лоадер
+			commit('set', {type: 'loader', items: true})
 			let arg = {
 				params:{
 					id    : idCategory,
@@ -434,16 +435,28 @@ const catalogStore = new Vuex.Store({
 								key.filterAlko  = true;
 								key.filterOffer = true;
 								// Количесво в корзине по умолчанию
-								key.cartQuantity = 1;							 
+								key.cartQuantity = 1;
 								// Свойства, делаем удобнее
 								key.properties = key.properties.elements[0].extend.properties.elements
 							})
 							commit('set', {type: 'productList', items: body.category.extend.products.elements})
 						if (body.category.filter) {
+							// Начальные значения фильтров
+							let filterPrice = {min: 0, max: 0};
+							let filterAlko  = {min: 0, max: 0};
+
 							body.category.filter.elements.forEach(function(key){
-								if(key.name == 'Цена')
-									commit('set', {type: 'filterPrice', items:key.filterarg})
+								if(key.name == 'Price') {
+									filterPrice.min = key.filterarg.elements[0].filterarg.value;
+									filterPrice.max = key.filterarg.elements[1].filterarg.value;
+								}
+								if(key.name == 'Alko') {
+									filterAlko.min = key.filterarg.elements[0].filterarg.value;
+									filterAlko.max = key.filterarg.elements[1].filterarg.value;
+								}
 							})
+							commit('set', {type: 'filterPrice', items: filterPrice})
+							commit('set', {type: 'filterAlko',  items: filterAlko})
 						}
 					}
 				},
@@ -470,11 +483,9 @@ const catalogStore = new Vuex.Store({
 						if (body.ERROR.AUTH)
 							document.location = '/#/auth'
 					} else {
-						console.log(body)
 						commit('set', {type: 'shop',   items: body.SHOP})
 						commit('set', {type: 'user',   items: body.USER});
 						commit('set', {type: 'shops',  items: body.USER.shops})
-
 					}
 				},
 				error => {
@@ -491,10 +502,9 @@ const catalogStore = new Vuex.Store({
 		selectShop({state, commit}, shopId) {
 			 let arg = {
 				params:{
-					token         : Cookies.get('token'),
-					'shop.id'     : shopId,
-					'merchant.id' : state.user.id,
-					action        : 'select_shop'
+					token  : Cookies.get('token'),
+					shop   : shopId,
+					action : 'select_shop'
 				},
 				headers: {
 					'Content-Type': 'text/plain'

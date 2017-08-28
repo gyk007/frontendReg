@@ -15,10 +15,10 @@
 			<nav class="nav js-nav">
 				<div class="js-nav-button-close">X</div>
 				<ul class="nav__list">
-					<li><router-link to="/main" active-class="black">Главная</router-link></li>
-					<li><router-link to="/catalog">Каталог продукции</router-link></li>
-					<li><router-link to="/orders">Заказы</router-link></li>
+					<li><router-link to="/orders"  active-class='active'>Заказы</router-link></li>
+					<li><router-link to="/catalog" active-class='active'>Каталог продукции</router-link></li>
 					<li><a data-fancybox data-src="#popup__contact" href="javascript:;">Обратная связь</a></li>
+					<li><a data-fancybox data-src="#popup__exit"    href="javascript:;">Выход</a></li>
 				</ul>
 			</nav>
 
@@ -47,30 +47,31 @@
 					</div>
 			</div>
 		</div>
+
 	</section>
 </template>
 
 
 <script>
-  import Store  from '../store/catalog.js'
-  import $      from 'jquery'
+	import Store   from '../store/catalog.js'
+	import $       from 'jquery'
 
-  export default {
-  	store: Store,
-	computed: {
-		cartPrice() {
-			return this.$store.getters.cartPrice
+	export default {
+		store: Store,
+		computed: {
+			cartPrice() {
+				return this.$store.getters.cartPrice
+			},
+			user() {
+				return this.$store.getters.user
+			},
+			shop() {
+				return this.$store.getters.shop
+			}
 		},
-		user() {
-			return this.$store.getters.user
-		},
-		shop() {
-			return this.$store.getters.shop
+		beforeCreate: function() {
+			this.$store.dispatch('getUser')
+			this.$store.dispatch('getCart')
 		}
-	},
-	beforeCreate: function() {
-		this.$store.dispatch('getUser')
-		this.$store.dispatch('getCart')
 	}
-  }
 </script>

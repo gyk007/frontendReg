@@ -61,7 +61,7 @@
 		},
 		methods: {
 			getOrder(orderId) {
-			 	 this.$store.dispatch('getOrder', orderId)
+			 	this.$store.dispatch('getOrder', orderId)
 			},
 		},
 		created: function() {
