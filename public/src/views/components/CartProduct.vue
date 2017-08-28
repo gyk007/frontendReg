@@ -11,21 +11,21 @@
 <div class="product__row js-t-row" >
 	<div class="product__cell product__name">
 		<div class="product__name-img">
-			<a href="#"><img src="pic/products/abrau_brut.png" alt="product"></a>
+			<!-- <a href="#"><img src="pic/products/abrau_brut.png" alt="product"></a> -->
 		</div>
 		<div class="product__name-title">
-			<a href="#">{{el.product.name}}</a>
+			{{el.product.name}}
 		</div>
 	</div>
 
 	<div class="product__cell product__quantity">
-		<input type="text" class="input" v-model="el.quantity" @keyup ='calculateCartPrice'>
+		<input type="number" class="input" :value="el.quantity" @keyup.enter ='calculateCartPrice(el)'>
 		<span>шт</span>
 	</div>
 
 	<div class="product__cell product__cost">
-		<div class="product__cost-item">{{el.product.price}}&nbsp;<i class="rub">a</i>&nbsp;/&nbsp;шт</div>
-		<div class="product__cost-all">{{parseFloat((el.product.price * el.quantity).toFixed(2))}}&nbsp;<i class="rub">a</i></div>
+		<div class="product__cost-item">{{parseFloat(el.product.price).toFixed(2)}}&nbsp;<i class="rub">a</i>&nbsp;/&nbsp;шт</div>
+		<div class="product__cost-all">{{parseFloat(el.product.price * el.quantity).toFixed(2)}}&nbsp;<i class="rub">a</i></div>
 	</div>
 	<div class="product__cell product__btn" @click='deletProduct(el.id_product)'>
 		<div class="product__btn-inner"><svg><use xlink:href="#circle-cross"></use></svg></div>
@@ -57,7 +57,11 @@
 			deletProduct(idProduct) {
 				this.$store.dispatch('deletProdInCart', idProduct)
 			},
- 			calculateCartPrice() {
+ 			calculateCartPrice(product) {
+ 				let  qty =  $(event.target).val();
+ 				// Количество которое прибавили к уже имеющимуся
+ 				product.quantity = qty - product.quantity;
+ 				this.$store.dispatch('updateQtyProdInCart', product)
 				this.$store.dispatch('calculateCartPrice')
 			}
 		},

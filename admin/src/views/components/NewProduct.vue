@@ -27,7 +27,7 @@
 			<div class="popup__product-form--holder_prop holder-third" v-for="prop in product.properties" :class="[prop.name == 'Старна производитель' ? '' : '']">
 				<label>
 					<span style="font-size: 15px">
-					<span v-if="prop.name == 'Price'"        class="product_prop_value">Цена (&#8381;)</span>
+					<span v-if="prop.name == 'Price'"        class="product_prop_value">Цена <i class="rub">a</i></span>
 					<span v-if="prop.name == 'Alko'"         class="product_prop_value"> (об. %)</span>
 					<span v-if="prop.name == 'Litr'"         class="product_prop_value">Объем (л.)</span>
 					<span v-if="prop.name == 'Pack'"         class="product_prop_value">Количесво в упаковке</span>

@@ -32,7 +32,7 @@
 						<div class="js-representative-title-clone"></div>
 					</div>
 				</div>
-				<div class="order__cell order__status"><span class="js-status"><span class='status status--accepted' v-tooltip="order.status.description">{{order.status.name}}</span></span></div>
+				<div class="order__cell order__status"><span class="js-status"><span class='status status--accepted' v-tooltip="order.status.description">{{order.status.description}}</span></span></div>
 				<div class="order__cell order__representative">
 					<span class="order__title order__title js-representative" v-if='order.sales_name'>{{order.sales_name}}</span>
 					<span class="order__tel js-representative" v-if='order.sales_phone'>{{order.sales_phone}}</span>

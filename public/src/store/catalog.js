@@ -27,6 +27,7 @@ const catalogStore = new Vuex.Store({
 		user        : null,      // данные пользователя
 		shop        : null,      // выбраная торговая точка
 		loader      : false,     // отвечает за лоадер, если true - лодер включен
+		selectOffer : false,     // вкладка с индивидуальными предложениями, если true - вкладка нажата
 	},
 	getters: {
 		catalogTree(state) {
@@ -77,7 +78,10 @@ const catalogStore = new Vuex.Store({
 		idActiveCat(state){
 			return state.idActiveCat
 		},
-	},
+		selectOffer(state){
+			return state.selectOffer
+		},
+	},	 
 	mutations: {
 		set(state, {type, items}) {
 			state[type] = items
@@ -151,7 +155,7 @@ const catalogStore = new Vuex.Store({
 					} else {
 						commit('set', {type: 'order', items: body.order})
 						commit('set', {type: 'documents', items: body.documents})
-						document.location = '/#/order'
+						document.location = '/#/order/' + body.order.id
 						dispatch('getCart')
 					};
 				},
@@ -191,7 +195,7 @@ const catalogStore = new Vuex.Store({
 					console.log(error);
 				}
 			)
-		},
+		},		
 		authorization({dispatch, commit}, data) {
 			let arg = {
 				params: {
@@ -363,7 +367,7 @@ const catalogStore = new Vuex.Store({
 					} else {
 						commit('set', {type: 'order',     items: body.order})
 						commit('set', {type: 'documents', items: body.documents})
-						document.location = '/#/order'
+						document.location = '/#/order/' + orderId
 					};
 				},
 				error => {
@@ -460,6 +464,8 @@ const catalogStore = new Vuex.Store({
 							commit('set', {type: 'filterAlko',  items: filterAlko})
 							// Выключаем лоадер
 							commit('set', {type: 'loader', items: false})
+							// Выключаем вкладку с индивидуальными предложениями
+							commit('set', {type: 'selectOffer', items: false})
 						}
 					}
 				},
@@ -532,6 +538,38 @@ const catalogStore = new Vuex.Store({
 
 						document.location = '/#/orders'
 						window.location.reload()
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		// Изменить количесво продуктво в корзине
+		updateQtyProdInCart({state, commit}, product) {
+			let arg = {
+				params: {
+				   action             : 'add',
+				   token              : Cookies.get('token'),
+				   'product.id'       : product.id_product,
+				   'product.quantity' : product.quantity,
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.cart, null, arg).then(
+				response => {
+					let body = response.body;
+					if (body.ERROR) {
+						console.log(body.ERROR);
+						if (body.ERROR.AUTH)
+							document.location = '/#/auth'
+					} else {
+						commit('set', {type: 'cart', items: body.cart})
+						if (body.cart)
+							commit('calculateCartPrice', {products: body.cart.products.elements})
 					}
 				},
 				error => {

@@ -42,6 +42,9 @@
 		},
 		shops(){
 			return this.$store.getters.shops
+		},
+		shop(){
+			return this.$store.getters.shop
 		}
 	},
 	methods: {
@@ -53,12 +56,14 @@
 				this.$store.dispatch('selectShop', this.$data.selectedShop.id)
 		}
 	},
-	mounted: function() {
-		$.fancybox.open({
-			src  : '#popup__select_shop',
-			type : 'inline',
-			modal : true
-		});
+	mounted: function() {			 
+		if (this.$route.fullPath == '/select_shop') {
+			$.fancybox.open({
+				src   : '#popup__select_shop',
+				type  : 'inline',
+				modal : true 
+			});
+		}	 
 	},
   }
 </script>

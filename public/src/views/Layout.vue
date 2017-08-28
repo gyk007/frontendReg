@@ -10,45 +10,42 @@
 
 		<Contact></Contact>
 		<ExitWnd></ExitWnd>
+		<SelectShopWnd></SelectShopWnd>
 	</section>
 </template>
 
 <script>
 
-import Vue         from 'vue'
-import VueRouter   from 'vue-router'
-import VTooltip    from 'v-tooltip'
-import Main        from './Main.vue'
-import Catalog     from './Catalog.vue'
-import Order       from './Order.vue'
-import Orders      from './Orders.vue'
-import Contacts    from './Contacts.vue'
-import Cart        from './Cart.vue'
-import Auth        from './Auth.vue'
-import HeadareEl   from './Header.vue'
-import SelectShop  from './SelectShop.vue'
-import Contact     from './components/Contact.vue'
-import ExitWnd     from './components/ExitWnd.vue'
-import Store       from '../store/catalog.js'
-import $           from 'jquery'
-import VueLazyload from 'vue-lazyload'
+import Vue           from 'vue'
+import VueRouter     from 'vue-router'
+import VTooltip      from 'v-tooltip'
+import Main          from './Main.vue'
+import Catalog       from './Catalog.vue'
+import Order         from './Order.vue'
+import Orders        from './Orders.vue'
+import Contacts      from './Contacts.vue'
+import Cart          from './Cart.vue'
+import Auth          from './Auth.vue'
+import HeadareEl     from './Header.vue'
+import SelectShopWnd from './components/SelectShopWnd.vue'
+import SelectShop    from './SelectShop.vue'
+import Contact       from './components/Contact.vue'
+import ExitWnd       from './components/ExitWnd.vue'
+import Store         from '../store/catalog.js'
+import $             from 'jquery'
+ 
 import 'malihu-custom-scrollbar-plugin'
 import 'jquery-mousewheel'
 
 Vue.use(VueRouter)
-Vue.use(VTooltip)
-Vue.use(VueLazyload, {
-  preLoad: 1.3,
-  loading: '../../pic/loading.gif',
-  attempt: 1
-})
+Vue.use(VTooltip) 
 
 var router = new VueRouter({
 	routes: [
 		{ path: '/',            redirect: '/orders' },
 		{ path: '/main',        redirect: '/orders' },
 		{ path: '/catalog',     component: Catalog },
-		{ path: '/order',       component: Order },
+		{ path: '/order/:id',   component: Order },
 		{ path: '/orders',      component: Orders },
 		{ path: '/cart',        component: Cart },
 		{ path: '/auth',        component: Auth },
@@ -58,8 +55,12 @@ var router = new VueRouter({
 
 export default  {
 	router: router,
-	components: {HeadareEl, Contact, ExitWnd},
+	store: Store,
+	components: {HeadareEl, Contact, ExitWnd, SelectShopWnd},
 	computed: {
+		shop() {
+			return this.$store.getters.shop
+		},
 		showHeader() {
 			let showHeader = true;
 			switch (this.$route.fullPath) {
@@ -67,7 +68,7 @@ export default  {
 				showHeader = false;
 				break;
 			case '/select_shop':
-				showHeader = false;
+				showHeader = this.shop ? true :false;
 				break;
 			default:
 				showHeader = true;

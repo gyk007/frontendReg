@@ -15,7 +15,7 @@ export default {
 	store: Store,
 	beforeCreate: function() {
 		this.$store.dispatch('getUser')
-	}
+	},	 
 }
 
 </script>

@@ -44,7 +44,7 @@
 					</div>
 					<div class="shop__cell shop__cell-availability"><span class='js-availability'>{{product.properties[7].value ? 'В наличии' : 'Нет в наличии' }}</span></div>
 					<div class="shop__cell shop__cell-benefit">
-						<span class="js-benefit" v-if='product.offer'>{{product.offer}}%</span>
+						<span class="js-benefit offer" v-if='product.offer'>{{product.offer}}%</span>
 						<span class="js-benefit" v-if='!product.offer'>нет</span>
 					</div>
 					<!-- <div class="shop__cell shop__cell-a"> -->
@@ -52,7 +52,7 @@
 					<!-- </div> -->
 					<!-- <div class="shop__cell shop__cell-a"><span class="js-a">46798456213456</span></div> -->
 					<div class="shop__cell shop__cell-price">
-						<span class="js-price">{{product.price}}&nbsp;<i class="rub">a</i></span>
+						<span class="js-price">{{parseFloat(product.price).toFixed(2)}}&nbsp;<i class="rub">a</i></span>
 					</div>
 					<div class="shop__cell shop__cell-order">
 						<div class="js-order">
@@ -75,14 +75,7 @@
 	import store from '../../store/catalog.js'
 	import $     from 'jquery'
 
-	export default {
-		data() {
-			return {
-				// true  - выбрана вкладка "Индивидуальные предложения"
-				// false - выбрана вкладка "Все"
-				selectOffer: false,
-			}
-		},
+	export default {		 
 		computed: {
 			category() {
 				return this.$store.getters.category
@@ -92,6 +85,11 @@
 			},
 			loader() {
 				return this.$store.getters.loader
+			},
+			selectOffer() {
+				// true  - выбрана вкладка "Индивидуальные предложения"
+				// false - выбрана вкладка "Все"
+				return this.$store.getters.selectOffer
 			}
 		},
 		methods: {
@@ -100,22 +98,23 @@
 			},
 			offers(showOffer){
 				if(showOffer) {
-					this.$data.selectOffer = true;
+					// Указываем что вкалда 'Индивидуальные предложения' включена
+					this.$store.commit('set', {type: 'selectOffer', items: true})					 
+					// Если у продукта есть скидка, то показываем этот продукт
 					this.productList.forEach(function(key){
 						if(!key.offer) {
 							key.filterOffer = false;
 						}
 					})
 				} else {
-					this.$data.selectOffer = false;
+					// Указываем что вкалда 'Индивидуальные предложения' выключена
+					this.$store.commit('set', {type: 'selectOffer', items: false})
+					// Показываем все продукты
 					this.productList.forEach(function(key){
 						key.filterOffer = true;
 					})
 				}
 			},
-		},
-		created: function() {
-			this.$store.dispatch('getCatalogTree')
-		}
+		},			 
 	}
 </script>

@@ -35,8 +35,8 @@
 					<div class="header__user--holder">
 
 							<div class="header__user-container">
-									<div class="header__user-name">
-										<router-link to="/select_shop"><span  v-if='shop'>{{shop.official.name}}</span></router-link>
+									<div class="header__user-name" v-if='shop'>
+										<a data-fancybox data-src="#popup__select_shop" href="javascript:;">{{shop.official.name}}</a> 
 									</div>
 									<div class="header__user-logo">
 											<!-- <img src="pic/icon/name-logo.png" alt="logo"> -->

@@ -45,6 +45,9 @@ export default {
 				return this.$store.getters.order
 		},
 	},
+	beforeCreate: function (){
+		this.$store.dispatch('getOrder', this.$route.params.id)
+	}
 }
 
 </script>
