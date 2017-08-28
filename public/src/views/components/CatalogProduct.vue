@@ -21,7 +21,7 @@
 					<div class="shop__cell shop__table-hdr--name"><span>Название</span></div>
 					<div class="shop__cell shop__cell-availability"><span>Наличие</span></div>
 					<div class="shop__cell ta_c"><span>Cкидка</span></div>
-					<!-- <div class="shop__cell"><span>Артикул</span></div> -->
+					<div class="shop__cell"><span>Фасовка</span></div>
 					<div class="shop__cell shop__cell-price"><span>Цена</span></div>
 					<div class="shop__cell shop__cell-order">&nbsp;</div>
 				</div>
@@ -50,7 +50,7 @@
 					<!-- <div class="shop__cell shop__cell-a"> -->
 						<!-- <span class="js-a">14%</span> -->
 					<!-- </div> -->
-					<!-- <div class="shop__cell shop__cell-a"><span class="js-a">46798456213456</span></div> -->
+					<div class="shop__cell shop__cell-a"><span class="js-a">{{product.properties[5].value}}</span></div>
 					<div class="shop__cell shop__cell-price">
 						<span class="js-price">{{parseFloat(product.price).toFixed(2)}}&nbsp;<i class="rub">a</i></span>
 					</div>

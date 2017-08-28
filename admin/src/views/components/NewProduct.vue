@@ -30,11 +30,11 @@
 					<span v-if="prop.name == 'Price'"        class="product_prop_value">Цена <i class="rub">a</i></span>
 					<span v-if="prop.name == 'Alko'"         class="product_prop_value"> (об. %)</span>
 					<span v-if="prop.name == 'Litr'"         class="product_prop_value">Объем (л.)</span>
-					<span v-if="prop.name == 'Pack'"         class="product_prop_value">Количесво в упаковке</span>
+					<span v-if="prop.name == 'Pack'"         class="product_prop_value">Фасовка</span>
 					<span v-if="prop.name == 'Brand'"        class="product_prop_value">Бренд</span>
-					<span v-if="prop.name == 'Made in'"      class="product_prop_value">Объем (л.)</span>
-					<span v-if="prop.name == 'Manufacturer'" class="product_prop_value">Объем (л.)</span>
-					<span v-if="prop.name == 'Qty'"          class="product_prop_value">Объем (л.)</span>
+					<span v-if="prop.name == 'Made in'"      class="product_prop_value">Страна производитель</span>
+					<span v-if="prop.name == 'Manufacturer'" class="product_prop_value">Производитель</span>
+					<span v-if="prop.name == 'Qty'"          class="product_prop_value">Количество</span>
 					</span>
 				</label>
 				<input v-model="prop.value" placeholder="" class="input" readonly="readonly">
