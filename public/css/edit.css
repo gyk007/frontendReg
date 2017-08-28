@@ -111,3 +111,22 @@
 	width: 230px;
 	margin: 0 auto;
 }
+
+.product_loader {
+	width: 415px;
+	margin: 0 auto;
+}
+
+.catalog__nav-item a {
+    height: auto;
+    cursor: pointer;
+}
+
+.shop__filter {
+	float: none;
+	background-color: #FFF;
+}
+
+.catalog__nav-item .active {
+    font-weight: bolder;
+}

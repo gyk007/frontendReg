@@ -5,7 +5,7 @@
 			<Search></Search>
 		</div>
 		<div class="shop__container">
-		<Filters></Filters>
+		<CatalogTree></CatalogTree>
 		<Catalog></Catalog>
 		</div>
 	</section>
@@ -14,15 +14,15 @@
 <script>
 
 import Search       from './components/SearchProduct.vue'
-import Filters      from './components/Filters.vue'
 import Catalog      from './components/CatalogProduct.vue'
+import CatalogTree  from './components/CatalogTree.vue'
 import Store        from '../store/catalog.js'
 
 import $            from 'jquery'
 
 export default {
 	name: 'catalog',
-	components: { Search, Filters, Catalog},
+	components: { Search, Catalog, CatalogTree},
 	store: Store,
 	computed: {
 		category() {

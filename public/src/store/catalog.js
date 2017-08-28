@@ -11,21 +11,22 @@ Vue.use(VueResource)
 
 const catalogStore = new Vuex.Store({
 	state: {
-		catalogTree : [],
-		productList : [],
-		category    : null,
-		filterPrice : null,
-		filterAlko  : null,
-		product     : null,
-		cart        : null,
-		cartPrice   : 0,
-		shops       : [],
-		order       : null,
-		orders      : [],
-		documents   : [],
-		user        : null,
-		shop        : null,
-		loader      : false, // отвечает за лоадер, если true - лодер включен
+		catalogTree : [],        // дерево категорий
+		productList : [],        // список товаров в выбранной категории
+		idActiveCat : undefined, // id выбранной категории
+		category    : null,      // выбранная категория
+		filterPrice : null,      // начальные значени фильра "Цена"
+		filterAlko  : null,      // начальные значения фильтра "Крепость об %"
+		product     : null,      // выбранные продукт
+		cart        : null,      // корзина
+		cartPrice   : 0,         // стоимость корзины
+		shops       : [],        // список магазинов доступных данному пользователю
+		order       : null,      // заказ
+		orders      : [],        // список заказов
+		documents   : [],        // список документов в заказе
+		user        : null,      // данные пользователя
+		shop        : null,      // выбраная торговая точка
+		loader      : false,     // отвечает за лоадер, если true - лодер включен
 	},
 	getters: {
 		catalogTree(state) {
@@ -72,6 +73,9 @@ const catalogStore = new Vuex.Store({
 		},
 		loader(state){
 			return state.loader
+		},
+		idActiveCat(state){
+			return state.idActiveCat
 		},
 	},
 	mutations: {
@@ -123,7 +127,7 @@ const catalogStore = new Vuex.Store({
 				}
 			)
 		},
-		addOrder({state, commit}, orderData){
+		addOrder({state, dispatch, commit}, orderData){
 			let arg = {
 				params:{
 					'order.phone'      : orderData.phone,
@@ -131,10 +135,6 @@ const catalogStore = new Vuex.Store({
 					'order.name'       : orderData.name,
 					'order.remark'     : orderData.remark,
 					'order.email'      : orderData.email,
-					'order.id_shop'    : orderData.idShop,
-					'order.price'      : state.cartPrice,
-					'cart.id_merchant' : state.cart.id_merchant,
-					'cart.n'           : state.cart.n,
 					action             :  'add',
 					token              : Cookies.get('token'),
 				},
@@ -152,6 +152,7 @@ const catalogStore = new Vuex.Store({
 						commit('set', {type: 'order', items: body.order})
 						commit('set', {type: 'documents', items: body.documents})
 						document.location = '/#/order'
+						dispatch('getCart')
 					};
 				},
 				error => {
@@ -457,6 +458,8 @@ const catalogStore = new Vuex.Store({
 							})
 							commit('set', {type: 'filterPrice', items: filterPrice})
 							commit('set', {type: 'filterAlko',  items: filterAlko})
+							// Выключаем лоадер
+							commit('set', {type: 'loader', items: false})
 						}
 					}
 				},
@@ -495,6 +498,10 @@ const catalogStore = new Vuex.Store({
 		},
 		selectCategory({commit}, category) {
 			commit('set', {type: 'category', items: category})
+			if (category)
+				commit('set', {type: 'idActiveCat', items: category.id})
+			else
+				commit('set', {type: 'idActiveCat', items: undefined})
 		},
 		selectProduct({commit}, product) {
 			commit('set', {type: 'product', items: product})

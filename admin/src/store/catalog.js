@@ -439,7 +439,6 @@ const store = new Vuex.Store({
 				commit('set', {type: 'idActiveCat', items: category.id})
 			else
 				commit('set', {type: 'idActiveCat', items: undefined})
-
 		},
 		selectProduct({commit}, product) {
 			if (product.properties.elements)

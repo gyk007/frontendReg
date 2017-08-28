@@ -1,16 +1,11 @@
 <template>
 	<section class="shop__data">
-		<ul class="shop__nav">
-		   <!--  <li class="active"><a href="#">Элитные напитки</a></li> -->
-			<li v-for="category in catalogTree"><a v-on:click="getCategory(category)">{{category.name}}</a></li>
-		</ul>
-
 		<div class="shop__data-body">
 			<ul class="shop__sub-nav">
 				<div v-if='category'>
-					<li class="active"><a v-on:click="offers(false)">Все</a></li>
+					<li :class="{ active: !selectOffer, accent: selectOffer}"><a v-on:click="offers(false)">Все</a></li>
 					<li v-for="cat in category.child"><a v-on:click="getCategory(cat)">{{cat.name}}</a></li>
-					<li class="accent"><a v-on:click="offers(true)">Индивидуальные предложения</a></li>
+					<li :class="{ active: selectOffer, accent: !selectOffer}"><a v-on:click="offers(true)">Индивидуальные предложения</a></li>
 				</div>
 			</ul>
 
@@ -18,6 +13,8 @@
 				<span>Фильтр</span>
 				<svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#filter"></use></svg>
 			</div>
+
+
 
 			<div class="shop__table" >
 				<div class="shop__row shop__table-hdr">
@@ -67,7 +64,9 @@
 						</div>
 					</div>
 				</div>
+
 			</div>
+			<div class='product_loader' v-if='loader'><img src="pic/loading.gif"></div>
 		</div>
 	</section>
 </template>
@@ -85,34 +84,30 @@
 			}
 		},
 		computed: {
-			catalogTree() {
-				return this.$store.getters.catalogTree
-			},
 			category() {
 				return this.$store.getters.category
 			},
 			productList() {
 				return this.$store.getters.productList
 			},
+			loader() {
+				return this.$store.getters.loader
+			}
 		},
 		methods: {
-			getCategory(category) {
-				$('.shop__nav li').removeClass('active');
-				$(event.target).parent().addClass('active');
-				this.$store.dispatch('selectCategory', category)
-				this.$store.dispatch('getProductList', category.id)
-			},
 			addToCart(product){
 				this.$store.dispatch('addToCart', product)
 			},
 			offers(showOffer){
 				if(showOffer) {
+					this.$data.selectOffer = true;
 					this.productList.forEach(function(key){
 						if(!key.offer) {
 							key.filterOffer = false;
 						}
 					})
 				} else {
+					this.$data.selectOffer = false;
 					this.productList.forEach(function(key){
 						key.filterOffer = true;
 					})

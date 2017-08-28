@@ -141,8 +141,8 @@ select:focus::placeholder,
 }
 
 .product_prop_value {
-		font-size: 15px;
-		font-family: "Ubuntu";
+	font-size: 15px;
+	font-family: "Ubuntu";
 }
 
 .catalog__nav-category {
