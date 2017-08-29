@@ -105,7 +105,6 @@ const store = new Vuex.Store({
 					'category.name'        : category.name,
 					'category.description' : category.description,
 					'category.visible'     : category.visible,
-					'category.face'        : category.face,
 					action                 : 'add'
 				},
 				headers: {
@@ -224,7 +223,6 @@ const store = new Vuex.Store({
 					'category.name'        : category.name,
 					'category.description' : category.description,
 					'category.visible'     : category.visible,
-					'category.face'        : category.face,
 					action                 : 'edit'
 				},
 				headers: {
@@ -279,11 +277,18 @@ const store = new Vuex.Store({
 			)
 		},
 		getClientList({commit}) {
+			// Включаем лоадер
+			commit('set', {type: 'loader', items: true})
 			Vue.http.get(Conf.url.clients).then(
 				response => {
 					let body = response.body;
-					console.log(body.clients)
+					body.clients.forEach(key => {
+						// Переменная отвечает за поиск
+						key.search = true
+					})
 					commit('set', {type: 'clientsList', items: body.clients})
+					// Выключаем лоадер
+					commit('set', {type: 'loader', items: false})
 				},
 				error => {
 				 	console.log(error);
@@ -309,7 +314,7 @@ const store = new Vuex.Store({
 					} else {
 						commit('set', {type: 'order', items: body.order})
 						commit('set', {type: 'documents', items: body.documents})
-						document.location = '/#/order'
+						document.location = '/#/order/' + body.order.id
 					};
 				},
 				error => {
@@ -318,6 +323,8 @@ const store = new Vuex.Store({
 			)
 		},
 		getOrders({commit}) {
+			// Включаем лоадер
+			commit('set', {type: 'loader', items: true})
 			Vue.http.get(Conf.url.order).then(
 				response => {
 					let body = response.body
@@ -327,6 +334,8 @@ const store = new Vuex.Store({
 				 		});
 
 				 	commit('set', {type: 'orders', items: body.orders});
+				 	// Выключаем лоадер
+					commit('set', {type: 'loader', items: false})
 				},
 				error => {
 					console.log(error);
@@ -361,9 +370,9 @@ const store = new Vuex.Store({
 							key.search = true
 						});
 						commit('set', {type: 'productList', items: body.category.extend.products.elements});
-						// Выключаем лоадер
-						commit('set', {type: 'loader', items: false})
 					}
+					// Выключаем лоадер
+					commit('set', {type: 'loader', items: false})
 				},
 				error => {
 					console.log(error);

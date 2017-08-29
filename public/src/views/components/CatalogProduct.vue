@@ -28,7 +28,7 @@
 
 				<div class="shop__row js-t-row normal" v-for='product in  productList' v-if="product.visible && product.filterPrice && product.filterAlko && product.search && product.filterOffer">
 					<div class="shop__cell shop__cell-name">
-						<div class="shop__cell-img"><!-- <a href="#"><img src="pic/products/abrau_brut.png" alt="product"></a> --></div>
+						<div class="shop__cell-img"><img src="pic/batle.png" alt="product"></div>
 						<div class="shop__cell-main">
 							<span class="shop__cell-n">{{product.name}}</span>
 							<div class="shop__cell-status">&nbsp;</div>

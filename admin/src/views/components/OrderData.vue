@@ -4,7 +4,7 @@
 				<li class="order_inf active" @click="tab('.order_inf')">Информация о заказе</li>
 				<li class='compani_inf'      @click="tab('.compani_inf')">Ваши данные</li>
 				<li class='sales_inf'        @click="tab('.sales_inf')">Доставка</li>
-				<li class='docs_inf marked'  @click="tab('.docs_inf')">Документы</li>
+				<li class='docs_inf'         @click="tab('.docs_inf')">Документы</li>
 			</ul>
 			<!--tabs content-->
 			<div class="tabs__content order-ls__info active order_inf">
@@ -105,7 +105,7 @@
 						<div class="order-ls__docs-cell">
 							<div class="order-ls__docs-name--holder">
 								<span class="status status--pdf">PDF</span>
-								<a href="" class="order-ls__docs-name">ТОРГ-12</a>
+								<p class="order-ls__docs-name">ТОРГ-12</p>
 							</div>
 						</div>
 						<div class="order-ls__docs-cell">
@@ -124,7 +124,7 @@
 						<div class="order-ls__docs-cell">
 							<div class="order-ls__docs-name--holder">
 								<span class="status status--pdf">PDF</span>
-								<a href="#" class="order-ls__docs-name">ТТН</a>
+								<p class="order-ls__docs-name">ТТН</p>
 							</div>
 						</div>
 						<div class="order-ls__docs-cell">
@@ -143,7 +143,7 @@
 						<div class="order-ls__docs-cell">
 							<div class="order-ls__docs-name--holder">
 								<span class="status status--pdf">PDF</span>
-								<a href="#" class="order-ls__docs-name">Cчет-фактура</a>
+								<p class="order-ls__docs-name">Cчет-фактура</p>
 							</div>
 						</div>
 						<div class="order-ls__docs-cell">
@@ -162,7 +162,7 @@
 						<div class="order-ls__docs-cell">
 							<div class="order-ls__docs-name--holder">
 								<span class="status status--pdf">PDF</span>
-								<a href="#" class="order-ls__docs-name">Справки ТТН</a>
+								<p class="order-ls__docs-name">Справки ТТН</p>
 							</div>
 						</div>
 						<div class="order-ls__docs-cell">
@@ -181,7 +181,7 @@
 						<div class="order-ls__docs-cell">
 							<div class="order-ls__docs-name--holder">
 								<span class="status status--pdf">PDF</span>
-								<a href="#" class="order-ls__docs-name">Сертификаты и удостоверения качества</a>
+								<p class="order-ls__docs-name">Сертификаты и удостоверения качества</p>
 							</div>
 						</div>
 						<div class="order-ls__docs-cell">

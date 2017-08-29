@@ -11,7 +11,7 @@
 		<div class="product__row js-t-row"  v-for='el in order.products.elements'>
 			<div class="product__cell product__name">
 				<div class="product__name-img">
-					<!-- <a href="#"><img src="pic/products/abrau_brut.png" alt="product"></a> -->
+					<img src="pic/batle.png" alt="product">
 				</div>
 				<div class="product__name-title">
 					{{el.product.name}}

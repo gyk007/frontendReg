@@ -8,22 +8,31 @@
 							<svg><use xlink:href="#filter"></use></svg>
 					</div>
 
-					<div class="catalog__products-row js-t-row" v-on:click="getProduct(product)" v-for="product in productList" v-if='product.search'>
-							<div class="catalog__products-col catalog__products-name">
-									<!-- <div class="catalog__products-name--img"> -->
-											<!-- <a href="#"><img src="pic/products/abrau_brut.png" alt="product"></a> -->
-									<!-- </div> -->
-									<span class="catalog__products-name--title">
-										{{product.name}}
-										<span class="js-av-clone"></span>
-									</span>
+
+					<div class="shop__table" v-if='productList'>
+
+						<div class="shop__row shop__table-hdr">
+							<div class="shop__cell shop__table-hdr--name"><span>Название</span></div>
+							<div class="shop__cell shop__cell-availability"><span>Количесво</span></div>
+							<div class="shop__cell shop__cell-order">&nbsp;</div>
+						</div>
+
+						<div class="shop__row js-t-row normal" v-for='product in  productList' v-if='product.search'>
+							<div class="shop__cell shop__cell-name">
+								<div class="shop__cell-img"><img src="pic/batle.png" alt="product"></div>
+								<div class="shop__cell-main">
+									<span class="shop__cell-n">{{product.name}}</span>
+									<div class="js-availability-clone"></div>
+								</div>
 							</div>
-							<div class="catalog__products-col catalog__products-available">
-								<span class="js-av-catch">{{product.properties[7].value}}</span>
+							<div class="shop__cell shop__cell-availability"><span class='js-availability'>{{product.properties[7].value}}</span></div>
+							<div class="shop__cell shop__cell-order">
+								 <a data-fancybox data-src="#popup__product" href="javascript:;" class="btn btn--reject" v-on:click="editProduct(product)">Просмотр</a>
 							</div>
-							<!-- <div class="catalog__products-col catalog__products-art"><span>Артикул: </span>46798456213456</div> -->
-							<div class="catalog__products-col catalog__products-btn"><a data-fancybox data-src="#popup__product" href="javascript:;" class="btn btn--reject" v-on:click="editProduct(product)">Просмотр</a></div>
+						</div>
+
 					</div>
+
 					<!-- Лоадер -->
 					<div class='product_loader' v-if='loader'><img src="pic/loading.gif"></div>
 

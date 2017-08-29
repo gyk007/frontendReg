@@ -17,12 +17,12 @@
 				</label>
 				<textarea v-model="product.description" placeholder="" readonly="readonly"></textarea>
 			</div>
-			<div class="popup__product-form--holder">
+			<!-- <div class="popup__product-form--holder">
 				<label>
 					<input type="checkbox" class="checkbox" v-model="product.visible" disabled="disabled">
 					<span style="font-size: 15px">Показать в публичной части</span>
 				</label>
-			</div>
+			</div> -->
 			<div class="product_prop_hdr">Параметры</div>
 			<div class="popup__product-form--holder_prop holder-third" v-for="prop in product.properties" :class="[prop.name == 'Старна производитель' ? '' : '']">
 				<label>

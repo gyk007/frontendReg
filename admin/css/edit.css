@@ -250,3 +250,7 @@ select[readonly],
 	width: 415px;
 	margin: 0 auto;
 }
+
+.catalog__products-scroll {
+	max-height: none;
+}

@@ -16,7 +16,7 @@
 				<div class="js-nav-button-close">X</div>
 				<ul class="nav__list">
 					<li><router-link to="/orders"  active-class='active'>Заказы</router-link></li>
-					<li><router-link to="/catalog" active-class='active'>Каталог продукции</router-link></li>
+					<li><router-link to="/catalog" active-class='active'>Каталог</router-link></li>
 					<li><a data-fancybox data-src="#popup__contact" href="javascript:;">Обратная связь</a></li>
 					<li><a data-fancybox data-src="#popup__exit"    href="javascript:;">Выход</a></li>
 				</ul>
@@ -36,7 +36,7 @@
 
 							<div class="header__user-container">
 									<div class="header__user-name" v-if='shop'>
-										<a data-fancybox data-src="#popup__select_shop" href="javascript:;">{{shop.official.name}}</a> 
+										<a data-fancybox data-src="#popup__select_shop" href="javascript:;">{{shop.official.name}}</a>
 									</div>
 									<div class="header__user-logo">
 											<!-- <img src="pic/icon/name-logo.png" alt="logo"> -->

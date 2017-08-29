@@ -58,7 +58,7 @@
 			getProductList(category) {
 				this.$store.dispatch('getProductList', category.id)
 				this.$store.dispatch('selectCategory', category)
-			 	$('.jq-scroll').mCustomScrollbar()
+			 	//$('.jq-scroll').mCustomScrollbar()
 			 	$('.catalog__nav').fadeOut(200)
 				$('body').css('overflow', 'auto')
 			},

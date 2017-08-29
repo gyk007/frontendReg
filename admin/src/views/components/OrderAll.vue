@@ -52,6 +52,8 @@
 			</div>
 
 		</div>
+		<!-- Лоадер -->
+		<div class='product_loader' v-if='loader'><img src="pic/loading.gif"></div>
 	</section>
 </template>
 
@@ -63,6 +65,9 @@
 		computed: {
 			orders() {
 				return this.$store.getters.orders
+			},
+			loader() {
+				return this.$store.getters.loader
 			}
 		},
 		methods: {

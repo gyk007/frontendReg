@@ -11,7 +11,7 @@
 							<a data-fancybox data-src="#popup__category" href="javascript:;" class="btn btn--pickup" v-on:click="unselectCategoory">Новая категория</a>
 						</div>
 						<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if="category">
-							<a data-fancybox data-src="#popup__delete_category" href="javascript:;" class="btn btn--delete" v-if="!category.child.length">Удалить</a>
+							<a data-fancybox data-src="#popup__delete_category" href="javascript:;" class="btn btn--delete" v-if="!category.child.length && !productList">Удалить</a>
 						</div>
 						<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if="category">
 								<a data-fancybox data-src="#popup__category" href="javascript:;" class="btn btn--edit">Редактировать</a>
@@ -23,7 +23,7 @@
 							<button class="btn btn--edit" title="Переместить категорию вверх" v-on:click="upCategoory(category)" v-if="!category.child.length">&#8593;</button>
 						</div>
 						<div class="a-catalog__hdr-controls in_category" style="margin-right:10px" v-if="isHidden()">
-							<button class="btn btn--edit" title="Поместить категорию внутрь следующей категории" v-on:click="inCategoory(category)" v-if="!category.child.length">&#8594;</button>
+							<button class="btn btn--edit" title="Поместить категорию внутрь следующей категории" v-on:click="inCategoory(category)" v-if="!category.child.length && !productList">&#8594;</button>
 						</div>
 				</div>
 		</div>
@@ -54,8 +54,11 @@ export default {
 	store: store,
 	computed: {
 		category() {
-				return this.$store.getters.category
-			},
+			return this.$store.getters.category
+		},
+		productList() {
+			return this.$store.getters.productList
+		}
 	},
 	methods: {
 		unselectCategoory(){

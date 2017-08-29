@@ -81,7 +81,7 @@ const catalogStore = new Vuex.Store({
 		selectOffer(state){
 			return state.selectOffer
 		},
-	},	 
+	},
 	mutations: {
 		set(state, {type, items}) {
 			state[type] = items
@@ -195,7 +195,7 @@ const catalogStore = new Vuex.Store({
 					console.log(error);
 				}
 			)
-		},		
+		},
 		authorization({dispatch, commit}, data) {
 			let arg = {
 				params: {
@@ -462,11 +462,11 @@ const catalogStore = new Vuex.Store({
 							})
 							commit('set', {type: 'filterPrice', items: filterPrice})
 							commit('set', {type: 'filterAlko',  items: filterAlko})
-							// Выключаем лоадер
-							commit('set', {type: 'loader', items: false})
-							// Выключаем вкладку с индивидуальными предложениями
-							commit('set', {type: 'selectOffer', items: false})
 						}
+						// Выключаем лоадер
+						commit('set', {type: 'loader', items: false})
+						// Выключаем вкладку с индивидуальными предложениями
+						commit('set', {type: 'selectOffer', items: false})
 					}
 				},
 				error => {

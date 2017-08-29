@@ -8,18 +8,18 @@
 		<div class="popup__product-form--holder">
 		<label>
 			<span style="font-size: 15px">Название Категории</span>
-			<input  v-bind:value="category.name"  placeholder="" class="input">
+			<input   v-model="category.name"  placeholder="" class="input">
 		</label>
 		</div>
 		<div class="popup__product-form--holder">
 		<label>
 			<span style="font-size: 15px" >Описание Категории</span>
-			<textarea v-bind:value="category.description" placeholder=""></textarea>
+			<textarea v-model="category.description" placeholder=""></textarea>
 		</label>
 		</div>
 		<div class="popup__product-form--holder">
 			<label>
-				<input type="checkbox" class="checkbox" v-bind:value="category.visible">
+				<input type="checkbox" class="checkbox"  v-model="category.visible">
 				<span style="font-size: 15px">Показать в публичной части</span>
 			</label>
 			<a data-fancybox data-src="#popup__products" href="javascript:;" class="btn" v-if="category.name">Редактор продуктов</a>
@@ -41,13 +41,14 @@
   export default {
 	computed: {
 		category() {
- 			return this.$store.getters.category
-			? this.$store.getters.category
-			: {
-				name        : '',
-				description : '',
-				visible     : false
+			let category = {
+				id          : this.$store.getters.category ? this.$store.getters.category.id          : undefined,
+				name        : this.$store.getters.category ? this.$store.getters.category.name        : '',
+				description : this.$store.getters.category ? this.$store.getters.category.description : '',
+				visible     : this.$store.getters.category ? this.$store.getters.category.visible     : false,
 			}
+
+			return category;
 		},
 	},
 	methods: {

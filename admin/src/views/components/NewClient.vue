@@ -1,5 +1,5 @@
 <template>
-	<section class="popup popup__category" id="popup__client">
+	<section class="popup popup__category" id="popup__client" v-if="client &&  client.official">
 
 	<div class="popup__hdr" v-if="!client"></div>
 	<div class="popup__hdr" v-if="client.official.name">{{client.official.name}}</div>
