@@ -19,6 +19,7 @@
 					<li><router-link to="/catalog" active-class='active'>Каталог</router-link></li>
 					<li><a data-fancybox data-src="#popup__contact" href="javascript:;">Обратная связь</a></li>
 					<li><a data-fancybox data-src="#popup__exit"    href="javascript:;">Выход</a></li>
+					<li><div @click='show'>Тест</div></li>
 				</ul>
 			</nav>
 
@@ -68,6 +69,11 @@
 			shop() {
 				return this.$store.getters.shop
 			}
+		},
+		methods: {
+			show() {
+				this.$store.commit('set', {type: 'showModal', items: true})
+			},
 		},
 		beforeCreate: function() {
 			this.$store.dispatch('getUser')

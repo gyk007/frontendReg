@@ -28,6 +28,7 @@ const catalogStore = new Vuex.Store({
 		shop        : null,      // выбраная торговая точка
 		loader      : false,     // отвечает за лоадер, если true - лодер включен
 		selectOffer : false,     // вкладка с индивидуальными предложениями, если true - вкладка нажата
+		showModal   : false,
 	},
 	getters: {
 		catalogTree(state) {
@@ -80,6 +81,9 @@ const catalogStore = new Vuex.Store({
 		},
 		selectOffer(state){
 			return state.selectOffer
+		},
+		showModal(state){
+			return state.showModal
 		},
 	},
 	mutations: {
