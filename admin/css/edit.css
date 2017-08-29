@@ -245,3 +245,8 @@ select[readonly],
 .popup__product-form--holder_prop.holder-fourth {
 	width: 25%;
 }
+
+.product_loader {
+	width: 415px;
+	margin: 0 auto;
+}

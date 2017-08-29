@@ -24,6 +24,8 @@
 							<!-- <div class="catalog__products-col catalog__products-art"><span>Артикул: </span>46798456213456</div> -->
 							<div class="catalog__products-col catalog__products-btn"><a data-fancybox data-src="#popup__product" href="javascript:;" class="btn btn--reject" v-on:click="editProduct(product)">Просмотр</a></div>
 					</div>
+					<!-- Лоадер -->
+					<div class='product_loader' v-if='loader'><img src="pic/loading.gif"></div>
 
 			</div>
 		</div>
@@ -38,6 +40,9 @@
 		computed: {
 			productList() {
 				return this.$store.getters.productList
+			},
+			loader() {
+				return this.$store.getters.loader
 			}
 		},
 		methods: {

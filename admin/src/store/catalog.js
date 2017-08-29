@@ -20,6 +20,7 @@ const store = new Vuex.Store({
 		orders         : [],        // все заказы
 		documents      : [],        // документы в заказе
 		allProducts    : [],        // Все продукты, для добавления и удаления из категории
+		loader         : false,      // отвечает за лоадер, если true - лодер включен
 	},
 	getters: {
 		catalogTree(state) {
@@ -57,6 +58,9 @@ const store = new Vuex.Store({
 		},
 		allProducts(state){
 			return state.allProducts
+		},
+		loader(state){
+			return state.loader
 		},
 	},
 	mutations: {
@@ -330,7 +334,10 @@ const store = new Vuex.Store({
 			)
 		},
 		getProductList({commit}, idCategory) {
-			let result;
+			// Очищаем список продуктов
+			commit('set', {type: 'productList', items: []})
+			// Включаем лоадер
+			commit('set', {type: 'loader', items: true})
 
 			let arg = {
 				params:{
@@ -354,6 +361,8 @@ const store = new Vuex.Store({
 							key.search = true
 						});
 						commit('set', {type: 'productList', items: body.category.extend.products.elements});
+						// Выключаем лоадер
+						commit('set', {type: 'loader', items: false})
 					}
 				},
 				error => {

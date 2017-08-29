@@ -66,6 +66,7 @@
 				</div>
 
 			</div>
+			<!-- Лоадер -->
 			<div class='product_loader' v-if='loader'><img src="pic/loading.gif"></div>
 		</div>
 	</section>
@@ -75,7 +76,7 @@
 	import store from '../../store/catalog.js'
 	import $     from 'jquery'
 
-	export default {		 
+	export default {
 		computed: {
 			category() {
 				return this.$store.getters.category
@@ -99,7 +100,7 @@
 			offers(showOffer){
 				if(showOffer) {
 					// Указываем что вкалда 'Индивидуальные предложения' включена
-					this.$store.commit('set', {type: 'selectOffer', items: true})					 
+					this.$store.commit('set', {type: 'selectOffer', items: true})
 					// Если у продукта есть скидка, то показываем этот продукт
 					this.productList.forEach(function(key){
 						if(!key.offer) {
@@ -115,6 +116,6 @@
 					})
 				}
 			},
-		},			 
+		},
 	}
 </script>
