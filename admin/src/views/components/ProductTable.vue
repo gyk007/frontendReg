@@ -3,17 +3,19 @@
 
 	<div class="popup__hdr">Редактор товаров в категории</div>
 
+	<div class="a-catalog__hdr-search" style="margin-left:180px; margin-top: 25px">
+	<div class="search" style="margin-bottom: 25px;">
+        <input type="text" class="input search__input"placeholder="Введите название" @keyup ='search'>
+        <input type="button" class="search__submit">
+        <div class="search__icon">
+            <svg>
+                <use xlink:href="#glass"></use>
+            </svg>
+        </div>
+    </div>
+    </div>
 
-	<div class="popup__category-form">
-		<div class="search" style="margin-bottom: 25px;">
-	        <input type="text" class="input search__input" placeholder="Введите название" @keyup ='search'>
-	        <input type="button" class="search__submit">
-	        <div class="search__icon">
-	            <svg>
-	                <use xlink:href="#glass"></use>
-	            </svg>
-	        </div>
-    	</div>
+	<div class="popup__category-form  prod_table">
 		<div class="catalog__products-row js-t-row"  v-for="product in allProducts" v-if='product.search'>
 			<div class="catalog__products-col catalog__products-name">
 					<span class="catalog__products-name--title">
@@ -74,7 +76,7 @@
 			let searchStr = $(event.target).val()
 
 			this.allProducts.forEach(key => {
-				if (~key.name.indexOf(searchStr)) {
+				if (~key.name.toUpperCase().indexOf(searchStr.toUpperCase())) {
 					key.search = true
 				} else {
 					key.search = false

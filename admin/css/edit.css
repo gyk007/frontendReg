@@ -267,3 +267,9 @@ select[readonly],
 	left: 50%;
 	top: 50%;
 }
+
+.prod_table{
+	max-height: 500px;
+	min-height: 500px;
+	overflow-y: auto;
+}

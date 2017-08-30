@@ -22,7 +22,6 @@
 				<input type="checkbox" class="checkbox"  v-model="category.visible">
 				<span style="font-size: 15px">Показать в публичной части</span>
 			</label>
-			<a data-fancybox data-src="#popup__products" href="javascript:;" class="btn" v-if="category.name">Редактор продуктов</a>
 		</div>
 
 		<button class="btn" v-on:click="addCategory"  v-if="!category.name">Добавить</button>

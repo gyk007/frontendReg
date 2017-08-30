@@ -26,14 +26,17 @@ export default {
     },
     methods: {
         search() {
-            let searchStr = $(event.target).val()
+            let searchStr = $(event.target).val() ? $(event.target).val() : '';
 
             this.clientsList.forEach(key => {
-                if (~key.official.name.indexOf(searchStr)) {
-                    key.search = true
-                } else if (~key.official.taxcode.indexOf(parseInt(searchStr))) {
-                    key.search = true
-                } else if(~key.official.phone.indexOf(parseInt(searchStr))) {
+                let search = (
+                    ~key.official.name.toUpperCase().indexOf(searchStr.toUpperCase())    ||
+                    ~key.official.taxcode.toUpperCase().indexOf(searchStr.toUpperCase()) ||
+                    ~key.official.phone.toUpperCase().indexOf(searchStr.toUpperCase())
+                )
+
+                console.log(search);
+                if (search > 0) {
                     key.search = true
                 } else {
                     key.search = false
