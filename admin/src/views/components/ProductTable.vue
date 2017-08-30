@@ -1,7 +1,7 @@
 <template>
 	<section class="popup popup__category" id="popup__products">
 
-	<div class="popup__hdr">Редактор товаров в категории</div>
+	<div class="popup__hdr">Выбор товаров</div>
 
 	<div class="a-catalog__hdr-search" style="margin-left:180px; margin-top: 25px">
 	<div class="search" style="margin-bottom: 25px;">
