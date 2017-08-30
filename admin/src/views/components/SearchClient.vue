@@ -3,7 +3,7 @@
         <div class="a-catalog__hdr-title">Клиенты</div>
         <div class="a-catalog__hdr-search">
             <form action="#" class="search">
-                <input type="text" class="input search__input" placeholder="Введите название, телефон, инн"  @blur ='search'>
+                <input type="text" class="input search__input" placeholder="Введите название, телефон, инн"  @keyup ='search'>
                 <div class="search__submit"></div>
                 <div class="search__icon">
                     <svg>

@@ -66,7 +66,7 @@
 			 	this.$store.dispatch('getOrder', orderId)
 			},
 		},
-		created: function() {
+		mounted: function() {
 			this.$store.dispatch('getOrders')
 		},
 	}

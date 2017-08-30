@@ -53,6 +53,10 @@
 			},
 		},
 		created: function() {
+			this.$store.commit('set', {type: 'clientsList', items: undefined})
+			this.$store.commit('set', {type: 'loader', items: undefined})
+		},
+		mounted: function() {
 			this.$store.dispatch('getClientList')
 		}
 	}

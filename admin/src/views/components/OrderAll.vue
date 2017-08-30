@@ -48,7 +48,7 @@
 					<span class="order__title js-e" v-if='!order.latch_number'>В обработке</span>
 				</div>
 				<div class="order__cell order__cost"><span class="js-cost">{{order.price}} <i class="rub">a</i></span></div>
-				<div class="order__cell order__status"><span class="js-status"><span class='status status--accepted' v-tooltip="order.status.description">{{order.status.name}}</span></span></div>
+				<div class="order__cell order__status"><span class="js-status"><span class='status status--accepted' v-tooltip="order.status.description">{{order.status.description}}</span></span></div>
 			</div>
 
 		</div>
@@ -76,7 +76,11 @@
 			},
 		},
 		created: function() {
-			this.$store.dispatch('getOrders')
+			this.$store.commit('set', {type: 'loader', items: undefined})
+			this.$store.commit('set', {type: 'orders', items: undefined})
 		},
+		mounted: function() {
+			this.$store.dispatch('getOrders')
+		}
 	}
 </script>

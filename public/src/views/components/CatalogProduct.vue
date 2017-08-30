@@ -68,8 +68,8 @@
 		<!-- Лоадер -->
 		<div class='product_loader fixed-loader'   v-if='loader'><img src="pic/loading.gif"></div>
 		<div class='text-no-category'      v-if='!productList && !loader && idActiveCat'>В категории нет товаров</div>
-		<div class='text-no-category'      v-if='!idActiveCat && !loade'>Выберите категорию</div>
-		<div class='text-no-category-long' v-if='!isOffers && selectOffer && !loade'>В данной категории у Вас нет индивидуальных предложений </div>
+		<div class='text-no-category'      v-if='!idActiveCat && !loader'>Выберите категорию</div>
+		<div class='text-no-category-long' v-if='!isOffers && selectOffer && !loader'>В данной категории у Вас нет индивидуальных предложений </div>
 	</section>
 </template>
 
@@ -88,13 +88,7 @@
 				return this.$store.getters.category
 			},
 			productList() {
-				let productList = this.$store.getters.productList
-
-				if (productList && productList.length) {
-					return productList
-				} else {
-					return undefined
-				}
+				return this.$store.getters.productList
 			},
 			loader() {
 				return this.$store.getters.loader
@@ -136,5 +130,9 @@
 				this.$data.isOffers = isOffers;
 			},
 		},
+		created: function() {
+			// Очищаем список продуктов
+			this.$store.commit('set', {type: 'productList', items: undefined})
+		}
 	}
 </script>

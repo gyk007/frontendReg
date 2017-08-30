@@ -14,7 +14,7 @@
 					<img src="pic/batle.png" alt="product">
 				</div>
 				<div class="product__name-title">
-					<a href="#">{{el.product.name}}</a>
+					{{el.product.name}}
 				</div>
 			</div>
 

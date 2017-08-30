@@ -282,6 +282,7 @@ const store = new Vuex.Store({
 			Vue.http.get(Conf.url.clients).then(
 				response => {
 					let body = response.body;
+					console.log(body)
 					body.clients.forEach(key => {
 						// Переменная отвечает за поиск
 						key.search = true

@@ -71,6 +71,9 @@
 				this.$store.dispatch('selectProduct', product)
 			}
 		},
+		created: function() {
+			this.$store.commit('set', {type: 'productList', items: undefined})
+		},
 		mounted: function() {
 			$('.js-nav-open').click(function () {
 					$('.catalog__nav').fadeIn(200);

@@ -7,19 +7,19 @@
 				<div class="p-card__data-title"> {{shop.official.name}} </div>
 			</div>
 			<div class="input-field">
-				<input id="personal-card-tel" type="text" class="input" v-model='orderData.phone' >
+				<input id="personal-card-tel" type="text" class="input" :class="{ valid_in_cart : validate.phone }" v-model='orderData.phone' >
 				<label for="personal-card-tel">Телефон получателя<span class="accent">*</span></label>
 			</div>
 			<div class="input-field">
-				<input id="personal-card-addr" type="text" class="input" v-model='orderData.address'>
+				<input id="personal-card-addr" type="text" class="input" :class="{ valid_in_cart : validate.address }" v-model='orderData.address'>
 				<label for="personal-card-addr">Адрес доставки<span class="accent">*</span></label>
 			</div>
 			<div class="input-field">
-				<input id="personal-card-name" type="text" class="input" v-model='orderData.name'>
+				<input id="personal-card-name" type="text" class="input" :class="{ valid_in_cart : validate.name }" v-model='orderData.name'>
 				<label for="personal-card-name">Имя получателя<span class="accent">*</span></label>
 			</div>
 			<div class="input-field">
-				<input id="personal-card-email" type="email" class="input" v-model='orderData.email'>
+				<input id="personal-card-email" type="email" class="input" :class="{ valid_in_cart : validate.email }" v-model='orderData.email'>
 				<label for="personal-card-email">Эл.почта<span class="accent">*</span></label>
 			</div>
 
@@ -42,12 +42,12 @@
 		data() {
     		return {
 	    		orderData  : {
-	    			name   : '',
-	    			phone  : '',
-	    			address: '',
-	    			email  : '',
-	    			remark : '',
-	    			idShop : null
+	    			name   : undefined,
+	    			phone  : undefined,
+	    			address: undefined,
+	    			email  : undefined,
+	    			remark : undefined,
+	    			idShop : undefined,
     			},
     			validate  :  {
 	    			name   : false,
@@ -67,6 +67,19 @@
 		},
 		methods: {
 			addOrder(selectedShop) {
+				['phone', 'address', 'name', 'email'].forEach(key => {
+					this.$data.validate[key]  = false
+					this.$data.orderData[key] = this.$data.orderData[key] ? this.$data.orderData[key].trim() : undefined
+				})
+
+				if (!this.$data.orderData.phone)
+					return this.$data.validate.phone   = true
+				if (!this.$data.orderData.address)
+					return this.$data.validate.address = true
+				if (!this.$data.orderData.name)
+					return this.$data.validate.name    = true
+				if (!this.$data.orderData.email)
+					return this.$data.validate.email   = true
 
 				this.$store.dispatch('addOrder', this.$data.orderData);
 			}

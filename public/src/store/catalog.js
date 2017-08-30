@@ -11,8 +11,8 @@ Vue.use(VueResource)
 
 const catalogStore = new Vuex.Store({
 	state: {
-		catalogTree   : [],        // дерево категорий
-		productList   : [],        // список товаров в выбранной категории
+		catalogTree   : undefined, // дерево категорий
+		productList   : undefined, // список товаров в выбранной категории
 		idActiveCat   : undefined, // id выбранной категории
 		category      : undefined, // выбранная категория
 		filterPrice   : undefined, // начальные значени фильра "Цена"
