@@ -273,3 +273,14 @@ select[readonly],
 	min-height: 500px;
 	overflow-y: auto;
 }
+
+.modal_btn{
+	display: block;
+	width: 140px;
+	margin: 0 auto;
+	margin-top: 20px;
+}
+
+.catalog__products-all {
+	width: 100%;
+}

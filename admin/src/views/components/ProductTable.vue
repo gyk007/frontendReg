@@ -17,7 +17,7 @@
 
 	<div class="popup__category-form  prod_table">
 		<div class="catalog__products-row js-t-row"  v-for="product in allProducts" v-if='product.search'>
-			<div class="catalog__products-col catalog__products-name">
+			<div class="catalog__products-col catalog__products-all">
 					<span class="catalog__products-name--title">
 						{{product.name}}
 						<span class="js-av-clone"></span>
@@ -29,6 +29,7 @@
 			</div>
 		</div>
 	</div>
+	<button class="modal_btn btn" v-on:click="reloadCategory" v-if="idActiveCat">Редактировать</button>
 </section>
 </template>
 
@@ -44,14 +45,15 @@
 				this.$store.getters.allProducts.forEach((key, index) => {
 					if (key.link) {
 						// Проверяем находится ли продукт в выбранной категории
-						key.link.forEach(link => {
-							if(link.id_category == this.$store.getters.idActiveCat) {
+						for (let i = 0; i < key.link.length; i++) {
+							if(key.link[i].id_category == this.$store.getters.idActiveCat) {
 								// Переменная указывает что данный товар находиться в данной категории
 								key.inThisCat = true
+								break;
 							} else {
 								key.inThisCat = false
 							}
-						})
+						}
 						// Помещаем в начало списка
 						if(key.inThisCat) {
 							// Удаляем из массива даный продукт
@@ -64,6 +66,9 @@
 
  			return this.$store.getters.allProducts
  		},
+ 		idActiveCat() {
+			return this.$store.getters.idActiveCat
+		},
 	},
 	methods: {
 		addProduct(id) {
@@ -83,6 +88,9 @@
 				}
 			})
 		},
+		reloadCategory(){
+			this.$store.dispatch('getProductList', this.idActiveCat)
+		}
 	},
 	created: function() {
 		this.$store.dispatch('getAllProducts')

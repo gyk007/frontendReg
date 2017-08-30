@@ -9,7 +9,7 @@
 					</div>
 
 
-					<div class="shop__table" v-if='productList.length'>
+					<div class="shop__table" v-if='productList'>
 
 						<div class="shop__row shop__table-hdr">
 							<div class="shop__cell shop__table-hdr--name"><span>Название</span></div>
@@ -35,7 +35,8 @@
 		</div>
 		<!-- Лоадер -->
 		<div class='product_loader fixed-loader' v-if='loader'><img src="pic/loading.gif"></div>
-		<div class='text-no-category' v-if='!productList.length && !loader'>Выберите категорию</div>
+		<div class='text-no-category' v-if='!productList && !loader && idActiveCat'>В категории нет товаров</div>
+		<div class='text-no-category' v-if='!idActiveCat && !loade'>Выберите категорию</div>
 	</section>
 </template>
 
@@ -45,6 +46,9 @@
 
 	export default {
 		computed: {
+			idActiveCat() {
+				return this.$store.getters.idActiveCat
+			},
 			productList() {
 				return this.$store.getters.productList
 			},

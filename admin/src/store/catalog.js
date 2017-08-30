@@ -8,19 +8,19 @@ Vue.use(VueResource)
 
 const store = new Vuex.Store({
 	state: {
-		catalogTree    : [],        // все категории (дерево категорий)
-		productList    : [],        // Продукты в категории
-		category       : null,      // выбранная категория
-		product        : null,      // выбранный продукт
+		catalogTree    : undefined, // все категории (дерево категорий)
+		productList    : undefined, // Продукты в категории
+		category       : undefined, // выбранная категория
+		product        : undefined, // выбранный продукт
 		idActiveCat    : undefined, // id выбранной категории
-		clientsList    : [],        // список клиентов
-		client         : null,      // выбранный клиент
+		clientsList    : undefined, // список клиентов
+		client         : undefined, // выбранный клиент
 		idActiveClient : undefined, // id выбранного клиентв
-		order          : null,      // выбранный заказ
-		orders         : [],        // все заказы
-		documents      : [],        // документы в заказе
-		allProducts    : [],        // Все продукты, для добавления и удаления из категории
-		loader         : false,      // отвечает за лоадер, если true - лодер включен
+		order          : undefined, // выбранный заказ
+		orders         : undefined, // все заказы
+		documents      : undefined, // документы в заказе
+		allProducts    : undefined, // Все продукты, для добавления и удаления из категории
+		loader         : false,     // отвечает за лоадер, если true - лодер включен
 	},
 	getters: {
 		catalogTree(state) {
@@ -161,7 +161,7 @@ const store = new Vuex.Store({
 						console.log(body.ERROR)
 					} else {
 						commit('relodCatalogTree');
-						commit('set', {type: 'category', items: null})
+						commit('set', {type: 'category', items: undefined})
 					};
 				},
 				error => {
@@ -208,7 +208,7 @@ const store = new Vuex.Store({
 						console.log(body.ERROR)
 					} else {
 						commit('relodClientList');
-						commit('set', {type: 'client', items: null})
+						commit('set', {type: 'client', items: undefined})
 					};
 				},
 				error => {
@@ -344,7 +344,7 @@ const store = new Vuex.Store({
 		},
 		getProductList({commit}, idCategory) {
 			// Очищаем список продуктов
-			commit('set', {type: 'productList', items: []})
+			commit('set', {type: 'productList', items: undefined})
 			// Включаем лоадер
 			commit('set', {type: 'loader', items: true})
 
@@ -361,7 +361,7 @@ const store = new Vuex.Store({
 				response => {
 					let body = response.body
 					// Очищаем список продуктов
-					commit('set', {type: 'productList', items: null})
+					commit('set', {type: 'productList', items: undefined})
 					if (body.category.extend.products.elements.length) {
 						body.category.extend.products.elements.forEach(function(key) {
 							// Свойства, делаем удобнее

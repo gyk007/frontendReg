@@ -17,7 +17,7 @@
 								<a data-fancybox data-src="#popup__category" href="javascript:;" class="btn btn--edit">Редактировать</a>
 						</div>
 						<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if="category">
-							<a data-fancybox data-src="#popup__products" href="javascript:;" class="btn btn--edit" v-if="category.name">Редактор продуктов</a>
+							<a data-fancybox data-src="#popup__products" href="javascript:;" class="btn btn--edit" v-if="category.name">Выбрать товары</a>
 						</div>
 						<div class="a-catalog__hdr-controls down_category" style="margin-right:10px" v-if="isHidden()">
 							<button class="btn btn--edit" title="Переместить категорию внизу" v-on:click="downCategoory(category)" v-if="!category.child.length" >&#8595;</button>
