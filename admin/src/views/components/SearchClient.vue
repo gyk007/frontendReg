@@ -34,7 +34,6 @@ export default {
                 let phone   = key.official.phone   ? key.official.phone   : '';
 
 
-
                 if (name.toUpperCase().indexOf(searchStr.toUpperCase()) >= 0) {
                     key.search = true
                 } else if (phone.toUpperCase().indexOf(searchStr.toUpperCase()) >= 0) {

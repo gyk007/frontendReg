@@ -22,7 +22,7 @@
 				</ul>
 			</nav>
 
-			<router-link to="/cart">
+			<router-link to="/cart" v-if='cartPrice'>
 			<div class="header__basket">
 					<div class="header__basket-stat">
 							<svg><use xlink:href="#bag"></use></svg>
@@ -30,6 +30,14 @@
 					</div>
 			</div>
 			</router-link>
+
+			<div class="header__basket" v-if='!cartPrice'>
+					<div class="header__basket-stat">
+							<svg><use xlink:href="#bag"></use></svg>
+							<div class="header__basket-num">{{cartPrice}}&nbsp;<i class="rub">a</i></div>
+					</div>
+			</div>
+
 
 			<div class="header__user">
 					<div class="header__user--holder">

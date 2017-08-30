@@ -22,10 +22,12 @@ export default {
 	},
 	methods: {
 		search() {
-			let searchStr = $(event.target).val()
+			let searchStr = $(event.target).val().toUpperCase()
 
 			this.productList.forEach(key => {
-				if (~key.name.indexOf(searchStr)) {
+				let name  = key.name ? key.name.toUpperCase() : ""
+
+				if (~name.indexOf(searchStr)) {
 					key.search = true
 				} else {
 					key.search = false

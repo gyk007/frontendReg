@@ -273,3 +273,28 @@
     text-align: center;
     padding-bottom: 15px;
 }
+
+.text-no-category{
+	font-family: "Ubuntu";
+	font-size: 25px;
+	position: fixed;
+	left: 50%;
+	top: 50%;
+}
+.text-no-category-long{
+	font-family: "Ubuntu";
+	font-size: 25px;
+	position: fixed;
+	left: 40%;
+	top: 50%;
+}
+
+.fixed-loader{
+	position: fixed;
+	left: 50%;
+	top: 50%;
+}
+
+.valid_in_cart {
+	border-bottom: 1px solid #f44336;
+}

@@ -7,7 +7,7 @@
 				<div class="p-card__data-title"> {{shop.official.name}} </div>
 			</div>
 			<div class="input-field">
-				<input id="personal-card-tel" type="text" class="input" v-model='orderData.phone'>
+				<input id="personal-card-tel" type="text" class="input" v-model='orderData.phone' >
 				<label for="personal-card-tel">Телефон получателя<span class="accent">*</span></label>
 			</div>
 			<div class="input-field">
@@ -27,7 +27,7 @@
 				<span>Пожелания по доставке</span>
 				<textarea name="personal-card-message"  v-model='orderData.remark'></textarea>
 			</div>
-			<button type="submit" class="btn btn--checkout p-card__data-submit" @click='addOrder'>Оформить</button>
+			<button v-if='cartPrice' type="submit" class="btn btn--checkout p-card__data-submit" @click='addOrder'>Оформить</button>
 		</div>
 
 	</section>
@@ -48,6 +48,12 @@
 	    			email  : '',
 	    			remark : '',
 	    			idShop : null
+    			},
+    			validate  :  {
+	    			name   : false,
+	    			phone  : false,
+	    			address: false,
+	    			email  : false,
     			}
     		}
   		},
@@ -55,9 +61,13 @@
 			shop() {
 				return this.$store.getters.shop;
 			},
+			cartPrice() {
+				return this.$store.getters.cartPrice
+			},
 		},
 		methods: {
 			addOrder(selectedShop) {
+
 				this.$store.dispatch('addOrder', this.$data.orderData);
 			}
 		},

@@ -1,10 +1,9 @@
 <template>
 	<section class="shop__data">
-		<div class="shop__data-body">
+		<div class="shop__data-body" v-if='productList'>
 			<ul class="shop__sub-nav">
-				<div v-if='category'>
+				<div>
 					<li :class="{ active: !selectOffer, accent: selectOffer}"><a v-on:click="offers(false)">Все</a></li>
-					<li v-for="cat in category.child"><a v-on:click="getCategory(cat)">{{cat.name}}</a></li>
 					<li :class="{ active: selectOffer, accent: !selectOffer}"><a v-on:click="offers(true)">Индивидуальные предложения</a></li>
 				</div>
 			</ul>
@@ -16,7 +15,7 @@
 
 
 
-			<div class="shop__table" >
+			<div class="shop__table" v-if ='productList'>
 				<div class="shop__row shop__table-hdr">
 					<div class="shop__cell shop__table-hdr--name"><span>Название</span></div>
 					<div class="shop__cell shop__cell-availability"><span>Наличие</span></div>
@@ -65,9 +64,12 @@
 					</div>
 				</div>
 			</div>
-			<!-- Лоадер -->
-			<div class='product_loader' v-if='loader'><img src="pic/loading.gif"></div>
 		</div>
+		<!-- Лоадер -->
+		<div class='product_loader fixed-loader'   v-if='loader'><img src="pic/loading.gif"></div>
+		<div class='text-no-category'      v-if='!productList && !loader && idActiveCat'>В категории нет товаров</div>
+		<div class='text-no-category'      v-if='!idActiveCat && !loade'>Выберите категорию</div>
+		<div class='text-no-category-long' v-if='!isOffers && selectOffer && !loade'>В данной категории у Вас нет индивидуальных предложений </div>
 	</section>
 </template>
 
@@ -76,12 +78,23 @@
 	import $     from 'jquery'
 
 	export default {
+		data() {
+			return {
+				isOffers : false,
+			}
+		},
 		computed: {
 			category() {
 				return this.$store.getters.category
 			},
 			productList() {
-				return this.$store.getters.productList
+				let productList = this.$store.getters.productList
+
+				if (productList && productList.length) {
+					return productList
+				} else {
+					return undefined
+				}
 			},
 			loader() {
 				return this.$store.getters.loader
@@ -90,6 +103,9 @@
 				// true  - выбрана вкладка "Индивидуальные предложения"
 				// false - выбрана вкладка "Все"
 				return this.$store.getters.selectOffer
+			},
+			idActiveCat(){
+				return this.$store.getters.idActiveCat
 			}
 		},
 		methods: {
@@ -97,14 +113,16 @@
 				this.$store.dispatch('addToCart', product)
 			},
 			offers(showOffer){
+				let isOffers = false;
 				if(showOffer) {
 					// Указываем что вкалда 'Индивидуальные предложения' включена
 					this.$store.commit('set', {type: 'selectOffer', items: true})
 					// Если у продукта есть скидка, то показываем этот продукт
 					this.productList.forEach(function(key){
-						if(!key.offer) {
+						if(!key.offer)
 							key.filterOffer = false;
-						}
+						else
+							isOffers = true;
 					})
 				} else {
 					// Указываем что вкалда 'Индивидуальные предложения' выключена
@@ -114,6 +132,8 @@
 						key.filterOffer = true;
 					})
 				}
+
+				this.$data.isOffers = isOffers;
 			},
 		},
 	}

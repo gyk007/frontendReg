@@ -14,18 +14,18 @@ const catalogStore = new Vuex.Store({
 		catalogTree   : [],        // дерево категорий
 		productList   : [],        // список товаров в выбранной категории
 		idActiveCat   : undefined, // id выбранной категории
-		category      : null,      // выбранная категория
-		filterPrice   : null,      // начальные значени фильра "Цена"
-		filterAlko    : null,      // начальные значения фильтра "Крепость об %"
-		product       : null,      // выбранные продукт
-		cart          : null,      // корзина
+		category      : undefined, // выбранная категория
+		filterPrice   : undefined, // начальные значени фильра "Цена"
+		filterAlko    : undefined, // начальные значения фильтра "Крепость об %"
+		product       : undefined, // выбранные продукт
+		cart          : undefined, // корзина
 		cartPrice     : 0,         // стоимость корзины
-		shops         : [],        // список магазинов доступных данному пользователю
-		order         : null,      // заказ
-		orders        : [],        // список заказов
-		documents     : [],        // список документов в заказе
-		user          : null,      // данные пользователя
-		shop          : null,      // выбраная торговая точка
+		shops         : undefined, // список магазинов доступных данному пользователю
+		order         : undefined, // заказ
+		orders        : undefined, // список заказов
+		documents     : undefined, // список документов в заказе
+		user          : undefined, // данные пользователя
+		shop          : undefined, // выбраная торговая точка
 		loader        : false,     // отвечает за лоадер, если true - лодер включен
 		selectOffer   : false,     // вкладка с индивидуальными предложениями, если true - вкладка нажата
 		selectShopWnd : false,     // true - показать окно "Выбора торговой точки"
@@ -421,7 +421,7 @@ const catalogStore = new Vuex.Store({
 		},
 		getProductList({commit}, idCategory) {
 			// Очищаем список продуктов
-			commit('set', {type: 'productList', items: []})
+			commit('set', {type: 'productList', items: undefined})
 			// Включаем лоадер
 			commit('set', {type: 'loader', items: true})
 			let arg = {
@@ -443,8 +443,8 @@ const catalogStore = new Vuex.Store({
 							document.location = '/#/auth'
 					} else {
 						// Очищаем список продуктов
-						commit('set', {type: 'productList', items: null})
-						commit('set', {type: 'filters',     items: null})
+						commit('set', {type: 'productList', items: undefined})
+						commit('set', {type: 'filters',     items: undefined})
 						if (body.category.extend.products.elements.length)
 							body.category.extend.products.elements.forEach(function(key) {
 								// Добавляем поиск

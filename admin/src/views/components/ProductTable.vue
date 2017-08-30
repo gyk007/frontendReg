@@ -90,6 +90,7 @@
 		},
 		reloadCategory(){
 			this.$store.dispatch('getProductList', this.idActiveCat)
+			$.fancybox.close()
 		}
 	},
 	created: function() {
