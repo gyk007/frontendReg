@@ -3,7 +3,7 @@
         <div class="a-catalog__hdr-title">Клиенты</div>
         <div class="a-catalog__hdr-search">
             <form action="#" class="search">
-                <input type="text" class="input search__input" placeholder="Введите название, телефон, инн"  @keyup ='search'>
+                <input type="text" class="input search__input" placeholder="Введите название, телефон, инн"  @blur ='search'>
                 <div class="search__submit"></div>
                 <div class="search__icon">
                     <svg>
@@ -29,14 +29,17 @@ export default {
             let searchStr = $(event.target).val() ? $(event.target).val() : '';
 
             this.clientsList.forEach(key => {
-                let search = (
-                    ~key.official.name.toUpperCase().indexOf(searchStr.toUpperCase())    ||
-                    ~key.official.taxcode.toUpperCase().indexOf(searchStr.toUpperCase()) ||
-                    ~key.official.phone.toUpperCase().indexOf(searchStr.toUpperCase())
-                )
+                let name    = key.official.name    ? key.official.name    : '';
+                let taxcode = key.official.taxcode ? key.official.taxcode : '';
+                let phone   = key.official.phone   ? key.official.phone   : '';
 
-                console.log(search);
-                if (search > 0) {
+
+
+                if (name.toUpperCase().indexOf(searchStr.toUpperCase()) >= 0) {
+                    key.search = true
+                } else if (phone.toUpperCase().indexOf(searchStr.toUpperCase()) >= 0) {
+                    key.search = true
+                } else if (taxcode.toUpperCase().indexOf(searchStr.toUpperCase()) >= 0) {
                     key.search = true
                 } else {
                     key.search = false
