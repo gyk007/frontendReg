@@ -8,19 +8,20 @@ Vue.use(VueResource)
 
 const store = new Vuex.Store({
 	state: {
-		catalogTree    : undefined, // все категории (дерево категорий)
-		productList    : undefined, // Продукты в категории
-		category       : undefined, // выбранная категория
-		product        : undefined, // выбранный продукт
-		idActiveCat    : undefined, // id выбранной категории
-		clientsList    : undefined, // список клиентов
-		client         : undefined, // выбранный клиент
-		idActiveClient : undefined, // id выбранного клиентв
-		order          : undefined, // выбранный заказ
-		orders         : undefined, // все заказы
-		documents      : undefined, // документы в заказе
-		allProducts    : undefined, // Все продукты, для добавления и удаления из категории
-		loader         : false,     // отвечает за лоадер, если true - лодер включен
+		catalogTree     : undefined, // все категории (дерево категорий)
+		productList     : undefined, // Продукты в категории
+		category        : undefined, // выбранная категория
+		product         : undefined, // выбранный продукт
+		idActiveCat     : undefined, // id выбранной категории
+		clientsList     : undefined, // список клиентов
+		clientPageCount : undefined, // количесво страниц в компоненте Client
+		client          : undefined, // выбранный клиент
+		idActiveClient  : undefined, // id выбранного клиентв
+		order           : undefined, // выбранный заказ
+		orders          : undefined, // все заказы
+		documents       : undefined, // документы в заказе
+		allProducts     : undefined, // Все продукты, для добавления и удаления из категории
+		loader          : false,     // отвечает за лоадер, если true - лодер включен
 	},
 	getters: {
 		catalogTree(state) {
@@ -41,6 +42,9 @@ const store = new Vuex.Store({
 		clientsList(state) {
 			return  state.clientsList
 		},
+		clientPageCount(state) {
+			return  state.clientPageCount
+		}, 
 		client(state) {
 			return state.client
 		},
@@ -276,18 +280,29 @@ const store = new Vuex.Store({
 				}
 			)
 		},
-		getClientList({commit}) {
+		getClientList({commit}, page) {
 			// Включаем лоадер
 			commit('set', {type: 'loader', items: true})
-			Vue.http.get(Conf.url.clients).then(
+
+			let arg = {
+				params:{
+					page : page
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.get(Conf.url.clients, arg).then(
 				response => {
-					let body = response.body;
-					console.log(body)
+					let body = response.body;					 
 					body.clients.forEach(key => {
 						// Переменная отвечает за поиск
 						key.search = true
 					})
-					commit('set', {type: 'clientsList', items: body.clients})
+					commit('set', {type: 'clientsList',     items: body.clients})
+					commit('set', {type: 'clientPageCount', items: body.pages})
+					document.location = '/#/client/' + page
 					// Выключаем лоадер
 					commit('set', {type: 'loader', items: false})
 				},

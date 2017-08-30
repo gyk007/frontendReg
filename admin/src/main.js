@@ -1,15 +1,17 @@
-import Vue       from 'vue'
-import VueRouter from 'vue-router'
-import Catalog   from './views/Catalog.vue'
-import Orders    from './views/Orders.vue'
-import Order     from './views/Order.vue'
-import Promotion from './views/Promotion.vue'
-import Client    from './views/Client.vue'
-import $         from 'jquery'
+import Vue        from 'vue'
+import VueRouter  from 'vue-router'
+
+import Catalog    from './views/Catalog.vue'
+import Orders     from './views/Orders.vue'
+import Order      from './views/Order.vue'
+import Promotion  from './views/Promotion.vue'
+import Client     from './views/Client.vue'
+import $          from 'jquery'
 import 'malihu-custom-scrollbar-plugin'
 import 'jquery-mousewheel'
 
 Vue.use(VueRouter)
+
 
 var router = new VueRouter({
 	routes: [
@@ -18,7 +20,7 @@ var router = new VueRouter({
 		{ path: '/orders',    component: Orders },
 		{ path: '/order/:id', component: Order },
 		// { path: '/promotion', component: Promotion },
-		{ path: '/client',    component: Client }
+		{ path: '/client/:page', component: Client }
 	]
 })
 

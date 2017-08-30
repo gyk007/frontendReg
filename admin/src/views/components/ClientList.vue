@@ -22,9 +22,8 @@
 			</div>
 		</div>
 		<!-- Лоадер -->
-		<div class='product_loader' v-if='loader'><img src="pic/loading.gif"></div>
-	</div>
-</div>
+		<div class='product_loader' v-if='loader'><img src="pic/loading.gif"></div>		 
+	</div> 
 </template>
 
 <script>
@@ -51,13 +50,6 @@
 					.removeClass('active')
 				this.$store.dispatch('selectClient', client)
 			},
-		},
-		created: function() {
-			this.$store.commit('set', {type: 'clientsList', items: undefined})
-			this.$store.commit('set', {type: 'loader', items: undefined})
-		},
-		mounted: function() {
-			this.$store.dispatch('getClientList')
-		}
+		},		 
 	}
 </script>

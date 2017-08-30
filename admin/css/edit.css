@@ -284,3 +284,37 @@ select[readonly],
 .catalog__products-all {
 	width: 100%;
 }
+.pagination{
+  margin: 0 auto;
+  margin-top: 30px;
+  width: 500px;
+
+} 
+.page-item{
+  float:left;  
+  margin-left: 5px;
+  padding: 5px;
+  box-shadow: 5px 5px 25px #e6e6e6, -5px -5px 25px #e6e6e6;
+}
+.page-item a {
+  font-family: "Ubuntu";   
+  font-size: 20px;
+}
+
+.page-item.disabled a{
+  cursor: default !important;
+  color: #343434;   
+}
+
+.page-item.active{
+  background-color: #343434;    
+}
+
+.page-item.active a{   
+  cursor: default !important;
+  color: #FFF;   
+}
+
+.page-item:first-child {
+  margin-left: 0px;
+}
