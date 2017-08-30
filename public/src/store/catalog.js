@@ -11,24 +11,25 @@ Vue.use(VueResource)
 
 const catalogStore = new Vuex.Store({
 	state: {
-		catalogTree : [],        // дерево категорий
-		productList : [],        // список товаров в выбранной категории
-		idActiveCat : undefined, // id выбранной категории
-		category    : null,      // выбранная категория
-		filterPrice : null,      // начальные значени фильра "Цена"
-		filterAlko  : null,      // начальные значения фильтра "Крепость об %"
-		product     : null,      // выбранные продукт
-		cart        : null,      // корзина
-		cartPrice   : 0,         // стоимость корзины
-		shops       : [],        // список магазинов доступных данному пользователю
-		order       : null,      // заказ
-		orders      : [],        // список заказов
-		documents   : [],        // список документов в заказе
-		user        : null,      // данные пользователя
-		shop        : null,      // выбраная торговая точка
-		loader      : false,     // отвечает за лоадер, если true - лодер включен
-		selectOffer : false,     // вкладка с индивидуальными предложениями, если true - вкладка нажата
-		showModal   : false,
+		catalogTree   : [],        // дерево категорий
+		productList   : [],        // список товаров в выбранной категории
+		idActiveCat   : undefined, // id выбранной категории
+		category      : null,      // выбранная категория
+		filterPrice   : null,      // начальные значени фильра "Цена"
+		filterAlko    : null,      // начальные значения фильтра "Крепость об %"
+		product       : null,      // выбранные продукт
+		cart          : null,      // корзина
+		cartPrice     : 0,         // стоимость корзины
+		shops         : [],        // список магазинов доступных данному пользователю
+		order         : null,      // заказ
+		orders        : [],        // список заказов
+		documents     : [],        // список документов в заказе
+		user          : null,      // данные пользователя
+		shop          : null,      // выбраная торговая точка
+		loader        : false,     // отвечает за лоадер, если true - лодер включен
+		selectOffer   : false,     // вкладка с индивидуальными предложениями, если true - вкладка нажата
+		selectShopWnd : false,     // true - показать окно "Выбора торговой точки"
+		authError     : false,     // переменная указывает на ошибку авторизации
 	},
 	getters: {
 		catalogTree(state) {
@@ -82,8 +83,11 @@ const catalogStore = new Vuex.Store({
 		selectOffer(state){
 			return state.selectOffer
 		},
-		showModal(state){
-			return state.showModal
+		selectShopWnd(state){
+			return state.selectShopWnd
+		},
+		authError(state){
+			return state.authError
 		},
 	},
 	mutations: {
@@ -216,15 +220,17 @@ const catalogStore = new Vuex.Store({
 					let body = response.body
 					if (body.ERROR) {
 						console.log(body.ERROR);
+						// Ошибка авторизации
+						commit('set', {type: 'authError', items:true});
 					} else if(body.SESSION) {
 						Cookies.set('token', body.SESSION.token);
-
+						// Сброс ошибки авторизации авторизации
+						commit('set', {type: 'authError', items:false});
 						dispatch('getUser')
 
-						$.fancybox.close()
 						document.location = '/#/select_shop'
-						window.location.reload()
 
+						window.location.reload()
 					}
 				},
 				error => {
@@ -380,6 +386,8 @@ const catalogStore = new Vuex.Store({
 			)
 		},
 		getOrders({commit}) {
+			// Включаем лоадер
+			commit('set', {type: 'loader', items: true})
 			let arg = {
 				params:{
 					token : Cookies.get('token'),
@@ -402,6 +410,8 @@ const catalogStore = new Vuex.Store({
 					 			key.ctime = new Date(key.ctime)
 					 		});
 					 	commit('set', {type: 'orders', items: body.orders});
+					 	// Выключаем лоадер
+						commit('set', {type: 'loader', items: false});
 					}
 				},
 				error => {

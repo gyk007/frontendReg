@@ -254,3 +254,16 @@ select[readonly],
 .catalog__products-scroll {
 	max-height: none;
 }
+.fixed-loader{
+	position: fixed;
+	left: 50%;
+	top: 50%;
+}
+
+.text-no-category{
+	font-family: "Ubuntu";
+	font-size: 25px;
+	position: fixed;
+	left: 50%;
+	top: 50%;
+}

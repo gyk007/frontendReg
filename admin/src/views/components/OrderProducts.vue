@@ -19,8 +19,7 @@
 			</div>
 
 			<div class="product__cell product__quantity">
-				<input type="text" class="input" v-model="el.qty" disabled>
-				<span>шт</span>
+				<div class="product__cost-item">{{el.qty}}&nbsp;шт</div>
 			</div>
 
 			<div class="product__cell product__cost">

@@ -19,7 +19,6 @@
 					<li><router-link to="/catalog" active-class='active'>Каталог</router-link></li>
 					<li><a data-fancybox data-src="#popup__contact" href="javascript:;">Обратная связь</a></li>
 					<li><a data-fancybox data-src="#popup__exit"    href="javascript:;">Выход</a></li>
-					<li><div @click='show'>Тест</div></li>
 				</ul>
 			</nav>
 
@@ -37,7 +36,7 @@
 
 							<div class="header__user-container">
 									<div class="header__user-name" v-if='shop'>
-										<a data-fancybox data-src="#popup__select_shop" href="javascript:;">{{shop.official.name}}</a>
+										<div class='link' @click='showSelectShopWnd'>{{shop.official.name}}</div>
 									</div>
 									<div class="header__user-logo">
 											<!-- <img src="pic/icon/name-logo.png" alt="logo"> -->
@@ -71,8 +70,8 @@
 			}
 		},
 		methods: {
-			show() {
-				this.$store.commit('set', {type: 'showModal', items: true})
+			showSelectShopWnd() {
+				this.$store.commit('set', {type: 'selectShopWnd', items: true})
 			},
 		},
 		beforeCreate: function() {

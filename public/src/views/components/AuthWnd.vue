@@ -1,26 +1,20 @@
 <template id="modal-template">
 	<transition name="modal">
 		<div class="modal-mask">
-			<div class="modal-wrapper">			 
+			<div class="modal-wrapper">
 				<div class="modal-container">
 
-					<div class="popup__hdr">Авторизация</div>
+					<div class="modal__hdr">Авторизация</div>
+					<div class="modal__hdr_error" v-if='authError'>Вы ввели неправильный пароль или email</div>
 
-					 
 					<div class="popup__product-form--holder">
-					<label>
-						<span style="font-size: 15px">Email</span>
-						<input type="email" class="input" v-model="login"/>
-					</label>
+						<input type="email" class="input" v-model="login" placeholder="Email" />
 					</div>
 					<div class="popup__product-form--holder">
-					<label>
-						<span style="font-size: 15px">Пароль</span>
-						<input type="password" class="input" v-model="password"/>
-					</label>
+						<input type="password" class="input" v-model="password" placeholder="Password"/>
 					</div>
 
-					<button class="btn" v-on:click="auth">Вход</button>				 
+					<button class="modal_btn btn" v-on:click="auth">Вход</button>
 			</div>
 		</div>
 		</div>
@@ -39,11 +33,16 @@
 			password : undefined
 		}
 	},
+	computed: {
+		authError() {
+			return this.$store.getters.authError;
+		},
+	},
 	methods: {
 		auth() {
 			this.$store.dispatch('authorization', this.$data)
 		},
-	},	 
+	},
   }
 </script>
 

@@ -9,11 +9,9 @@
 
 
 		<Contact></Contact>
-		<ExitWnd></ExitWnd>		 
-		<SelectShopWnd></SelectShopWnd>
-		<WndTest v-if="showModal"></WndTest>
-			  
-		 
+		<ExitWnd></ExitWnd>
+		<SelectShopWnd v-if='selectShopWnd'></SelectShopWnd>
+
 	</section>
 </template>
 
@@ -34,15 +32,14 @@ import SelectShopWnd from './components/SelectShopWnd.vue'
 import SelectShop    from './SelectShop.vue'
 import Contact       from './components/Contact.vue'
 import ExitWnd       from './components/ExitWnd.vue'
-import WndTest       from './components/WndTest.vue'
 import Store         from '../store/catalog.js'
 import $             from 'jquery'
- 
+
 import 'malihu-custom-scrollbar-plugin'
 import 'jquery-mousewheel'
 
 Vue.use(VueRouter)
-Vue.use(VTooltip) 
+Vue.use(VTooltip)
 
 var router = new VueRouter({
 	routes: [
@@ -60,10 +57,10 @@ var router = new VueRouter({
 export default  {
 	router: router,
 	store: Store,
-	components: {HeadareEl, Contact, ExitWnd, SelectShopWnd, WndTest},
+	components: {HeadareEl, Contact, ExitWnd, SelectShopWnd},
 	computed: {
-		showModal() {			 
-			return this.$store.getters.showModal
+		selectShopWnd() {
+			return this.$store.getters.selectShopWnd
 		},
 		shop() {
 			return this.$store.getters.shop

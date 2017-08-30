@@ -28,7 +28,7 @@ export default {
 			let searchStr = $(event.target).val()
 
 			this.productList.forEach(key => {
-				if (~key.name.indexOf(searchStr)) {
+				if (~key.name.toUpperCase().indexOf(searchStr.toUpperCase())) {
 					key.search = true
 				} else {
 					key.search = false

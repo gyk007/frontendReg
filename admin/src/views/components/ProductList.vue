@@ -9,7 +9,7 @@
 					</div>
 
 
-					<div class="shop__table" v-if='productList'>
+					<div class="shop__table" v-if='productList.length'>
 
 						<div class="shop__row shop__table-hdr">
 							<div class="shop__cell shop__table-hdr--name"><span>Название</span></div>
@@ -30,14 +30,12 @@
 								 <a data-fancybox data-src="#popup__product" href="javascript:;" class="btn btn--reject" v-on:click="editProduct(product)">Просмотр</a>
 							</div>
 						</div>
-
 					</div>
-
-					<!-- Лоадер -->
-					<div class='product_loader' v-if='loader'><img src="pic/loading.gif"></div>
-
 			</div>
 		</div>
+		<!-- Лоадер -->
+		<div class='product_loader fixed-loader' v-if='loader'><img src="pic/loading.gif"></div>
+		<div class='text-no-category' v-if='!productList.length && !loader'>Выберите категорию</div>
 	</section>
 </template>
 

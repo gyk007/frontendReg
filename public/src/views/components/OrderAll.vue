@@ -44,8 +44,10 @@
 				</div>
 				<div class="order__cell order__cost"><span class="js-cost">{{order.price}} <i class="rub">a</i></span></div>
 			</div>
-
 		</div>
+		<div class='text_no_oredr' v-if='!orders'>У вас пока нет заказов</div>
+		<!-- Лоадер -->
+		<div class='product_loader' v-if='loader'><img src="pic/loading.gif"></div>
 	</section>
 </template>
 

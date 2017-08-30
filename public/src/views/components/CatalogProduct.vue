@@ -64,7 +64,6 @@
 						</div>
 					</div>
 				</div>
-
 			</div>
 			<!-- Лоадер -->
 			<div class='product_loader' v-if='loader'><img src="pic/loading.gif"></div>

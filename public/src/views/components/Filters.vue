@@ -145,7 +145,6 @@
 		components: {vueSlider},
 		computed: {
 			filterPrice() {
-				console.log(this.$store.getters.filterPrice)
 				return this.$store.getters.filterPrice
 			},
 			productList() {
@@ -164,7 +163,7 @@
 					disabled: false,
 					show: true,
 					tooltip: 'always',
-					formatter: '₽{value}',
+					formatter: '{value} ₽',
 					bgStyle: {
 						backgroundColor: '#fff',
 						boxShadow: 'inset 0.5px 0.5px 3px 1px rgba(0,0,0,.36)'
@@ -192,7 +191,7 @@
 					disabled: false,
 					show: true,
 					tooltip: 'always',
-					formatter: '%{value}',
+					formatter: '{value} %',
 					bgStyle: {
 						backgroundColor: '#fff',
 						boxShadow: 'inset 0.5px 0.5px 3px 1px rgba(0,0,0,.36)'
