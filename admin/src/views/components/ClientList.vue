@@ -10,7 +10,7 @@
 				<div class="b-catalog__cell b-catalog__table-hdr"></div>
 			</div>
 
-			<div class="b-catalog__row js-t-row" v-for='client in clientsList' v-on:click="selectClient(client)" v-if='client.search'>
+			<div class="b-catalog__row js-t-row" v-for='client in clientsList' v-on:click="selectClient(client)">
 				<div class="b-catalog__cell b-catalog__table-name">
 					<div class="b-catalog__table-title--img"><img src="pic/nologo.png" alt="logo"></div>
 					<span>{{client.official.name}}</span>
@@ -22,8 +22,8 @@
 			</div>
 		</div>
 		<!-- Лоадер -->
-		<div class='product_loader' v-if='loader'><img src="pic/loading.gif"></div>		 
-	</div> 
+		<div class='product_loader' v-if='loader'><img src="pic/loading.gif"></div>
+	</div>
 </template>
 
 <script>
@@ -33,7 +33,11 @@
 	export default {
 		computed: {
 			clientsList() {
-				return this.$store.getters.clientsList
+				if (this.$store.getters.searchClient) {
+					return this.$store.getters.searchClient
+				} else {
+					return this.$store.getters.clientsList
+				}
 			},
 			idActive() {
 				return this.$store.getters.idActive
@@ -50,6 +54,6 @@
 					.removeClass('active')
 				this.$store.dispatch('selectClient', client)
 			},
-		},		 
+		},
 	}
 </script>

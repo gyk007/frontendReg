@@ -22,6 +22,12 @@ const store = new Vuex.Store({
 		documents       : undefined, // документы в заказе
 		allProducts     : undefined, // Все продукты, для добавления и удаления из категории
 		loader          : false,     // отвечает за лоадер, если true - лодер включен
+		searchClient    : undefined, // клиенты выводимые в поиске
+		shopList        : undefined, // торговые точки длч выбранного клиента
+		showShopsWnd    : false,     // показать окно торговых точек
+		merchant        : undefined, // торговый пердставитель сети
+		showMerchantWnd : false,     // показать окно торговой точки
+		showRegWnd      : false,     // показать окно подтверждения сброса пароля
 	},
 	getters: {
 		catalogTree(state) {
@@ -44,7 +50,7 @@ const store = new Vuex.Store({
 		},
 		clientPageCount(state) {
 			return  state.clientPageCount
-		}, 
+		},
 		client(state) {
 			return state.client
 		},
@@ -65,6 +71,24 @@ const store = new Vuex.Store({
 		},
 		loader(state){
 			return state.loader
+		},
+		searchClient(state){
+			return state.searchClient
+		},
+		shopList(state){
+			return state.shopList
+		},
+		showShopsWnd(state){
+			return state.showShopsWnd
+		},
+		showMerchantWnd(state){
+			return state.showMerchantWnd
+		},
+		merchant(state){
+			return state.merchant
+		},
+		showRegWnd(state){
+			return state.showRegWnd
 		},
 	},
 	mutations: {
@@ -283,7 +307,10 @@ const store = new Vuex.Store({
 		getClientList({commit}, page) {
 			// Включаем лоадер
 			commit('set', {type: 'loader', items: true})
-
+			// Очищаем спсок поиска киентов
+			commit('set', {type: 'searchClient',    items: undefined})
+			// Очищаем список клиентов
+			commit('set', {type: 'clientsList',  items: undefined})
 			let arg = {
 				params:{
 					page : page
@@ -295,16 +322,33 @@ const store = new Vuex.Store({
 
 			Vue.http.get(Conf.url.clients, arg).then(
 				response => {
-					let body = response.body;					 
-					body.clients.forEach(key => {
-						// Переменная отвечает за поиск
-						key.search = true
-					})
+					let body = response.body;
 					commit('set', {type: 'clientsList',     items: body.clients})
 					commit('set', {type: 'clientPageCount', items: body.pages})
 					document.location = '/#/client/' + page
 					// Выключаем лоадер
 					commit('set', {type: 'loader', items: false})
+				},
+				error => {
+				 	console.log(error);
+				}
+			)
+		},
+		getNetMerchant({state, commit}) {
+			let arg = {
+				params:{
+					action : 'netMerchant',
+					id_net : state.idActiveClient
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.get(Conf.url.clients, arg).then(
+				response => {
+					let body = response.body;
+					commit('set', {type: 'merchant', items: body.merchant})
 				},
 				error => {
 				 	console.log(error);
@@ -395,6 +439,30 @@ const store = new Vuex.Store({
 				}
 			)
 		},
+		getShops({state, commit}) {
+			// Очищаем спсок поиска киентов
+			commit('set', {type: 'shopList', items: undefined})
+			let arg = {
+				params:{
+					action : 'shops',
+					id_net : state.idActiveClient
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.get(Conf.url.clients, arg).then(
+				response => {
+					let body = response.body;
+					console.log(body.shops)
+					commit('set', {type: 'shopList', items: body.shops})
+				},
+				error => {
+				 	console.log(error);
+				}
+			)
+		},
 		// Переместить в нижнюю категорию
 		inCategory({commit}, idCategory) {
 			let arg = {
@@ -460,6 +528,39 @@ const store = new Vuex.Store({
 				}
 			)
 		},
+		searchClient({commit}, search) {
+			// Включаем лоадер
+			commit('set', {type: 'loader', items: true})
+			// Очищаем список клиентов
+			commit('set', {type: 'clientsList',  items: undefined})
+			// Очищаем список поиск
+			commit('set', {type: 'searchClient',  items: undefined})
+			// Убираем постраничную навигацию
+			commit('set', {type: 'clientPageCount', items: undefined})
+			let arg = {
+				params:{
+					action : 'search',
+					search : search
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.get(Conf.url.clients, arg).then(
+				response => {
+					let body = response.body;
+					// Удаляем список клиентов
+					commit('set', {type: 'searchClient', items: body.clients})
+					document.location = '/#/client/' + 0
+					// Выключаем лоадер
+					commit('set', {type: 'loader', items: false})
+				},
+				error => {
+				 	console.log(error);
+				}
+			)
+		},
 		selectClient({commit}, client) {
 			commit('set', {type: 'client', items: client})
 			if (client)
@@ -478,6 +579,26 @@ const store = new Vuex.Store({
 			if (product.properties.elements)
 				product.properties = product.properties.elements[0].extend.properties.elements
 			commit('set', {type: 'product', items: product})
+		},
+		sendRegEmail({commit}, email) {
+			let arg = {
+				params:{
+					action : 'registration',
+					email  : email
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.get(Conf.url.clients, arg).then(
+				response => {
+					let body = response.body;
+				},
+				error => {
+				 	console.log(error);
+				}
+			)
 		},
 	}
 })

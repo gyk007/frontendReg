@@ -6,6 +6,7 @@ import Orders     from './views/Orders.vue'
 import Order      from './views/Order.vue'
 import Promotion  from './views/Promotion.vue'
 import Client     from './views/Client.vue'
+
 import $          from 'jquery'
 import 'malihu-custom-scrollbar-plugin'
 import 'jquery-mousewheel'
@@ -15,11 +16,10 @@ Vue.use(VueRouter)
 
 var router = new VueRouter({
 	routes: [
-		{ path: '/',          redirect: '/catalog' },
-		{ path: '/catalog',   component: Catalog },
-		{ path: '/orders',    component: Orders },
-		{ path: '/order/:id', component: Order },
-		// { path: '/promotion', component: Promotion },
+		{ path: '/',             redirect: '/catalog' },
+		{ path: '/catalog',      component: Catalog },
+		{ path: '/orders',       component: Orders },
+		{ path: '/order/:id',    component: Order },
 		{ path: '/client/:page', component: Client }
 	]
 })

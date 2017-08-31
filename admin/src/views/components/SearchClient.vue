@@ -1,49 +1,35 @@
 <template>
-	 <section class="a-catalog__hdr">
-        <div class="a-catalog__hdr-title">Клиенты</div>
-        <div class="a-catalog__hdr-search">
-            <form action="#" class="search">
-                <input type="text" class="input search__input" placeholder="Введите название, телефон, инн"  @keyup ='search'>
-                <div class="search__submit"></div>
-                <div class="search__icon">
-                    <svg>
-                        <use xlink:href="#glass"></use>
-                    </svg>
-                </div>
-            </form>
+	 <section class="a-catalog__hdr-search">
+        <div class="search">
+            <input type="text" class="input search__input" placeholder="Введите название, телефон, инн" v-model='query'>
+            <div class="search__submit" @click='search' v-if='!loader'></div>
+            <div class="search__submit disable_search_submit" v-if='loader'></div>
+            <div class="search__icon" :class="{disable_search_icon : loader }" >
+                <svg>
+                    <use xlink:href="#glass"></use>
+                </svg>
+            </div>
         </div>
-
     </section>
 </template>
 
 <script>
 
 export default {
-	computed: {
-        clientsList() {
-            return this.$store.getters.clientsList
+	data() {
+        return {
+            query: ''
+        }
+    },
+    computed: {
+        loader() {
+            return this.$store.getters.loader
         }
     },
     methods: {
         search() {
-            let searchStr = $(event.target).val() ? $(event.target).val() : '';
-
-            this.clientsList.forEach(key => {
-                let name    = key.official.name    ? key.official.name    : '';
-                let taxcode = key.official.taxcode ? key.official.taxcode : '';
-                let phone   = key.official.phone   ? key.official.phone   : '';
-
-
-                if (name.toUpperCase().indexOf(searchStr.toUpperCase()) >= 0) {
-                    key.search = true
-                } else if (phone.toUpperCase().indexOf(searchStr.toUpperCase()) >= 0) {
-                    key.search = true
-                } else if (taxcode.toUpperCase().indexOf(searchStr.toUpperCase()) >= 0) {
-                    key.search = true
-                } else {
-                    key.search = false
-                }
-            })
+            if(this.$data.query.trim())
+                this.$store.dispatch('searchClient', this.$data.query.trim())
         },
     },
 }
