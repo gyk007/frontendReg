@@ -28,6 +28,7 @@ const store = new Vuex.Store({
 		merchant        : undefined, // торговый пердставитель сети
 		showMerchantWnd : false,     // показать окно торговой точки
 		showRegWnd      : false,     // показать окно подтверждения сброса пароля
+		error           : undefined, // в переменную записываем ошибку
 	},
 	getters: {
 		catalogTree(state) {
@@ -90,6 +91,9 @@ const store = new Vuex.Store({
 		showRegWnd(state){
 			return state.showRegWnd
 		},
+		error(state){
+			return state.error
+		},
 	},
 	mutations: {
 		set(state, {type, items}) {
@@ -143,7 +147,13 @@ const store = new Vuex.Store({
 			Vue.http.post(Conf.url.category, null,  arg).then(
 				response => {
 					let body = response.body
-					commit('relodCatalogTree')
+					if (body.ERROR) {
+						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error', items: undefined})
+						commit('relodCatalogTree')
+					}
 				},
 				error => {
 					console.log(error);
@@ -165,6 +175,12 @@ const store = new Vuex.Store({
 			Vue.http.post(Conf.url.category, null,  arg).then(
 				response => {
 					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error', items: undefined})
+					}
 				},
 				error => {
 					console.log(error);
@@ -187,7 +203,9 @@ const store = new Vuex.Store({
 					let body = response.body;
 					if (body.ERROR) {
 						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
 					} else {
+						commit('set', {type: 'error', items: undefined})
 						commit('relodCatalogTree');
 						commit('set', {type: 'category', items: undefined})
 					};
@@ -212,6 +230,12 @@ const store = new Vuex.Store({
 			Vue.http.post(Conf.url.category, null,  arg).then(
 				response => {
 					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error', items: undefined})
+					}
 				},
 				error => {
 					console.log(error);
@@ -234,7 +258,9 @@ const store = new Vuex.Store({
 					let body = response.body;
 					if (body.ERROR) {
 						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
 					} else {
+						commit('set', {type: 'error', items: undefined})
 						commit('relodClientList');
 						commit('set', {type: 'client', items: undefined})
 					};
@@ -261,7 +287,13 @@ const store = new Vuex.Store({
 			Vue.http.post(Conf.url.category, null,  arg).then(
 				response => {
 					let body = response.body;
-					commit('relodCatalogTree');
+					if (body.ERROR) {
+						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error', items: undefined})
+						commit('relodCatalogTree');
+					}
 				},
 				error => {
 					console.log(error);
@@ -280,13 +312,19 @@ const store = new Vuex.Store({
 			Vue.http.get(Conf.url.category, arg).then(
 				response => {
 					let body = response.body;
-					if (body.products) {
-						body.products.forEach(product => {
-							// Вводим переменную для поиска
-							product.search = true;
-						})
+					if (body.ERROR) {
+						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error', items: undefined})
+						if (body.products) {
+							body.products.forEach(product => {
+								// Вводим переменную для поиска
+								product.search = true;
+							})
+						}
+						commit('set', {type: 'allProducts', items: body.products})
 					}
-					commit('set', {type: 'allProducts', items: body.products})
 				},
 				error => {
 					console.log(error);
@@ -297,7 +335,13 @@ const store = new Vuex.Store({
 			Vue.http.get(Conf.url.catalog).then(
 				response => {
 					let body = response.body;
-					commit('set', {type: 'catalogTree', items: body.catalog.child})
+					if (body.ERROR) {
+						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error', items: undefined})
+						commit('set', {type: 'catalogTree', items: body.catalog.child})
+					}
 				},
 				error => {
 					console.log(error);
@@ -323,11 +367,17 @@ const store = new Vuex.Store({
 			Vue.http.get(Conf.url.clients, arg).then(
 				response => {
 					let body = response.body;
-					commit('set', {type: 'clientsList',     items: body.clients})
-					commit('set', {type: 'clientPageCount', items: body.pages})
-					document.location = '/#/client/' + page
-					// Выключаем лоадер
-					commit('set', {type: 'loader', items: false})
+					if (body.ERROR) {
+						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error', items: undefined})
+						commit('set', {type: 'clientsList',     items: body.clients})
+						commit('set', {type: 'clientPageCount', items: body.pages})
+						document.location = '/#/client/' + page
+						// Выключаем лоадер
+						commit('set', {type: 'loader', items: false})
+					}
 				},
 				error => {
 				 	console.log(error);
@@ -348,7 +398,13 @@ const store = new Vuex.Store({
 			Vue.http.get(Conf.url.clients, arg).then(
 				response => {
 					let body = response.body;
-					commit('set', {type: 'merchant', items: body.merchant})
+					if (body.ERROR) {
+						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error', items: undefined})
+						commit('set', {type: 'merchant', items: body.merchant})
+					}
 				},
 				error => {
 				 	console.log(error);
@@ -371,7 +427,9 @@ const store = new Vuex.Store({
 					let body = response.body
 					if (body.ERROR) {
 						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
 					} else {
+						commit('set', {type: 'error', items: undefined})
 						commit('set', {type: 'order', items: body.order})
 						commit('set', {type: 'documents', items: body.documents})
 						document.location = '/#/order/' + body.order.id
@@ -388,14 +446,19 @@ const store = new Vuex.Store({
 			Vue.http.get(Conf.url.order).then(
 				response => {
 					let body = response.body
-					if (body.orders)
-						body.orders.forEach(key => {
-				 			key.ctime = new Date(key.ctime)
-				 		});
+					if (body.ERROR) {
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error', items: undefined})
+						if (body.orders)
+							body.orders.forEach(key => {
+					 			key.ctime = new Date(key.ctime)
+					 		});
 
-				 	commit('set', {type: 'orders', items: body.orders});
-				 	// Выключаем лоадер
-					commit('set', {type: 'loader', items: false})
+					 	commit('set', {type: 'orders', items: body.orders});
+					 	// Выключаем лоадер
+						commit('set', {type: 'loader', items: false})
+					}
 				},
 				error => {
 					console.log(error);
@@ -420,19 +483,24 @@ const store = new Vuex.Store({
 			Vue.http.get(Conf.url.category, arg).then(
 				response => {
 					let body = response.body
-					// Очищаем список продуктов
-					commit('set', {type: 'productList', items: undefined})
-					if (body.category.extend.products.elements.length) {
-						body.category.extend.products.elements.forEach(function(key) {
-							// Свойства, делаем удобнее
-							key.properties = key.properties.elements[0].extend.properties.elements
-							// Переменная для поиска
-							key.search = true
-						});
-						commit('set', {type: 'productList', items: body.category.extend.products.elements});
+					if (body.ERROR) {
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error', items: undefined})
+						// Очищаем список продуктов
+						commit('set', {type: 'productList', items: undefined})
+						if (body.category.extend.products.elements.length) {
+							body.category.extend.products.elements.forEach(function(key) {
+								// Свойства, делаем удобнее
+								key.properties = key.properties.elements[0].extend.properties.elements
+								// Переменная для поиска
+								key.search = true
+							});
+							commit('set', {type: 'productList', items: body.category.extend.products.elements});
+						}
+						// Выключаем лоадер
+						commit('set', {type: 'loader', items: false})
 					}
-					// Выключаем лоадер
-					commit('set', {type: 'loader', items: false})
 				},
 				error => {
 					console.log(error);
@@ -455,8 +523,12 @@ const store = new Vuex.Store({
 			Vue.http.get(Conf.url.clients, arg).then(
 				response => {
 					let body = response.body;
-					console.log(body.shops)
-					commit('set', {type: 'shopList', items: body.shops})
+					if (body.ERROR) {
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error', items: undefined})
+						commit('set', {type: 'shopList', items: body.shops})
+					}
 				},
 				error => {
 				 	console.log(error);
@@ -478,7 +550,12 @@ const store = new Vuex.Store({
 			Vue.http.post(Conf.url.category, null, arg).then(
 				response => {
 					let body = response.body;
-					commit('relodCatalogTree');
+					if (body.ERROR) {
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error', items: undefined})
+						commit('relodCatalogTree');
+					}
 				},
 				error => {
 					console.log(error);
@@ -499,7 +576,12 @@ const store = new Vuex.Store({
 			Vue.http.post(Conf.url.category, null, arg).then(
 				response => {
 					let body = response.body;
-					commit('relodCatalogTree');
+					if (body.ERROR) {
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error', items: undefined})
+						commit('relodCatalogTree');
+					}
 				},
 				error => {
 					console.log(error);
@@ -521,7 +603,12 @@ const store = new Vuex.Store({
 			Vue.http.post(Conf.url.category, null, arg).then(
 				response => {
 					let body = response.body;
-					commit('relodCatalogTree');
+					if (body.ERROR) {
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error', items: undefined})
+						commit('relodCatalogTree');
+					}
 				},
 				error => {
 					console.log(error);
@@ -550,11 +637,16 @@ const store = new Vuex.Store({
 			Vue.http.get(Conf.url.clients, arg).then(
 				response => {
 					let body = response.body;
-					// Удаляем список клиентов
-					commit('set', {type: 'searchClient', items: body.clients})
-					document.location = '/#/client/' + 0
-					// Выключаем лоадер
-					commit('set', {type: 'loader', items: false})
+					if (body.ERROR) {
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error', items: undefined})
+						// Удаляем список клиентов
+						commit('set', {type: 'searchClient', items: body.clients})
+						document.location = '/#/client/' + 0
+						// Выключаем лоадер
+						commit('set', {type: 'loader', items: false})
+					}
 				},
 				error => {
 				 	console.log(error);
@@ -580,11 +672,12 @@ const store = new Vuex.Store({
 				product.properties = product.properties.elements[0].extend.properties.elements
 			commit('set', {type: 'product', items: product})
 		},
-		sendRegEmail({commit}, email) {
+		sendRegEmail({state, commit}, email) {
 			let arg = {
 				params:{
-					action : 'registration',
-					email  : email
+					action      : 'registration',
+					email       : email,
+					id_merchant : state.merchant.id
 				},
 				headers: {
 					'Content-Type': 'text/plain'
@@ -594,6 +687,13 @@ const store = new Vuex.Store({
 			Vue.http.get(Conf.url.clients, arg).then(
 				response => {
 					let body = response.body;
+					if (body.ERROR) {
+						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error', items: undefined})
+						commit('set', {type: 'showRegWnd', items: false})
+					}
 				},
 				error => {
 				 	console.log(error);

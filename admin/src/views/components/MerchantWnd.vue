@@ -6,12 +6,12 @@
 				<div class="modal-container-merchant">
 				<div class="modal__hdr">Представитель</div>
 
-				<div class="popup__category-form client_form">
+				<div class="popup__category-form client_form" v-if='merchant'>
 
 					<div class="popup__product-form--holder client_holder">
 					<label>
-						<span style="font-size: 15px">E-mail</span>
-						<input v-model="merchant.email" class="input">
+						<span style="font-size: 15px">E-mail <span style='color:#f44336' v-if='validateEmail'>Введите корректный Email</span></span>
+						<input v-model="merchant.email" :class="{ valid_imnput : validateEmail }" class="input" @keyup='resetValid'>
 					</label>
 					</div>
 
@@ -56,18 +56,14 @@
 
   export default {
   	components: {RegistrWnd},
+  	data() {
+		return {
+			validateEmail : false,
+		}
+	},
 	computed: {
 		merchant() {
-			let merchant = this.$store.getters.merchant ?
-						this.$store.getters.merchant :
-						{
-							name     : undefined,
-							password : undefined,
-							phone    : undefined,
-							email    : undefined,
-						};
-
-			return merchant;
+			return this.$store.getters.merchant
 		},
 		showRegWnd() {
 			return this.$store.getters.showRegWnd
@@ -78,10 +74,20 @@
 			this.$store.commit('set', {type: 'showMerchantWnd', items: false})
 		},
 		regWnd(){
-			this.$store.commit('set', {type: 'showRegWnd', items: true})
+			this.$data.validateEmail = false;
+			// Регулярное выражение проверки email
+			let rEmail = /^\w+@\w+\.\w{2,4}$/i;
+			if (rEmail.test(this.merchant.email)) {
+	 			this.$store.commit('set', {type: 'showRegWnd', items: true})
+			} else {
+				this.$data.validateEmail = true;
+			}
+		},
+		resetValid(){
+			this.$data.validateEmail = false;
 		}
 	},
-	created: function() {
+	beforeCreate: function() {
 		this.$store.dispatch('getNetMerchant')
 	}
   }

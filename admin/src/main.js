@@ -21,6 +21,7 @@ var router = new VueRouter({
 		{ path: '/orders',       component: Orders },
 		{ path: '/order/:id',    component: Order },
 		{ path: '/client/:page', component: Client }
+
 	]
 })
 

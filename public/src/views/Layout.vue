@@ -28,6 +28,7 @@ import Contacts      from './Contacts.vue'
 import Cart          from './Cart.vue'
 import Auth          from './Auth.vue'
 import HeadareEl     from './Header.vue'
+import Registration  from './Registration.vue'
 import SelectShopWnd from './components/SelectShopWnd.vue'
 import SelectShop    from './SelectShop.vue'
 import Contact       from './components/Contact.vue'
@@ -43,14 +44,16 @@ Vue.use(VTooltip)
 
 var router = new VueRouter({
 	routes: [
-		{ path: '/',            redirect: '/orders' },
-		{ path: '/main',        redirect: '/orders' },
-		{ path: '/catalog',     component: Catalog },
-		{ path: '/order/:id',   component: Order },
-		{ path: '/orders',      component: Orders },
-		{ path: '/cart',        component: Cart },
-		{ path: '/auth',        component: Auth },
-		{ path: '/select_shop', component: SelectShop },
+		{ path: '/',                    redirect: '/orders' },
+		{ path: '/main',                redirect: '/orders' },
+		{ path: '/catalog',             component: Catalog },
+		{ path: '/order/:id',           component: Order },
+		{ path: '/orders',              component: Orders },
+		{ path: '/cart',                component: Cart },
+		{ path: '/auth',                component: Auth },
+		{ path: '/select_shop',         component: SelectShop },
+		{ path: '/registration/:token', component: Registration }
+
 	]
 })
 
@@ -67,8 +70,11 @@ export default  {
 		},
 		showHeader() {
 			let showHeader = true;
-			switch (this.$route.fullPath) {
+			switch (this.$route.matched[0].path) {
 			case '/auth':
+				showHeader = false;
+				break;
+			case '/registration/:token':
 				showHeader = false;
 				break;
 			case '/select_shop':

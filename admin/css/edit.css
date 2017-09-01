@@ -461,3 +461,7 @@ select[readonly],
   font-family: Helvetica, Arial, sans-serif;
 }
 /* END VUE MODAL */
+
+.valid_imnput{
+	border:  solid 1px #f44336 !important;
+}

@@ -30,6 +30,8 @@ const catalogStore = new Vuex.Store({
 		selectOffer   : false,     // вкладка с индивидуальными предложениями, если true - вкладка нажата
 		selectShopWnd : false,     // true - показать окно "Выбора торговой точки"
 		authError     : false,     // переменная указывает на ошибку авторизации
+		merchant      : undefined, // представитель
+		regError      : false,     // указывает на ошибку при регистрации
 	},
 	getters: {
 		catalogTree(state) {
@@ -88,6 +90,12 @@ const catalogStore = new Vuex.Store({
 		},
 		authError(state){
 			return state.authError
+		},
+		merchant(state){
+			return state.merchant
+		},
+		regError(state){
+			return state.regError
 		},
 	},
 	mutations: {
@@ -300,7 +308,7 @@ const catalogStore = new Vuex.Store({
 			)
 		},
 		// Получить корзину
-		getCart({state, commit}, idClinet, product, count) {
+		getCart({state, commit}) {
 			let arg = {
 				params:{
 				    token : Cookies.get('token'),
@@ -488,6 +496,37 @@ const catalogStore = new Vuex.Store({
 				}
 			)
 		},
+		getRegData ({commit}, regToken) {
+			let arg = {
+				params:{
+					action    : 'get_reg_data',
+					reg_token : regToken,
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.get(Conf.url.client, arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR);
+						commit('set', {type: 'regError',  items: true})
+					} else {
+						if (body.merchant.password) {
+							commit('set', {type: 'regError',  items: true})
+						} else {
+							commit('set', {type: 'merchant',  items: body.merchant})
+							commit('set', {type: 'regError',  items: false})
+						}
+					};
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
 		getUser({commit}) {
 			let arg = {
 				params:{
@@ -510,6 +549,36 @@ const catalogStore = new Vuex.Store({
 						commit('set', {type: 'user',   items: body.USER});
 						commit('set', {type: 'shops',  items: body.USER.shops})
 					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		registration ({commit}, merchant, regToken) {
+			let arg = {
+				params:{
+					action      : 'registration',
+					reg_token   : merchant.regToken,
+					name        : merchant.name,
+					phone       : merchant.phone,
+					password    : merchant.password,
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.client, null, arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR);
+						commit('set', {type: 'regError',  items: true})
+					} else {
+						commit('set', {type: 'regError',  items: false})
+						document.location = '/#/auth'
+					};
 				},
 				error => {
 					console.log(error);

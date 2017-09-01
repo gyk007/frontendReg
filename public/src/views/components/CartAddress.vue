@@ -41,7 +41,7 @@
 	export default {
 		data() {
     		return {
-	    		orderData  : {
+	    		orderData : {
 	    			name   : undefined,
 	    			phone  : undefined,
 	    			address: undefined,
@@ -49,7 +49,7 @@
 	    			remark : undefined,
 	    			idShop : undefined,
     			},
-    			validate  :  {
+    			validate : {
 	    			name   : false,
 	    			phone  : false,
 	    			address: false,
