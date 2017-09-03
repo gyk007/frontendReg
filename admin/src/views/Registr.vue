@@ -1,6 +1,5 @@
 <template>
-	<RegistrWnd></RegistrWnd>
-</div>
+	<RegistrWnd></RegistrWnd> 
 </template>
 
 <script>

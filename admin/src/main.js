@@ -6,6 +6,7 @@ import Orders     from './views/Orders.vue'
 import Order      from './views/Order.vue'
 import Promotion  from './views/Promotion.vue'
 import Client     from './views/Client.vue'
+import Statistic  from './views/Statistic.vue'
 
 import $          from 'jquery'
 import 'malihu-custom-scrollbar-plugin'
@@ -20,8 +21,8 @@ var router = new VueRouter({
 		{ path: '/catalog',      component: Catalog },
 		{ path: '/orders',       component: Orders },
 		{ path: '/order/:id',    component: Order },
-		{ path: '/client/:page', component: Client }
-
+		{ path: '/client/:page', component: Client },
+		{ path: '/statistic',    component: Statistic },
 	]
 })
 

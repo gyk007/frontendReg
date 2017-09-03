@@ -55,11 +55,11 @@
 					</div>
 					<div class="shop__cell shop__cell-order">
 						<div class="js-order">
-							<input type="text" class="input"  v-model="product.cartQuantity">
+							<input type="number" class="input"  min="1" v-model="product.cartQuantity" :class="{ valid_imnput : product.cartQuantity == 0 }">
 							<span class="shop__cell-order--txt">шт</span>
-							<a v-on:click="addToCart(product)" class='btn__sell' title="Добавить в корзину">
+							<button v-on:click="addToCart(product)" class='btn__sell' title="Добавить в корзину" :disabled="product.cartQuantity == 0">
 								<span>+</span>&nbsp;<svg><use xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='#bag'></use></svg>
-							</a>
+							</button>
 						</div>
 					</div>
 				</div>

@@ -5,11 +5,13 @@
 			<div class='modal-close' @click="close"><img src="img/close.png" alt="Закрыть"></div>
 				<div class="modal-container">
 
-					<div class="modal__hdr" v-if='!error'>Вы дейсвительно хотите сбросить пароль ?</div>
-					<div class="modal__hdr" style='color: #f44336' v-if='error'>Такой Email уже используется</div>
+					<div class="modal__hdr" v-if='!error && isPassword'>Вы дейсвительно хотите сбросить пароль ?</div>
+					<div class="modal__hdr" v-if='!error && !isPassword'>Отправить ссылку на регистрацию ?</div>
+					<div class="modal__hdr" style='color: #f44336' v-if='error'>Такой Email уже используется</div>									
 					<div class='btn_list'>
-						<button class=" btn_in_list modal_btn btn" v-on:click="send_mail">Сбросить</button>
-						<button class=" btn_in_list modal_btn btn" v-on:click="close">Отмена</button>
+						<button class="btn_in_list modal_btn btn" v-if='!isSent'  v-on:click="send_mail">Отправить</button>			
+						<button class="btn_in_list modal_btn btn" style='color:#FFF' v-if='isSent' disabled="disabled">Отправка...</button>
+						<button class="btn_in_list modal_btn btn" style='background-color: #f48c42;' v-on:click="close">Отмена</button>
 						<div class="clear"></div>
 					</div>
 			</div>
@@ -26,13 +28,15 @@
   export default {
 	data() {
 		return {
-			email : this.$parent.merchant.email,
+			email      : this.$parent.merchant.email,
+			isPassword : this.$parent.merchant.password,
+			isSent     : false,
 		}
 	},
 	computed: {
 		error() {
 			return this.$store.getters.error
-		}
+		},	 
 	},
 	methods: {
 		close() {
@@ -40,6 +44,7 @@
 		},
 		send_mail() {
 			this.$store.dispatch('sendRegEmail', this.$data.email.trim())
+			this.$data.isSent = true;
 		},
 	},
 	mounted: function() {

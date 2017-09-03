@@ -13,24 +13,29 @@ const store = new Vuex.Store({
 		category        : undefined, // выбранная категория
 		product         : undefined, // выбранный продукт
 		idActiveCat     : undefined, // id выбранной категории
-		clientsList     : undefined, // список клиентов
+		netList         : undefined, // список сетей
 		clientPageCount : undefined, // количесво страниц в компоненте Client
-		client          : undefined, // выбранный клиент
-		idActiveClient  : undefined, // id выбранного клиентв
+		net             : undefined, // выбранная сеть
+		shop            : undefined, // выбранный магазин		
 		order           : undefined, // выбранный заказ
 		orders          : undefined, // все заказы
 		documents       : undefined, // документы в заказе
 		allProducts     : undefined, // Все продукты, для добавления и удаления из категории
-		loader          : false,     // отвечает за лоадер, если true - лодер включен
-		searchClient    : undefined, // клиенты выводимые в поиске
+		loader          : false,     // отвечает за лоадер, если true - лодер включен		 
 		shopList        : undefined, // торговые точки длч выбранного клиента
 		showShopsWnd    : false,     // показать окно торговых точек
 		merchant        : undefined, // торговый пердставитель сети
 		showMerchantWnd : false,     // показать окно торговой точки
 		showRegWnd      : false,     // показать окно подтверждения сброса пароля
+		statNet         : undefined, // статистика сетей
+		statShop        : undefined, // статистика торговых точек
+		statProduct     : undefined, // статистика товаров
 		error           : undefined, // в переменную записываем ошибку
 	},
 	getters: {
+		allProducts(state){
+			return state.allProducts
+		},
 		catalogTree(state) {
 			return  state.catalogTree
 		},
@@ -40,24 +45,21 @@ const store = new Vuex.Store({
 		category(state) {
 			return state.category
 		},
-		product(state){
-			return state.product
-		},
+		error(state){
+			return state.error
+		},		 
 		idActiveCat(state){
 			return state.idActiveCat
 		},
-		clientsList(state) {
-			return  state.clientsList
+		netList(state) {
+			return  state.netList
 		},
 		clientPageCount(state) {
 			return  state.clientPageCount
 		},
-		client(state) {
-			return state.client
-		},
-		idActiveClient(state){
-			return state.idActiveClient
-		},
+		net(state) {
+			return state.net
+		},		 		 
 		order(state){
 			return state.order
 		},
@@ -66,12 +68,12 @@ const store = new Vuex.Store({
 		},
 		documents(state){
 			return state.documents
-		},
-		allProducts(state){
-			return state.allProducts
-		},
+		},		 
 		loader(state){
 			return state.loader
+		},
+		product(state){
+			return state.product
 		},
 		searchClient(state){
 			return state.searchClient
@@ -88,12 +90,21 @@ const store = new Vuex.Store({
 		merchant(state){
 			return state.merchant
 		},
+		shop(state) {
+			return state.shop
+		},
 		showRegWnd(state){
 			return state.showRegWnd
 		},
-		error(state){
-			return state.error
+		statNet(state){
+			return state.statNet
 		},
+		statShop(state){
+			return state.statShop
+		},
+		statProduct(state){
+			return state.statProduct
+		},		 
 	},
 	mutations: {
 		set(state, {type, items}) {
@@ -348,13 +359,13 @@ const store = new Vuex.Store({
 				}
 			)
 		},
-		getClientList({commit}, page) {
+		getNetList({commit}, page) {
 			// Включаем лоадер
 			commit('set', {type: 'loader', items: true})
 			// Очищаем спсок поиска киентов
-			commit('set', {type: 'searchClient',    items: undefined})
+			commit('set', {type: 'searchClient', items: undefined})
 			// Очищаем список клиентов
-			commit('set', {type: 'clientsList',  items: undefined})
+			commit('set', {type: 'netList',  items: undefined})
 			let arg = {
 				params:{
 					page : page
@@ -371,8 +382,8 @@ const store = new Vuex.Store({
 						console.log(body.ERROR)
 						commit('set', {type: 'error', items: body.ERROR})
 					} else {
-						commit('set', {type: 'error', items: undefined})
-						commit('set', {type: 'clientsList',     items: body.clients})
+						commit('set', {type: 'error',           items: undefined})
+						commit('set', {type: 'netList',         items: body.clients})
 						commit('set', {type: 'clientPageCount', items: body.pages})
 						document.location = '/#/client/' + page
 						// Выключаем лоадер
@@ -384,16 +395,32 @@ const store = new Vuex.Store({
 				}
 			)
 		},
-		getNetMerchant({state, commit}) {
-			let arg = {
-				params:{
-					action : 'netMerchant',
-					id_net : state.idActiveClient
-				},
-				headers: {
-					'Content-Type': 'text/plain'
+		getMerchant({state, commit}) {
+			let arg;
+
+			// Если есть выбранный магазин то берем представителя магазина
+			// Иначе берем представителя сети
+			if(state.shop) {
+				arg = {
+					params:{
+						action  : 'shopMerchant',
+						id_shop : state.shop.id 
+					},
+					headers: {
+						'Content-Type': 'text/plain'
+					}
 				}
-			}
+			} else {
+				arg = {
+					params:{
+						action : 'netMerchant',
+						id_net : state.net.id 
+					},
+					headers: {
+						'Content-Type': 'text/plain'
+					}
+				}	
+			}			 
 
 			Vue.http.get(Conf.url.clients, arg).then(
 				response => {
@@ -513,7 +540,7 @@ const store = new Vuex.Store({
 			let arg = {
 				params:{
 					action : 'shops',
-					id_net : state.idActiveClient
+					id_net : state.net.id
 				},
 				headers: {
 					'Content-Type': 'text/plain'
@@ -534,6 +561,63 @@ const store = new Vuex.Store({
 				 	console.log(error);
 				}
 			)
+		},
+		getShopMerchant({state, commit}) {
+			let arg = {
+				params:{
+					action : 'shopMerchant',
+					id_net : state.idActiveClient
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.get(Conf.url.clients, arg).then(
+				response => {
+					let body = response.body;
+					if (body.ERROR) {
+						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error', items: undefined})
+						commit('set', {type: 'merchant', items: body.merchant})
+					}
+				},
+				error => {
+				 	console.log(error);
+				}
+			)
+		},
+		getStatistic({commit}) {
+			// Включаем лоадер
+			commit('set', {type: 'loader', items: true})
+			let arg = {
+				params:{
+					action : 'statistic',					 
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.get(Conf.url.order, arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error',       items: undefined})						 				 
+						commit('set', {type: 'statNet',     items: body.net})
+						commit('set', {type: 'statShop',    items: body.shop})
+						commit('set', {type: 'statProduct', items: body.product})
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+			commit('set', {type: 'loader', items: false})
 		},
 		// Переместить в нижнюю категорию
 		inCategory({commit}, idCategory) {
@@ -615,13 +699,11 @@ const store = new Vuex.Store({
 				}
 			)
 		},
-		searchClient({commit}, search) {
+		searchNet({commit}, search) {
 			// Включаем лоадер
 			commit('set', {type: 'loader', items: true})
 			// Очищаем список клиентов
-			commit('set', {type: 'clientsList',  items: undefined})
-			// Очищаем список поиск
-			commit('set', {type: 'searchClient',  items: undefined})
+			commit('set', {type: 'netList',  items: undefined})			 
 			// Убираем постраничную навигацию
 			commit('set', {type: 'clientPageCount', items: undefined})
 			let arg = {
@@ -642,7 +724,7 @@ const store = new Vuex.Store({
 					} else {
 						commit('set', {type: 'error', items: undefined})
 						// Удаляем список клиентов
-						commit('set', {type: 'searchClient', items: body.clients})
+						commit('set', {type: 'netList', items: body.clients})
 						document.location = '/#/client/' + 0
 						// Выключаем лоадер
 						commit('set', {type: 'loader', items: false})
@@ -652,14 +734,7 @@ const store = new Vuex.Store({
 				 	console.log(error);
 				}
 			)
-		},
-		selectClient({commit}, client) {
-			commit('set', {type: 'client', items: client})
-			if (client)
-				commit('set', {type: 'idActiveClient', items: client.id})
-			else
-				commit('set', {type: 'idActiveClient', items: undefined})
-		},
+		},		 
 		selectCategory({commit}, category) {
 			commit('set', {type: 'category', items: category})
 			if (category)

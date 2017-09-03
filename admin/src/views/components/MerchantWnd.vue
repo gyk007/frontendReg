@@ -34,9 +34,10 @@
 
 				</div>
 
-				<div class='btn_list'>
-					<button class="modal_btn_big_text btn_in_list modal_btn btn" v-on:click="regWnd">Сбросить пароль</button>
-					<button class="btn_in_list modal_btn btn" v-on:click="close">Закрыть</button>
+				<div class='btn_list' v-if='merchant'>
+					<button class="modal_btn_big_text btn_in_list modal_btn btn" v-on:click="regWnd" v-if='merchant.password'>Сбросить пароль</button>
+					<button class="modal_btn_big_text btn_in_list modal_btn btn" v-on:click="regWnd" v-if='!merchant.password'>Регистрация представителя</button>
+					<button class="btn_in_list modal_btn btn" style='background-color: #f48c42;' v-on:click="close">Закрыть</button>
 					<div class="clear"></div>
 				</div>
 
@@ -88,7 +89,7 @@
 		}
 	},
 	beforeCreate: function() {
-		this.$store.dispatch('getNetMerchant')
+		this.$store.dispatch('getMerchant')
 	}
   }
 </script>

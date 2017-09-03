@@ -19,7 +19,7 @@
 	</div>
 
 	<div class="product__cell product__quantity">
-		<input type="number" class="input" :value="el.quantity" @blur ='calculateCartPrice(el)'>
+		<input type="number"  min="1" class="input" :value="el.quantity" @blur ='calculateCartPrice(el)' :class="{ valid_imnput : el.quantity == 0 }">
 		<span>шт</span>
 	</div>
 

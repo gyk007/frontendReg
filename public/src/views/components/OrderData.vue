@@ -58,14 +58,16 @@
 					<li class="order-ls__info-txt">{{order.shop.official.name}}</li>
 
 					<li class="order-ls__info-title">Телефон</li>
-					<li class="order-ls__info-txt">{{order.shop.net.official.phone}}</li>
+					<li class="order-ls__info-txt" v-if='order.shop.official.phone'>{{order.shop.net.official.phone}}</li>
+					<li class="order-ls__info-txt" v-if='!order.shop.official.phone'>неуказан</li>
 
 					<li class="order-ls__info-title">Юредический адрес</li>
-					<li class="order-ls__info-txt">{{order.shop.net.official.regaddress}}</li>
+					<li class="order-ls__info-txt" v-if='order.shop.official.regaddress'>{{order.shop.net.official.regaddress}}</li>
+					<li class="order-ls__info-txt" v-if='!order.shop.official.regaddress'>неуказан</li>
 
 					<li class="order-ls__info-title">Эл.почта</li>
-					<li class="order-ls__info-txt" v-if='order.shop.net.official.email'>{{order.shop.net.official.email}}</li>
-					<li class="order-ls__info-txt" v-if='!order.shop.net.official.email'>не указан</li>
+					<li class="order-ls__info-txt" v-if='order.shop.official.email'>{{order.shop.net.official.email}}</li>
+					<li class="order-ls__info-txt" v-if='!order.shop.official.email'>не указан</li>
 
 				</ul>
 			</div>

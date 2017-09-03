@@ -465,3 +465,8 @@ select[readonly],
 .valid_imnput{
 	border:  solid 1px #f44336 !important;
 }
+
+.b-catalog__row:hover, .b-catalog__row.active {
+  background-color: #d7ffaa;
+  border-color: #000 !important;
+}

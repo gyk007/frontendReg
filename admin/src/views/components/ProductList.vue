@@ -19,7 +19,7 @@
 
 						<div class="shop__row js-t-row normal" v-for='product in  productList' v-if='product.search'>
 							<div class="shop__cell shop__cell-name">
-								<div class="shop__cell-img"><img src="pic/batle.png" alt="product"></div>
+								<div class="shop__cell-img"><img src="pic/batle.png" :alt="product.name"></div>
 								<div class="shop__cell-main">
 									<span class="shop__cell-n">{{product.name}}</span>
 									<div class="js-availability-clone"></div>

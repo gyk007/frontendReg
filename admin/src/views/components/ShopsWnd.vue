@@ -4,25 +4,37 @@
 			<div class="modal-wrapper">
 			<div class='modal-close' @click="close"><img src="img/close.png" alt="Закрыть"></div>
 				<div class="modal-container-shops">
-				<div class="modal__hdr">Торговые точки</div>
+				<div class="modal__hdr">Торговые точки</div>			 
+
 				<div class="shop_table">
 					<div class="b-catalog__table">
 					<div class="b-catalog__row js-t-row">
 						<div class="b-catalog__cell b-catalog__table-hdr">Название</div>
 						<div class="b-catalog__cell b-catalog__table-hdr">Адрес</div>
+						<div class="b-catalog__cell b-catalog__table-hdr"></div>
 					</div>
 
-					<div class="b-catalog__row js-t-row" v-for='shop in shopList'>
+					<div class="b-catalog__row js-t-row" 
+						v-for='shop in shopList' 
+						v-on:click="selectShop(shop)" 
+						:class="{ active : (shop.id == idSelectedShop) }">
 						<div class="b-catalog__cell b-catalog__table-title">
 							<div class="b-catalog__table-title--img"><img src="pic/nologo.png" alt="logo"></div>
 							<span>{{shop.official.name}}</span>
 						</div>
 						<div class="b-catalog__cell b-catalog__table-name">{{shop.official.address}}</div>
+						<div class="b-catalog__cell b-catalog__table-history"  style ='width: 10%'>
+							<button 
+								v-if  ='idSelectedShop == shop.id'
+								class ="btn btn--edit" 
+								style ='width:150px; background-color: #0aaf5a; color: #fff; margin-left: 15px' 
+								@click="merchantWnd">Представитель</button>
+						</div>
 					</div>
 				</div>
 				</div>
 				</br>
-				<button class="modal_btn btn" v-on:click="close">Закрыть</button>
+				<button class="modal_btn btn" style='background-color: #f48c42;' v-on:click="close">Закрыть</button>
 
 			</div>
 		</div>
@@ -32,7 +44,7 @@
 
 
 <script>
-  import store from '../../store/catalog.js'
+  import store  from '../../store/catalog.js'
   import $      from 'jquery'
 
   export default {
@@ -43,14 +55,29 @@
 		showShopsWnd() {
 			return this.$store.getters.showShopsWnd;
 		},
+		idSelectedShop() {
+			if (this.$store.getters.shop){
+				return this.$store.getters.shop.id
+			} else {
+				return undefined
+			}				 		 		 
+		},
 	},
 	methods: {
 		close() {
 			this.$store.commit('set', {type: 'showShopsWnd', items: false})
-		}
+			this.$store.commit('set', {type: 'shop', items: undefined}) 				 
+		},
+		merchantWnd(){
+			this.$store.commit('set', {type: 'showMerchantWnd', items: true})
+		},
+		selectShop(shop) {			 
+			this.$store.commit('set', {type: 'shop', items: shop}) 
+		},
 	},
 	created: function() {
 		this.$store.dispatch('getShops')
+		this.$store.commit('set', {type: 'shop', items: undefined}) 
 	}
   }
 </script>
