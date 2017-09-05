@@ -76,9 +76,16 @@
 		},
 		regWnd(){
 			this.$data.validateEmail = false;
+			// Удаляем пробелы
+			if(this.merchant.email)
+				this.merchant.email = this.merchant.email.trim();
+
 			// Регулярное выражение проверки email
-			let rEmail = /^\w+@\w+\.\w{2,4}$/i;
+			let rEmail = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i;
 			if (rEmail.test(this.merchant.email)) {
+				// Указываем что письмо не отправлено
+				this.$store.commit('set', {type: 'isSendMail', items: false})
+				// Открываем окно для отправки письма
 	 			this.$store.commit('set', {type: 'showRegWnd', items: true})
 			} else {
 				this.$data.validateEmail = true;

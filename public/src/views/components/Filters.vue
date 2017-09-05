@@ -163,7 +163,7 @@
 					disabled: false,
 					show: true,
 					tooltip: 'always',
-					formatter: '{value} ₽',
+					formatter: "{value} Р",
 					bgStyle: {
 						backgroundColor: '#fff',
 						boxShadow: 'inset 0.5px 0.5px 3px 1px rgba(0,0,0,.36)'
@@ -211,24 +211,26 @@
 			priceFilter(val){
 				let minPrice = val[0]
 				let maxPrice = val[1]
-
-				this.productList.forEach(function(key) {
-					if (key.properties[0].value < minPrice || key.properties[0].value > maxPrice)
-						key.filterPrice = false
-					else
-						key.filterPrice = true
-				})
+				if(this.productList) {
+					this.productList.forEach(function(key) {
+						if (key.properties[0].value < minPrice || key.properties[0].value > maxPrice)
+							key.filterPrice = false
+						else
+							key.filterPrice = true
+					})
+				}
 			},
 			alkoFilter(val){
 				let minAlko = val[0]
 				let maxAlko = val[1]
-
-				this.productList.forEach(function(key) {
-					if (key.properties[4].value < minAlko || key.properties[4].value > maxAlko)
-						key.filterAlko = false
-					else
-						key.filterAlko = true
-				})
+				if(this.productList) {
+					this.productList.forEach(function(key) {
+						if (key.properties[4].value < minAlko || key.properties[4].value > maxAlko)
+							key.filterAlko = false
+						else
+							key.filterAlko = true
+					})
+				}
 			}
 		},
 		created: function () {

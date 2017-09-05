@@ -3,7 +3,7 @@
 <div class="order-ls__product--holder">
 
 	<div class="p-card__products-header">
-		<span>Продукция на сумму: {{orderPrice}} &nbsp;<i class="rub">a</i></span>
+		<span>Продукция на сумму: {{parseFloat(orderPrice.toFixed(2))}} &nbsp;<i class="rub">a</i></span>
 	</div>
 
 	<div class="product">

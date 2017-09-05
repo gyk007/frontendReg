@@ -16,12 +16,12 @@ const store = new Vuex.Store({
 		netList         : undefined, // список сетей
 		clientPageCount : undefined, // количесво страниц в компоненте Client
 		net             : undefined, // выбранная сеть
-		shop            : undefined, // выбранный магазин		
+		shop            : undefined, // выбранный магазин
 		order           : undefined, // выбранный заказ
 		orders          : undefined, // все заказы
 		documents       : undefined, // документы в заказе
 		allProducts     : undefined, // Все продукты, для добавления и удаления из категории
-		loader          : false,     // отвечает за лоадер, если true - лодер включен		 
+		loader          : false,     // отвечает за лоадер, если true - лодер включен
 		shopList        : undefined, // торговые точки длч выбранного клиента
 		showShopsWnd    : false,     // показать окно торговых точек
 		merchant        : undefined, // торговый пердставитель сети
@@ -31,6 +31,8 @@ const store = new Vuex.Store({
 		statShop        : undefined, // статистика торговых точек
 		statProduct     : undefined, // статистика товаров
 		error           : undefined, // в переменную записываем ошибку
+		sendMailLoader  : false,     // отвечает за лоадер при отправке почты , если true - лодер включен
+		isSendMail      : false,     // указывает отправлено ли письмо, если true - письмо отправлено
 	},
 	getters: {
 		allProducts(state){
@@ -47,7 +49,7 @@ const store = new Vuex.Store({
 		},
 		error(state){
 			return state.error
-		},		 
+		},
 		idActiveCat(state){
 			return state.idActiveCat
 		},
@@ -59,7 +61,7 @@ const store = new Vuex.Store({
 		},
 		net(state) {
 			return state.net
-		},		 		 
+		},
 		order(state){
 			return state.order
 		},
@@ -68,7 +70,7 @@ const store = new Vuex.Store({
 		},
 		documents(state){
 			return state.documents
-		},		 
+		},
 		loader(state){
 			return state.loader
 		},
@@ -104,7 +106,13 @@ const store = new Vuex.Store({
 		},
 		statProduct(state){
 			return state.statProduct
-		},		 
+		},
+		sendMailLoader(state){
+			return state.sendMailLoader
+		},
+		isSendMail(state){
+			return state.isSendMail
+		},
 	},
 	mutations: {
 		set(state, {type, items}) {
@@ -404,7 +412,7 @@ const store = new Vuex.Store({
 				arg = {
 					params:{
 						action  : 'shopMerchant',
-						id_shop : state.shop.id 
+						id_shop : state.shop.id
 					},
 					headers: {
 						'Content-Type': 'text/plain'
@@ -414,13 +422,13 @@ const store = new Vuex.Store({
 				arg = {
 					params:{
 						action : 'netMerchant',
-						id_net : state.net.id 
+						id_net : state.net.id
 					},
 					headers: {
 						'Content-Type': 'text/plain'
 					}
-				}	
-			}			 
+				}
+			}
 
 			Vue.http.get(Conf.url.clients, arg).then(
 				response => {
@@ -594,7 +602,7 @@ const store = new Vuex.Store({
 			commit('set', {type: 'loader', items: true})
 			let arg = {
 				params:{
-					action : 'statistic',					 
+					action : 'statistic',
 				},
 				headers: {
 					'Content-Type': 'text/plain'
@@ -607,7 +615,7 @@ const store = new Vuex.Store({
 					if (body.ERROR) {
 						commit('set', {type: 'error', items: body.ERROR})
 					} else {
-						commit('set', {type: 'error',       items: undefined})						 				 
+						commit('set', {type: 'error',       items: undefined})
 						commit('set', {type: 'statNet',     items: body.net})
 						commit('set', {type: 'statShop',    items: body.shop})
 						commit('set', {type: 'statProduct', items: body.product})
@@ -703,7 +711,7 @@ const store = new Vuex.Store({
 			// Включаем лоадер
 			commit('set', {type: 'loader', items: true})
 			// Очищаем список клиентов
-			commit('set', {type: 'netList',  items: undefined})			 
+			commit('set', {type: 'netList',  items: undefined})
 			// Убираем постраничную навигацию
 			commit('set', {type: 'clientPageCount', items: undefined})
 			let arg = {
@@ -734,7 +742,7 @@ const store = new Vuex.Store({
 				 	console.log(error);
 				}
 			)
-		},		 
+		},
 		selectCategory({commit}, category) {
 			commit('set', {type: 'category', items: category})
 			if (category)
@@ -748,6 +756,7 @@ const store = new Vuex.Store({
 			commit('set', {type: 'product', items: product})
 		},
 		sendRegEmail({state, commit}, email) {
+			commit('set', {type: 'sendMailLoader', items: true})
 			let arg = {
 				params:{
 					action      : 'registration',
@@ -765,9 +774,11 @@ const store = new Vuex.Store({
 					if (body.ERROR) {
 						console.log(body.ERROR)
 						commit('set', {type: 'error', items: body.ERROR})
+						commit('set', {type: 'sendMailLoader', items: false})
 					} else {
 						commit('set', {type: 'error', items: undefined})
-						commit('set', {type: 'showRegWnd', items: false})
+						commit('set', {type: 'sendMailLoader', items: false})
+						commit('set', {type: 'isSendMail', items: true})
 					}
 				},
 				error => {
