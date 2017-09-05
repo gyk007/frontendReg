@@ -1,5 +1,6 @@
-import Vue        from 'vue'
-import VueRouter  from 'vue-router'
+import Vue          from 'vue'
+import VueRouter    from 'vue-router'
+import ToggleButton from 'vue-js-toggle-button'
 
 import Catalog    from './views/Catalog.vue'
 import Orders     from './views/Orders.vue'
@@ -13,7 +14,7 @@ import 'malihu-custom-scrollbar-plugin'
 import 'jquery-mousewheel'
 
 Vue.use(VueRouter)
-
+Vue.use(ToggleButton)
 
 var router = new VueRouter({
 	routes: [

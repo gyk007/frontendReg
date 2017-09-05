@@ -33,6 +33,7 @@ const store = new Vuex.Store({
 		error           : undefined, // в переменную записываем ошибку
 		sendMailLoader  : false,     // отвечает за лоадер при отправке почты , если true - лодер включен
 		isSendMail      : false,     // указывает отправлено ли письмо, если true - письмо отправлено
+		allOrderStatus  : undefined, // Все статусы заказа
 	},
 	getters: {
 		allProducts(state){
@@ -112,6 +113,9 @@ const store = new Vuex.Store({
 		},
 		isSendMail(state){
 			return state.isSendMail
+		},
+		allOrderStatus(state){
+			return state.allOrderStatus
 		},
 	},
 	mutations: {
@@ -405,7 +409,6 @@ const store = new Vuex.Store({
 		},
 		getMerchant({state, commit}) {
 			let arg;
-
 			// Если есть выбранный магазин то берем представителя магазина
 			// Иначе берем представителя сети
 			if(state.shop) {
@@ -475,10 +478,22 @@ const store = new Vuex.Store({
 				}
 			)
 		},
-		getOrders({commit}) {
+		getOrders({commit}, status) {
 			// Включаем лоадер
 			commit('set', {type: 'loader', items: true})
-			Vue.http.get(Conf.url.order).then(
+			commit('set', {type: 'orders', items: undefined});
+
+			let arg = {
+				params:{
+					status : JSON.stringify(status)
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			console.log(arg);
+			Vue.http.get(Conf.url.order, arg).then(
 				response => {
 					let body = response.body
 					if (body.ERROR) {
@@ -626,6 +641,32 @@ const store = new Vuex.Store({
 				}
 			)
 			commit('set', {type: 'loader', items: false})
+		},
+		// Получаем список стусов
+		getStatus({commit}) {
+			let arg = {
+				params:{
+					action : 'status',
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.get(Conf.url.order, arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error', items: undefined})
+					 	commit('set', {type: 'allOrderStatus', items: body.status});
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
 		},
 		// Переместить в нижнюю категорию
 		inCategory({commit}, idCategory) {

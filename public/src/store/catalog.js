@@ -11,29 +11,33 @@ Vue.use(VueResource)
 
 const catalogStore = new Vuex.Store({
 	state: {
-		catalogTree   : undefined, // дерево категорий
-		productList   : undefined, // список товаров в выбранной категории
-		idActiveCat   : undefined, // id выбранной категории
-		category      : undefined, // выбранная категория
-		filterPrice   : undefined, // начальные значени фильра "Цена"
-		filterAlko    : undefined, // начальные значения фильтра "Крепость об %"
-		product       : undefined, // выбранные продукт
-		cart          : undefined, // корзина
-		cartPrice     : 0,         // стоимость корзины
-		shops         : undefined, // список магазинов доступных данному пользователю
-		order         : undefined, // заказ
-		orders        : undefined, // список заказов
-		documents     : undefined, // список документов в заказе
-		user          : undefined, // данные пользователя
-		shop          : undefined, // выбраная торговая точка
-		loader        : false,     // отвечает за лоадер, если true - лодер включен
-		selectOffer   : false,     // вкладка с индивидуальными предложениями, если true - вкладка нажата
-		selectShopWnd : false,     // true - показать окно "Выбора торговой точки"
-		authError     : false,     // переменная указывает на ошибку авторизации
-		merchant      : undefined, // представитель
-		regError      : false,     // указывает на ошибку при регистрации
+		allOrderStatus : undefined, // все статусы заказа
+		catalogTree    : undefined, // дерево категорий
+		productList    : undefined, // список товаров в выбранной категории
+		idActiveCat    : undefined, // id выбранной категории
+		category       : undefined, // выбранная категория
+		filterPrice    : undefined, // начальные значени фильра "Цена"
+		filterAlko     : undefined, // начальные значения фильтра "Крепость об %"
+		product        : undefined, // выбранные продукт
+		cart           : undefined, // корзина
+		cartPrice      : 0,         // стоимость корзины
+		shops          : undefined, // список магазинов доступных данному пользователю
+		order          : undefined, // заказ
+		orders         : undefined, // список заказов
+		documents      : undefined, // список документов в заказе
+		user           : undefined, // данные пользователя
+		shop           : undefined, // выбраная торговая точка
+		loader         : false,     // отвечает за лоадер, если true - лодер включен
+		selectOffer    : false,     // вкладка с индивидуальными предложениями, если true - вкладка нажата
+		selectShopWnd  : false,     // true - показать окно "Выбора торговой точки"
+		authError      : false,     // переменная указывает на ошибку авторизации
+		merchant       : undefined, // представитель
+		regError       : false,     // указывает на ошибку при регистрации
 	},
 	getters: {
+		allOrderStatus(state) {
+			return  state.allOrderStatus
+		},
 		catalogTree(state) {
 			return  state.catalogTree
 		},
@@ -393,12 +397,15 @@ const catalogStore = new Vuex.Store({
 				}
 			)
 		},
-		getOrders({commit}) {
+		getOrders({commit}, status) {
 			// Включаем лоадер
 			commit('set', {type: 'loader', items: true})
+			commit('set', {type: 'orders', items: undefined});
+
 			let arg = {
 				params:{
-					token : Cookies.get('token'),
+					token  : Cookies.get('token'),
+					status : JSON.stringify(status),
 				},
 				headers: {
 					'Content-Type': 'text/plain'
@@ -521,6 +528,33 @@ const catalogStore = new Vuex.Store({
 							commit('set', {type: 'regError',  items: false})
 						}
 					};
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		// Получаем список стусов
+		getStatus({commit}) {
+			let arg = {
+				params:{
+					action : 'status',
+					token  : Cookies.get('token'),
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.get(Conf.url.order, arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error', items: undefined})
+					 	commit('set', {type: 'allOrderStatus', items: body.status});
+					}
 				},
 				error => {
 					console.log(error);

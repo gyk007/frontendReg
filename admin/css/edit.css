@@ -470,3 +470,7 @@ select[readonly],
   background-color: #d7ffaa;
   border-color: #000 !important;
 }
+
+.aa-order__filter {
+    padding: 25px 18px 18px;
+}

@@ -10,12 +10,12 @@
 				<div class="b-catalog__cell b-catalog__table-hdr"></div>
 			</div>
 
-			<div class="b-catalog__row js-t-row" 
-				v-for='net in netList' 
+			<div class="b-catalog__row js-t-row"
+				v-for='net in netList'
 				v-on:click="selectNet(net)"
 				:class="{ active : (net.id == idSelectedNet) }">
 				<div class="b-catalog__cell b-catalog__table-name">
-					<div class="b-catalog__table-title--img"><img src="pic/nologo.png" alt="logo"></div>
+					<div class="b-catalog__table-title--img"><img src="pic/nologo.png" :alt="net.official.name"></div>
 					<span>{{net.official.name}}</span>
 				</div>
 				<div class="b-catalog__cell b-catalog__table-title">{{net.official.person}}</div>
@@ -44,15 +44,15 @@
 					return this.$store.getters.net.id
 				} else {
 					return undefined
-				}					 		 		 
+				}
 			},
 			loader() {
 				return this.$store.getters.loader
 			}
 		},
 		methods: {
-			selectNet(net) {				 				 
-				this.$store.commit('set', {type: 'net', items: net}) 
+			selectNet(net) {
+				this.$store.commit('set', {type: 'net', items: net})
 			},
 		},
 		created: function() {

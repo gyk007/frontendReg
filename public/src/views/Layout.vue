@@ -20,6 +20,7 @@
 import Vue           from 'vue'
 import VueRouter     from 'vue-router'
 import VTooltip      from 'v-tooltip'
+import ToggleButton  from 'vue-js-toggle-button'
 import Main          from './Main.vue'
 import Catalog       from './Catalog.vue'
 import Order         from './Order.vue'
@@ -41,6 +42,7 @@ import 'jquery-mousewheel'
 
 Vue.use(VueRouter)
 Vue.use(VTooltip)
+Vue.use(ToggleButton)
 
 var router = new VueRouter({
 	routes: [

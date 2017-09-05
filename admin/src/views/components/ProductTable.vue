@@ -29,7 +29,7 @@
 			</div>
 		</div>
 	</div>
-	<button class="modal_btn btn" v-on:click="reloadCategory" v-if="idActiveCat">Редактировать</button>
+	<button class="modal_btn btn" style="width: 181px" v-on:click="reloadCategory" v-if="idActiveCat">Редактировать</button>
 </section>
 </template>
 
