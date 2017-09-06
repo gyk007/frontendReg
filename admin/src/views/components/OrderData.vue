@@ -116,7 +116,10 @@
 						<div class="order-ls__docs-cell">
 							<div class="order-ls__docs-name--holder">
 								<span class="status status--pdf">PDF</span>
-								<p class="order-ls__docs-name">ТОРГ-12</p>
+								<p v-if="docTorg12 &&  docTorg12.status == 'uploaded'" class="order-ls__docs-name">
+									<a  style='text-decoration: underline' :href='fileUrl + docTorg12.file_name' target="_blank">ТОРГ-12</a>
+								</p>
+								<p v-else class="order-ls__docs-name">ТОРГ-12</p>
 							</div>
 						</div>
 						<div class="order-ls__docs-cell">
@@ -135,7 +138,10 @@
 						<div class="order-ls__docs-cell">
 							<div class="order-ls__docs-name--holder">
 								<span class="status status--pdf">PDF</span>
-								<p class="order-ls__docs-name">ТТН</p>
+								<p v-if="docTtn &&  docTtn.status == 'uploaded'" class="order-ls__docs-name">
+									<a  style='text-decoration: underline' :href='fileUrl + docTtn.file_name' target="_blank">ТТН</a>
+								</p>
+								<p v-else class="order-ls__docs-name">ТТН</p>
 							</div>
 						</div>
 						<div class="order-ls__docs-cell">
@@ -154,7 +160,10 @@
 						<div class="order-ls__docs-cell">
 							<div class="order-ls__docs-name--holder">
 								<span class="status status--pdf">PDF</span>
-								<p class="order-ls__docs-name">Cчет-фактура</p>
+								<p v-if="docCount &&  docCount.status == 'uploaded'" class="order-ls__docs-name">
+									<a  style='text-decoration: underline' :href='fileUrl + docCount.file_name' target="_blank">Cчет-фактура</a>
+								</p>
+								<p v-else class="order-ls__docs-name">Cчет-фактура</p>
 							</div>
 						</div>
 						<div class="order-ls__docs-cell">
@@ -173,7 +182,10 @@
 						<div class="order-ls__docs-cell">
 							<div class="order-ls__docs-name--holder">
 								<span class="status status--pdf">PDF</span>
-								<p class="order-ls__docs-name">Справки ТТН</p>
+								<p v-if="docSttn &&  docSttn.status == 'uploaded'" class="order-ls__docs-name">
+									<a  style='text-decoration: underline' :href='fileUrl + docSttn.file_name' target="_blank">Справки ТТН</a>
+								</p>
+								<p v-else class="order-ls__docs-name">Справки ТТН</p>
 							</div>
 						</div>
 						<div class="order-ls__docs-cell">
@@ -192,7 +204,10 @@
 						<div class="order-ls__docs-cell">
 							<div class="order-ls__docs-name--holder">
 								<span class="status status--pdf">PDF</span>
-								<p class="order-ls__docs-name">Сертификаты и удостоверения качества</p>
+								<p v-if="docCer &&  docCer.status == 'uploaded'" class="order-ls__docs-name">
+									<a  style='text-decoration: underline' :href='fileUrl + docCer.file_name' target="_blank">Сертификаты и удостоверения качества</a>
+								</p>
+								<p v-else class="order-ls__docs-name">Сертификаты и удостоверения качества</p>
 							</div>
 						</div>
 						<div class="order-ls__docs-cell">
@@ -215,8 +230,14 @@
 <script>
 	import store from '../../store/catalog.js'
 	import $     from 'jquery'
+	import conf  from '../../conf/conf.js'
 
 	export default {
+		data() {
+			return {
+				fileUrl : conf.url.file,
+			}
+		},
 		computed: {
 			order() {
 				return this.$store.getters.order

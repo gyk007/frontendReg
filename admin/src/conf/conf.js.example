@@ -4,6 +4,9 @@ const conf = {
 		category : 'http://reg50.nixteam.ru/alko/admin/catalog/category/',
 		clients  : 'http://reg50.nixteam.ru/alko/admin/client/',
 		order    : 'http://reg50.nixteam.ru/alko/admin/order/',
+		// Путь к файлам
+		file    :  'http://localhost:9887/',
+
 	}
 }
 

@@ -5,3 +5,4 @@ public/src/conf/conf.js
 admin/src/conf/conf.js
 admin/build/bundle.js
 public/build/bundle.js
+*.pdf

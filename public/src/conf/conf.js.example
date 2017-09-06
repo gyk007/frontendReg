@@ -5,6 +5,9 @@ const conf = {
 		cart     : 'http://localhost:9888/alko/cart/',
 		order    : 'http://localhost:9888/alko/order/',
 		client   : 'http://localhost:9888/alko/client/',
+		// Путь к файлам
+		file    :  'http://localhost:9887/',
+
 	}
 }
 
