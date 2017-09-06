@@ -13,7 +13,10 @@
 					<div v-if='!isSendMail'>
 						<div class="modal__hdr" v-if='!error && isPassword'>Вы дейсвительно хотите сбросить пароль ?</div>
 						<div class="modal__hdr" v-if='!error && !isPassword'>Отправить ссылку на регистрацию ?</div>
-						<div class="modal__hdr" style='color: #f44336' v-if='error'>Такой Email уже используется</div>
+						<div class="modal__hdr" style='font-size: 14px; color: #f44336' v-if='error'>Такой Email уже использует
+						<span v-if='error.name'></br> {{error.name}}</span>
+						</br> {{error.net.official.name}}
+						</div>
 						<div class='btn_list' v-if='!error'>
 							<button class="btn_in_list modal_btn btn" v-on:click="send_mail">Отправить</button>
 							<button class="btn_in_list modal_btn btn" style='background-color: #f48c42;' v-on:click="close">Отмена</button>

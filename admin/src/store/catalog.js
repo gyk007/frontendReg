@@ -821,9 +821,14 @@ const store = new Vuex.Store({
 						commit('set', {type: 'error', items: body.ERROR})
 						commit('set', {type: 'sendMailLoader', items: false})
 					} else {
-						commit('set', {type: 'error', items: undefined})
-						commit('set', {type: 'sendMailLoader', items: false})
-						commit('set', {type: 'isSendMail', items: true})
+						if (body.merchant) {
+							commit('set', {type: 'error', items: body.merchant})
+							commit('set', {type: 'sendMailLoader', items: false})
+						} else {
+							commit('set', {type: 'error', items: undefined})
+							commit('set', {type: 'sendMailLoader', items: false})
+							commit('set', {type: 'isSendMail', items: true})
+						}
 					}
 				},
 				error => {
