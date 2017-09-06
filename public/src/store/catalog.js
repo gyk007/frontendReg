@@ -13,6 +13,7 @@ const catalogStore = new Vuex.Store({
 	state: {
 		allOrderStatus : undefined, // все статусы заказа
 		catalogTree    : undefined, // дерево категорий
+		contactWnd     : false,     // true - показть окно "Контакты"
 		productList    : undefined, // список товаров в выбранной категории
 		idActiveCat    : undefined, // id выбранной категории
 		category       : undefined, // выбранная категория
@@ -29,10 +30,12 @@ const catalogStore = new Vuex.Store({
 		shop           : undefined, // выбраная торговая точка
 		loader         : false,     // отвечает за лоадер, если true - лодер включен
 		selectOffer    : false,     // вкладка с индивидуальными предложениями, если true - вкладка нажата
+		sendMailLoader : false,     // отвечает за лоадер при отправке почты , если true - лодер включен
 		selectShopWnd  : false,     // true - показать окно "Выбора торговой точки"
 		authError      : false,     // переменная указывает на ошибку авторизации
 		merchant       : undefined, // представитель
 		regError       : false,     // указывает на ошибку при регистрации
+		isSentMail     : false,     // указывает отправлино ли письмо
 	},
 	getters: {
 		allOrderStatus(state) {
@@ -52,6 +55,9 @@ const catalogStore = new Vuex.Store({
 		},
 		category(state) {
 			return state.category
+		},
+		contactWnd(state) {
+			return state.contactWnd
 		},
 		product(state){
 			return state.product
@@ -100,6 +106,12 @@ const catalogStore = new Vuex.Store({
 		},
 		regError(state){
 			return state.regError
+		},
+		isSentMail(state){
+			return state.isSentMail
+		},
+		sendMailLoader(state){
+			return state.sendMailLoader
 		},
 	},
 	mutations: {
@@ -387,6 +399,11 @@ const catalogStore = new Vuex.Store({
 						if (body.ERROR.AUTH)
 							document.location = '/#/auth'
 					} else {
+
+						if (body.order.ttn_date)     body.order.ttn_date     = new Date(body.order.ttn_date);
+						if (body.order.deliver_date) body.order.deliver_date = new Date(body.order.deliver_date);
+						if (body.order.ctime)        body.order.ctime        = new Date(body.order.ctime);
+
 						commit('set', {type: 'order',     items: body.order})
 						commit('set', {type: 'documents', items: body.documents})
 						document.location = '/#/order/' + orderId
@@ -655,6 +672,40 @@ const catalogStore = new Vuex.Store({
 
 						document.location = '/#/orders'
 						window.location.reload()
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		sendMail({state, commit}, text) {
+			// Включаем лоадер
+			commit('set', {type: 'sendMailLoader',  items: true})
+
+			let arg = {
+				params:{
+					token  : Cookies.get('token'),
+					text   : text,
+					action : 'send_mail'
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.client, null, arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR);
+						if (body.ERROR.AUTH)
+							document.location = '/#/auth'
+					} else {
+						// Выключаем лоадер
+						commit('set', {type: 'sendMailLoader',  items: false})
+						// Указываем что сообщение отправлено
+						commit('set', {type: 'isSentMail', items: true})
 					}
 				},
 				error => {

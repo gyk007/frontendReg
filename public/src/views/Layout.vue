@@ -8,7 +8,7 @@
 		<!-- </div> -->
 
 
-		<Contact></Contact>
+		<Contact v-if='contactWnd'></Contact>
 		<ExitWnd></ExitWnd>
 		<SelectShopWnd v-if='selectShopWnd'></SelectShopWnd>
 
@@ -25,7 +25,6 @@ import Main          from './Main.vue'
 import Catalog       from './Catalog.vue'
 import Order         from './Order.vue'
 import Orders        from './Orders.vue'
-import Contacts      from './Contacts.vue'
 import Cart          from './Cart.vue'
 import Auth          from './Auth.vue'
 import HeadareEl     from './Header.vue'
@@ -64,6 +63,9 @@ export default  {
 	store: Store,
 	components: {HeadareEl, Contact, ExitWnd, SelectShopWnd},
 	computed: {
+		contactWnd() {
+			return this.$store.getters.contactWnd
+		},
 		selectShopWnd() {
 			return this.$store.getters.selectShopWnd
 		},

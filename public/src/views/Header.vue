@@ -17,7 +17,7 @@
 				<ul class="nav__list">
 					<li><router-link to="/orders"  active-class='active'>Заказы</router-link></li>
 					<li><router-link to="/catalog" active-class='active'>Каталог</router-link></li>
-					<li><a data-fancybox data-src="#popup__contact" href="javascript:;">Обратная связь</a></li>
+					<li><a style="cursor:pointer" @click='showContactWnd'>Обратная связь</a></li>
 					<li><a data-fancybox data-src="#popup__exit"    href="javascript:;">Выход</a></li>
 				</ul>
 			</nav>
@@ -80,6 +80,9 @@
 		methods: {
 			showSelectShopWnd() {
 				this.$store.commit('set', {type: 'selectShopWnd', items: true})
+			},
+			showContactWnd() {
+				this.$store.commit('set', {type: 'contactWnd', items: true})
 			},
 		},
 		beforeCreate: function() {

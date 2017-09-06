@@ -468,6 +468,11 @@ const store = new Vuex.Store({
 						commit('set', {type: 'error', items: body.ERROR})
 					} else {
 						commit('set', {type: 'error', items: undefined})
+
+						if (body.order.ttn_date)     body.order.ttn_date     = new Date(body.order.ttn_date);
+						if (body.order.deliver_date) body.order.deliver_date = new Date(body.order.deliver_date);
+						if (body.order.ctime)        body.order.ctime        = new Date(body.order.ctime);
+
 						commit('set', {type: 'order', items: body.order})
 						commit('set', {type: 'documents', items: body.documents})
 						document.location = '/#/order/' + body.order.id
@@ -492,7 +497,6 @@ const store = new Vuex.Store({
 				}
 			}
 
-			console.log(arg);
 			Vue.http.get(Conf.url.order, arg).then(
 				response => {
 					let body = response.body

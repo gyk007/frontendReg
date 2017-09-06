@@ -234,6 +234,9 @@
 	width: 100px;
 	margin:  0 auto;
 }
+.btn {
+	font-size: 13px;
+}
 
 .btn_list {
 	margin:  0 auto;

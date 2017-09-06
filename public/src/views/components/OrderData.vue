@@ -39,8 +39,13 @@
 					<li class="order-ls__info-txt" v-if='order.latch_number'>{{order.latch_number}}</li>
 					<li class="order-ls__info-txt" v-if='!order.latch_number'>в обработке</li>
 
-					<li class="order-ls__info-title">ID Торговой точки</li>
-					<li class="order-ls__info-txt">{{order.shop.official.alkoid}}</li>
+					<li class="order-ls__info-title">№ ТТН</li>
+					<li class="order-ls__info-txt" v-if='order.ttn_number'>{{order.ttn_number}}</li>
+					<li class="order-ls__info-txt" v-if='!order.ttn_number'>в обработке</li>
+
+					<li class="order-ls__info-title">Дата ТТН</li>
+					<li class="order-ls__info-txt" v-if='order.ttn_date'>{{order.ttn_date.toLocaleDateString("ru-RU")}}</li>
+					<li class="order-ls__info-txt" v-if='!order.ttn_date'>в обработке</li>
 				</ul>
 			</div>
 
@@ -91,7 +96,7 @@
 					<li class="order-ls__info-txt" v-if='!order.deliver_phone'>в обработке</li>
 
 					<li class="order-ls__info-title">Дата доставки</li>
-					<li class="order-ls__info-txt" v-if='order.deliver_date'>{{order.deliver_date}}</li>
+					<li class="order-ls__info-txt" v-if='order.deliver_date'>{{order.deliver_date.toLocaleDateString("ru-RU")}}</li>
 					<li class="order-ls__info-txt" v-if='!order.deliver_date'>в обработке</li>
 
 					<li class="order-ls__info-title">Период доставки</li>

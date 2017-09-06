@@ -2,7 +2,7 @@
 	<section class="order-ls__tabs tabs">
 			<ul class="tabs__caption">
 				<li class="order_inf active" @click="tab('.order_inf')">Информация о заказе</li>
-				<li class='compani_inf'      @click="tab('.compani_inf')">Ваши данные</li>
+				<li class='compani_inf'      @click="tab('.compani_inf')">Данные клиента</li>
 				<li class='sales_inf'        @click="tab('.sales_inf')">Доставка</li>
 				<li class='docs_inf'         @click="tab('.docs_inf')">Документы</li>
 			</ul>
@@ -39,6 +39,14 @@
 					<li class="order-ls__info-txt" v-if='order.latch_number'>{{order.latch_number}}</li>
 					<li class="order-ls__info-txt" v-if='!order.latch_number'>в обработке</li>
 
+					<li class="order-ls__info-title">№ ТТН</li>
+					<li class="order-ls__info-txt" v-if='order.ttn_number'>{{order.ttn_number}}</li>
+					<li class="order-ls__info-txt" v-if='!order.ttn_number'>в обработке</li>
+
+					<li class="order-ls__info-title">Дата ТТН</li>
+					<li class="order-ls__info-txt" v-if='order.ttn_date'>{{order.ttn_date.toLocaleDateString("ru-RU")}}</li>
+					<li class="order-ls__info-txt" v-if='!order.ttn_date'>в обработке</li>
+
 					<li class="order-ls__info-title">ID Торговой точки</li>
 					<li class="order-ls__info-txt">{{order.shop.official.alkoid}}</li>
 				</ul>
@@ -65,7 +73,8 @@
 					<li class="order-ls__info-txt" v-if='order.shop.official.regaddress'>{{order.shop.net.official.regaddress}}</li>
 					<li class="order-ls__info-txt" v-if='!order.shop.official.regaddress'>неуказан</li>
 
-					<li class="order-ls__info-title">Эл.почта</li>
+
+					<li class="order-ls__info-title">Эл.почта организации</li>
 					<li class="order-ls__info-txt" v-if='order.shop.official.email'>{{order.shop.net.official.email}}</li>
 					<li class="order-ls__info-txt" v-if='!order.shop.official.email'>не указан</li>
 
@@ -91,7 +100,7 @@
 					<li class="order-ls__info-txt" v-if='!order.deliver_phone'>в обработке</li>
 
 					<li class="order-ls__info-title">Дата доставки</li>
-					<li class="order-ls__info-txt" v-if='order.deliver_date'>{{order.deliver_date}}</li>
+					<li class="order-ls__info-txt" v-if='order.deliver_date'>{{order.deliver_date.toLocaleDateString("ru-RU")}}</li>
 					<li class="order-ls__info-txt" v-if='!order.deliver_date'>в обработке</li>
 
 					<li class="order-ls__info-title">Период доставки</li>
