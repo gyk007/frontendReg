@@ -329,3 +329,7 @@
 .shop__filter {
     width: 100% !important;
 }
+
+.product__cost-item {
+    font-size: 12px !important;
+}
