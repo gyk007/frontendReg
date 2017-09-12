@@ -155,6 +155,9 @@ const store = new Vuex.Store({
 	},
 	actions: {
 		addCategory({commit}, category) {
+			// Очищаем список продуктов
+			commit('set', {type: 'productList', items: undefined})
+
 			let arg = {
 				params:{
 					'category.name'        : category.name,
@@ -294,6 +297,9 @@ const store = new Vuex.Store({
 			)
 		},
 		editCategory ({commit}, category) {
+			// Очищаем список продуктов
+			commit('set', {type: 'productList', items: undefined})
+
 			let arg = {
 				params:{
 					'category.id'          : category.id,
