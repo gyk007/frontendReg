@@ -474,3 +474,7 @@ select[readonly],
 .aa-order__filter {
     padding: 25px 18px 18px;
 }
+
+.order-ls__info-list li {
+	height: 45px !important;
+}

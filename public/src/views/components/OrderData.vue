@@ -106,7 +106,7 @@
 				</ul>
 			</div>
 
-			<div class="tabs__content order-ls__docs docs_inf">
+			<div class="tabs__content order-ls__docs docs_inf" v-if="docTorg12 && docTorg12.status == 'uploaded'">
 				<div class="order-ls__docs-table">
 
 					<div class="order-ls__docs-row js-t-row">
@@ -138,7 +138,7 @@
 						</div>
 					</div>
 
-					<div class="order-ls__docs-row js-t-row">
+					<div class="order-ls__docs-row js-t-row" v-if="docTtn && docTtn.status == 'uploaded'">
 						<div class="order-ls__docs-cell">
 							<div class="order-ls__docs-name--holder">
 								<span class="status status--pdf">PDF</span>
@@ -167,7 +167,7 @@
 						</div>
 					</div>
 
-					<div class="order-ls__docs-row js-t-row">
+					<div class="order-ls__docs-row js-t-row" v-if="docCount && docCount.status == 'uploaded'">
 						<div class="order-ls__docs-cell">
 							<div class="order-ls__docs-name--holder">
 								<span class="status status--pdf">PDF</span>
@@ -197,7 +197,7 @@
 						</div>
 					</div>
 
-					<div class="order-ls__docs-row js-t-row">
+					<div class="order-ls__docs-row js-t-row" v-if="docSttn && docSttn.status == 'uploaded'">
 						<div class="order-ls__docs-cell">
 							<div class="order-ls__docs-name--holder">
 								<span class="status status--pdf">PDF</span>
@@ -226,7 +226,7 @@
 						</div>
 					</div>
 
-					<div class="order-ls__docs-row js-t-row">
+					<div class="order-ls__docs-row js-t-row" v-if="docCer && docCer.status == 'uploaded'">
 						<div class="order-ls__docs-cell">
 							<div class="order-ls__docs-name--holder">
 								<span class="status status--pdf">PDF</span>

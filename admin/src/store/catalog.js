@@ -761,14 +761,13 @@ const store = new Vuex.Store({
 			commit('set', {type: 'clientPageCount', items: undefined})
 			let arg = {
 				params:{
-					action : 'search',
 					search : search
 				},
 				headers: {
 					'Content-Type': 'text/plain'
 				}
 			}
-
+			console.log(arg);
 			Vue.http.get(Conf.url.clients, arg).then(
 				response => {
 					let body = response.body;
@@ -778,6 +777,9 @@ const store = new Vuex.Store({
 						commit('set', {type: 'error', items: undefined})
 						// Удаляем список клиентов
 						commit('set', {type: 'netList', items: body.clients})
+						if (body.pages) {
+							commit('set', {type: 'clientPageCount', items: body.pages})
+						}
 						document.location = '/#/client/' + 0
 						// Выключаем лоадер
 						commit('set', {type: 'loader', items: false})

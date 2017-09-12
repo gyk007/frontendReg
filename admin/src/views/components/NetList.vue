@@ -18,8 +18,13 @@
 					<div class="b-catalog__table-title--img"><img src="pic/nologo.png" :alt="net.official.name"></div>
 					<span>{{net.official.name}}</span>
 				</div>
-				<div class="b-catalog__cell b-catalog__table-title">{{net.official.person}}</div>
-				<div class="b-catalog__cell b-catalog__table-history">{{net.official.phone}}</div>
+
+				<div class="b-catalog__cell b-catalog__table-title"   v-if='!net.merchant.name'>-</div>
+				<div class="b-catalog__cell b-catalog__table-title"   v-if='net.merchant.name'>{{net.merchant.name}}</div>
+
+				<div class="b-catalog__cell b-catalog__table-history" v-if='!net.merchant.phone'>-</div>
+				<div class="b-catalog__cell b-catalog__table-history" v-if='net.merchant.phone'>{{net.merchant.phone}}</div>
+
 				<div class="b-catalog__cell b-catalog__table-history">{{net.official.taxcode}}</div>
 				<div class="b-catalog__cell b-catalog__table-history"><a data-fancybox  data-src="#popup__client" href="javascript:;" class="btn btn--edit">Просмотр</a></div>
 			</div>

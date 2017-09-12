@@ -28,8 +28,7 @@ export default {
     },
     methods: {
         search() {
-            if(this.$data.query.trim())
-                this.$store.dispatch('searchNet', this.$data.query.trim())
+            this.$store.dispatch('searchNet', this.$data.query.trim())
         },
     },
 }

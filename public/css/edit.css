@@ -320,3 +320,12 @@
 .valid_imnput{
 	border:  solid 1px #f44336 !important;
 }
+
+
+.order-ls__info-list li {
+	height: 45px !important;
+}
+
+.shop__filter {
+    width: 100% !important;
+}
