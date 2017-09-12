@@ -4,7 +4,7 @@
 				<li class="order_inf active" @click="tab('.order_inf')">Информация о заказе</li>
 				<li class='compani_inf'      @click="tab('.compani_inf')">Ваши данные</li>
 				<li class='sales_inf'        @click="tab('.sales_inf')">Доставка</li>
-				<li class='docs_inf'         @click="tab('.docs_inf')">Документы</li>
+				<li class='docs_inf'         @click="tab('.docs_inf')" v-if='documents && documents.length'>Документы</li>
 			</ul>
 			<!--tabs content-->
 			<div class="tabs__content order-ls__info active order_inf">
@@ -108,6 +108,7 @@
 
 			<div class="tabs__content order-ls__docs docs_inf">
 				<div class="order-ls__docs-table">
+
 					<div class="order-ls__docs-row js-t-row">
 						<div class="order-ls__docs-cell">
 							<div class="order-ls__docs-name--holder">
@@ -129,12 +130,11 @@
 							</span>
 						</div>
 						<div class="order-ls__docs-cell">
-							<span class="a-order__dl">
+							<!-- <span class="a-order__dl">
 								<input type="checkbox" class="checkbox" @click="addDocument('ТОРГ-12')" v-if="docTorg12 && docTorg12.status == 'requested'" checked>
 								<input type="checkbox" class="checkbox" v-if="docTorg12 && docTorg12.status == 'uploaded'" checked disabled>
 								<input type="checkbox" class="checkbox" @click="addDocument('ТОРГ-12')" v-if="!docTorg12">
-							</span>
-							</span>
+							</span>		 -->
 						</div>
 					</div>
 
@@ -159,11 +159,11 @@
 							</span>
 						</div>
 						<div class="order-ls__docs-cell">
-							<span class="a-order__dl">
+							<!-- <span class="a-order__dl">
 								<input type="checkbox" class="checkbox" @click="addDocument('ТТН')" v-if="docTtn && docTtn.status == 'requested'" checked>
 								<input type="checkbox" class="checkbox" v-if="docTtn && docTtn.status == 'uploaded'" checked disabled>
 								<input type="checkbox" class="checkbox" @click="addDocument('ТТН')" v-if="!docTtn">
-							</span>
+							</span> -->
 						</div>
 					</div>
 
@@ -188,12 +188,12 @@
 							</span>
 						</div>
 						<div class="order-ls__docs-cell">
-							<span class="a-order__dl">
+							<!-- <span class="a-order__dl">
 								<input type="checkbox" class="checkbox" @click="addDocument('Cчет-фактура')" v-if="docCount && docCount.status == 'requested'" checked>
 								<input type="checkbox" class="checkbox" v-if="docCount && docCount.status == 'uploaded'" checked disabled>
 								<input type="checkbox" class="checkbox" @click="addDocument('Cчет-фактура')" v-if="!docCount">
 
-							</span>
+							</span> -->
 						</div>
 					</div>
 
@@ -202,9 +202,9 @@
 							<div class="order-ls__docs-name--holder">
 								<span class="status status--pdf">PDF</span>
 								<p v-if="docSttn &&  docSttn.status == 'uploaded'" class="order-ls__docs-name">
-									<a  style='text-decoration: underline' :href='fileUrl + docSttn.file_name' target="_blank">Справки ТТН</a>
+									<a  style='text-decoration: underline' :href='fileUrl + docSttn.file_name' target="_blank">Приложения ТТН</a>
 								</p>
-								<p v-else class="order-ls__docs-name">Справки ТТН</p>
+								<p v-else class="order-ls__docs-name">Приложения ТТН</p>
 							</div>
 						</div>
 						<div class="order-ls__docs-cell">
@@ -218,11 +218,11 @@
 							</span>
 						</div>
 						<div class="order-ls__docs-cell">
-							<span class="a-order__dl">
-								<input type="checkbox" class="checkbox" @click="addDocument('Справки ТТН')"      v-if="docSttn && docSttn.status == 'requested'" checked>
+						<!-- 	<span class="a-order__dl">
+								<input type="checkbox" class="checkbox" @click="addDocument('Приложения ТТН')"      v-if="docSttn && docSttn.status == 'requested'" checked>
 								<input type="checkbox" class="checkbox" v-if="docSttn && docSttn.status == 'uploaded'" checked disabled>
-								<input type="checkbox" class="checkbox" @click="addDocument('Справки ТТН')"  v-if="!docSttn">
-							</span>
+								<input type="checkbox" class="checkbox" @click="addDocument('Приложения ТТН')"  v-if="!docSttn">
+							</span> -->
 						</div>
 					</div>
 
@@ -231,9 +231,9 @@
 							<div class="order-ls__docs-name--holder">
 								<span class="status status--pdf">PDF</span>
 								<p v-if="docCer &&  docCer.status == 'uploaded'" class="order-ls__docs-name">
-									<a  style='text-decoration: underline' :href='fileUrl + docCer.file_name' target="_blank">Сертификаты и удостоверения качества</a>
+									<a  style='text-decoration: underline' :href='fileUrl + docCer.file_name' target="_blank">Справки, сертификаты и удостоверения качества</a>
 								</p>
-								<p v-else class="order-ls__docs-name">Сертификаты и удостоверения качества</p>
+								<p v-else class="order-ls__docs-name">Справки, сертификаты и удостоверения качества</p>
 							</div>
 						</div>
 						<div class="order-ls__docs-cell">
@@ -247,11 +247,11 @@
 							</span>
 						</div>
 						<div class="order-ls__docs-cell">
-							<span class="a-order__dl">
-								<input type="checkbox" class="checkbox" @click="addDocument('Сертификаты и удостоверения качества')" v-if="docCer && docCer.status == 'requested'" checked>
+							<!-- <span class="a-order__dl">
+								<input type="checkbox" class="checkbox" @click="addDocument('Справки, сертификаты и удостоверения качества')" v-if="docCer && docCer.status == 'requested'" checked>
 								<input type="checkbox" class="checkbox" v-if="docCer && docCer.status == 'uploaded'" checked disabled>
-								<input type="checkbox" class="checkbox" @click="addDocument('Сертификаты и удостоверения качества')" v-if="!docCer">
-							</span>
+								<input type="checkbox" class="checkbox" @click="addDocument('Справки, сертификаты и удостоверения качества')" v-if="!docCer">
+							</span> -->
 						</div>
 					</div>
 				</div>
@@ -274,6 +274,9 @@
 		computed: {
 			order() {
 				return this.$store.getters.order
+			},
+			documents() {
+				return this.$store.getters.documents
 			},
 			docTtn () {
 				let docTtn = null;
@@ -302,7 +305,7 @@
 			docSttn () {
 				let docSttn = null;
 				this.$store.getters.documents.forEach(key => {
-					if(key.name == 'Справки ТТН')
+					if(key.name == 'Приложения ТТН')
 						docSttn = key;
 				});
 				return docSttn;
@@ -310,7 +313,7 @@
 			docCer () {
 				let docCer = null;
 				this.$store.getters.documents.forEach(key => {
-					if(key.name == 'Сертификаты и удостоверения качества')
+					if(key.name == 'Справки, сертификаты и удостоверения качества')
 						docCer = key;
 				});
 				return docCer;

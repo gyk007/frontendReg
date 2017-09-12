@@ -2,8 +2,8 @@
 <section class="delete_wnd" id="popup__exit">
 	<div class="popup__hdr">Выход</div>
 	<div class="btn_delete_wnd_form">
-		<button class="btn_delete_wnd_ok" v-on:click="exit">Выйти</button>
-		<button class="btn_delete_wnd_cancel" v-on:click="closeWnd">Отмена</button>
+		<button class="btn_delete_wnd_ok" v-on:click="exit" style='background-color: #9fc957;'>Выйти</button>
+		<button class="btn_delete_wnd_cancel" v-on:click="closeWnd" style='background-color: #f48c42;'>Отмена</button>
 	</div>
 </section>
 </template>

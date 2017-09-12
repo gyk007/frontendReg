@@ -185,7 +185,7 @@ const catalogStore = new Vuex.Store({
 					if (body.ERROR) {
 						console.log(body.ERROR)
 					} else {
-						commit('set', {type: 'order', items: body.order})
+						commit('set', {type: 'order',     items: body.order})
 						commit('set', {type: 'documents', items: body.documents})
 						document.location = '/#/order/' + body.order.id
 						dispatch('getCart')

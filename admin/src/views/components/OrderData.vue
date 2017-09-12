@@ -4,7 +4,7 @@
 				<li class="order_inf active" @click="tab('.order_inf')">Информация о заказе</li>
 				<li class='compani_inf'      @click="tab('.compani_inf')">Данные клиента</li>
 				<li class='sales_inf'        @click="tab('.sales_inf')">Доставка</li>
-				<li class='docs_inf'         @click="tab('.docs_inf')">Документы</li>
+				<li class='docs_inf'         @click="tab('.docs_inf')" v-if='documents && documents.length'>Документы</li>
 			</ul>
 			<!--tabs content-->
 			<div class="tabs__content order-ls__info active order_inf">
@@ -183,9 +183,9 @@
 							<div class="order-ls__docs-name--holder">
 								<span class="status status--pdf">PDF</span>
 								<p v-if="docSttn &&  docSttn.status == 'uploaded'" class="order-ls__docs-name">
-									<a  style='text-decoration: underline' :href='fileUrl + docSttn.file_name' target="_blank">Справки ТТН</a>
+									<a  style='text-decoration: underline' :href='fileUrl + docSttn.file_name' target="_blank">Приложения ТТН</a>
 								</p>
-								<p v-else class="order-ls__docs-name">Справки ТТН</p>
+								<p v-else class="order-ls__docs-name">Приложения ТТН</p>
 							</div>
 						</div>
 						<div class="order-ls__docs-cell">
@@ -205,9 +205,9 @@
 							<div class="order-ls__docs-name--holder">
 								<span class="status status--pdf">PDF</span>
 								<p v-if="docCer &&  docCer.status == 'uploaded'" class="order-ls__docs-name">
-									<a  style='text-decoration: underline' :href='fileUrl + docCer.file_name' target="_blank">Сертификаты и удостоверения качества</a>
+									<a  style='text-decoration: underline' :href='fileUrl + docCer.file_name' target="_blank">Справки, сертификаты и удостоверения качества</a>
 								</p>
-								<p v-else class="order-ls__docs-name">Сертификаты и удостоверения качества</p>
+								<p v-else class="order-ls__docs-name">Справки, сертификаты и удостоверения качества</p>
 							</div>
 						</div>
 						<div class="order-ls__docs-cell">
@@ -242,6 +242,9 @@
 			order() {
 				return this.$store.getters.order
 			},
+			documents () {
+				return this.$store.getters.documents
+			},
 			docTtn () {
 				let docTtn = null;
 				this.$store.getters.documents.forEach(key => {
@@ -269,7 +272,7 @@
 			docSttn () {
 				let docSttn = null;
 				this.$store.getters.documents.forEach(key => {
-					if(key.name == 'Справки ТТН')
+					if(key.name == 'Приложения ТТН')
 						docSttn = key;
 				});
 				return docSttn;
@@ -277,7 +280,7 @@
 			docCer () {
 				let docCer = null;
 				this.$store.getters.documents.forEach(key => {
-					if(key.name == 'Сертификаты и удостоверения качества')
+					if(key.name == 'Справки, сертификаты и удостоверения качества')
 						docCer = key;
 				});
 				return docCer;
