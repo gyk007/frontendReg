@@ -378,6 +378,9 @@ const store = new Vuex.Store({
 			commit('set', {type: 'searchClient', items: undefined})
 			// Очищаем список клиентов
 			commit('set', {type: 'netList',  items: undefined})
+			// Убираем выделение сети
+			commit('set', {type: 'net', items: undefined})
+
 			let arg = {
 				params:{
 					page : page
@@ -759,6 +762,9 @@ const store = new Vuex.Store({
 			commit('set', {type: 'netList',  items: undefined})
 			// Убираем постраничную навигацию
 			commit('set', {type: 'clientPageCount', items: undefined})
+			// Убираем выделение сети
+			commit('set', {type: 'net', items: undefined})
+
 			let arg = {
 				params:{
 					search : search
@@ -767,7 +773,7 @@ const store = new Vuex.Store({
 					'Content-Type': 'text/plain'
 				}
 			}
-			console.log(arg);
+
 			Vue.http.get(Conf.url.clients, arg).then(
 				response => {
 					let body = response.body;
