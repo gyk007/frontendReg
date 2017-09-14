@@ -8,19 +8,19 @@
 			</div>
 			<div class="input-field">
 				<input id="personal-card-tel" type="text" class="input" :class="{ valid_in_cart : validate.phone }" v-model='orderData.phone' >
-				<label for="personal-card-tel">Телефон получателя<span class="accent">*</span></label>
+				<label for="personal-card-tel" :class="{active : orderData.phone }">Телефон получателя<span class="accent">*</span></label>
 			</div>
 			<div class="input-field">
 				<input id="personal-card-addr" type="text" class="input" :class="{ valid_in_cart : validate.address }" v-model='orderData.address'>
-				<label for="personal-card-addr">Адрес доставки<span class="accent">*</span></label>
+				<label for="personal-card-addr" :class="{active : orderData.address }">Адрес доставки<span class="accent">*</span></label>
 			</div>
 			<div class="input-field">
-				<input id="personal-card-name" type="text" class="input" :class="{ valid_in_cart : validate.name }" v-model='orderData.name'>
-				<label for="personal-card-name">Имя получателя<span class="accent">*</span></label>
+				<input id="personal-card-name" type="text" class="input" :class="{ valid_in_cart : validate.name}" v-model='orderData.name'>
+				<label for="personal-card-name" :class="{active : orderData.name }">Имя получателя<span class="accent">*</span></label>
 			</div>
 			<div class="input-field">
 				<input id="personal-card-email" type="email" class="input" :class="{ valid_in_cart : validate.email }" v-model='orderData.email'>
-				<label for="personal-card-email">Эл.почта<span class="accent">*</span></label>
+				<label for="personal-card-email" :class="{active : orderData.email }">Эл.почта<span class="accent">*</span></label>
 			</div>
 
 			<div class="p-card__data-form--txt">
@@ -41,14 +41,6 @@
 	export default {
 		data() {
     		return {
-	    		orderData : {
-	    			name   : undefined,
-	    			phone  : undefined,
-	    			address: undefined,
-	    			email  : undefined,
-	    			remark : undefined,
-	    			idShop : undefined,
-    			},
     			validate : {
 	    			name   : false,
 	    			phone  : false,
@@ -64,32 +56,47 @@
 			cartPrice() {
 				return this.$store.getters.cartPrice
 			},
+			user() {
+				return this.$store.getters.user
+			},
+			orderData() {
+				let orderData = {
+					name   : this.$store.getters.user  ? this.$store.getters.user.name             : undefined,
+	    			phone  : this.$store.getters.user  ? this.$store.getters.user.phone            : undefined,
+	    			address: this.$store.getters.shop  ? this.$store.getters.shop.official.address : undefined,
+	    			email  : this.$store.getters.user  ? this.$store.getters.user.email            : undefined,
+	    			remark : undefined,
+	    			idShop : undefined,
+				}
+				return orderData;
+			}
 		},
 		methods: {
 			addOrder(selectedShop) {
 				['phone', 'address', 'name', 'email'].forEach(key => {
 					this.$data.validate[key]  = false
-					this.$data.orderData[key] = this.$data.orderData[key] ? this.$data.orderData[key].trim() : undefined
+					this.orderData[key] = this.orderData[key] ? this.orderData[key].trim() : undefined
 				})
 
-				if (!this.$data.orderData.phone)
+				if (!this.orderData.phone)
 					return this.$data.validate.phone   = true
-				if (!this.$data.orderData.address)
+				if (!this.orderData.address)
 					return this.$data.validate.address = true
-				if (!this.$data.orderData.name)
+				if (!this.orderData.name)
 					return this.$data.validate.name    = true
-				if (!this.$data.orderData.email)
+				if (!this.orderData.email)
 					return this.$data.validate.email   = true
 
-				this.$store.dispatch('addOrder', this.$data.orderData);
+				this.$store.dispatch('addOrder', this.orderData);
 			}
 		},
 		mounted: function() {
 		 	materializeInput();
 		},
+
 	}
 
-	 //materialize input
+	//materialize input
 	function materializeInput() {
 		$('.input-field input').focus(function () {
 			$(this).next('label').addClass('active');

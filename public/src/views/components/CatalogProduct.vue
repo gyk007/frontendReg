@@ -133,6 +133,8 @@
 		created: function() {
 			// Очищаем список продуктов
 			this.$store.commit('set', {type: 'productList', items: undefined})
+			// Вкладка Все
+			this.$store.commit('set', {type: 'selectOffer', items: false})
 		}
 	}
 </script>

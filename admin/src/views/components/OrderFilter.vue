@@ -39,7 +39,7 @@
 				}
 
 				return this.$store.getters.allOrderStatus
-			}
+			},
 		},
 		methods: {
 			selectStatus(status) {
@@ -50,14 +50,12 @@
 						filter.push(key.id);
 					}
 				});
+
 			 	this.$store.dispatch('getOrders', filter)
 			},
 		},
 		created: function() {
 			this.$store.dispatch('getStatus')
 		},
-		mounted: function() {
-
-		}
 	}
 </script>

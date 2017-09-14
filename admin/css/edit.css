@@ -478,3 +478,11 @@ select[readonly],
 .order-ls__info-list li {
 	height: 45px !important;
 }
+
+.offer {
+	background-color: red;
+	padding: 3px;
+	color: #FFF;
+	border-radius: 20px;
+	font-weight: bold;
+}

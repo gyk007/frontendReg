@@ -26,6 +26,9 @@
 				<div class="product__cost-item">{{el.price}}&nbsp;<i class="rub">a</i>&nbsp;/&nbsp;шт</div>
 				<div class="product__cost-all">{{parseFloat((el.price * el.qty).toFixed(2))}}&nbsp;<i class="rub">a</i></div>
 			</div>
+			<div class="product__cell product__cost">
+				<span class="js-benefit offer" style='font-size: 10px'v-if='el.product.offer'>{{el.product.offer}}%</span>
+			</div>
 			<div class="product__cell product__btn">
 				<!-- <div class="product__btn-inner"><svg><use xlink:href="#circle-cross"></use></svg></div> -->
 			</div>

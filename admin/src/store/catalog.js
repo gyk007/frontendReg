@@ -505,7 +505,7 @@ const store = new Vuex.Store({
 					'Content-Type': 'text/plain'
 				}
 			}
-
+			console.log(arg);
 			Vue.http.get(Conf.url.order, arg).then(
 				response => {
 					let body = response.body

@@ -17,11 +17,11 @@
 
 					<li class="order-ls__info-title">Телефон получателя</li>
 					<li class="order-ls__info-txt" v-if='order.phone'>{{order.phone}}</li>
-					<li class="order-ls__info-txt" v-if='!order.phone'>неуказан</li>
+					<li class="order-ls__info-txt" v-if='!order.phone'>не указан</li>
 
 					<li class="order-ls__info-title">Адрес доставки</li>
 					<li class="order-ls__info-txt" v-if='order.address'>{{order.address}}</li>
-					<li class="order-ls__info-txt" v-if='!order.address'>неуказан</li>
+					<li class="order-ls__info-txt" v-if='!order.address'>не указан</li>
 
 					<li class="order-ls__info-title">Имя получателя</li>
 					<li class="order-ls__info-txt" v-if='order.name'>{{order.name}}</li>
@@ -29,7 +29,7 @@
 
 					<li class="order-ls__info-title">Эл.почта</li>
 					<li class="order-ls__info-txt" v-if='order.email'>{{order.email}}</li>
-					<li class="order-ls__info-txt" v-if='!order.email'>неуказан</li>
+					<li class="order-ls__info-txt" v-if='!order.email'>не указан</li>
 
 					<li class="order-ls__info-title">Пожелания по доставке</li>
 					<li class="order-ls__info-txt" v-if='order.remark'>{{order.remark}}</li>
@@ -66,47 +66,42 @@
 					<li class="order-ls__info-txt">{{order.shop.official.name}}</li>
 
 					<li class="order-ls__info-title">Телефон</li>
-					<li class="order-ls__info-txt" v-if='order.shop.official.phone'>{{order.shop.net.official.phone}}</li>
-					<li class="order-ls__info-txt" v-if='!order.shop.official.phone'>неуказан</li>
+					<li class="order-ls__info-txt" v-if='order.shop.net.official.phone'>{{order.shop.net.official.phone}}</li>
+					<li class="order-ls__info-txt" v-if='!order.shop.net.official.phone'>не указан</li>
 
-					<li class="order-ls__info-title">Юредический адрес</li>
-					<li class="order-ls__info-txt" v-if='order.shop.official.regaddress'>{{order.shop.net.official.regaddress}}</li>
-					<li class="order-ls__info-txt" v-if='!order.shop.official.regaddress'>неуказан</li>
+					<li class="order-ls__info-title">Юридический адрес</li>
+					<li class="order-ls__info-txt" v-if='order.shop.net.official.regaddress'>{{order.shop.net.official.regaddress}}</li>
+					<li class="order-ls__info-txt" v-if='!order.shop.net.official.regaddress'>не указан</li>
 
 
 					<li class="order-ls__info-title">Эл.почта организации</li>
-					<li class="order-ls__info-txt" v-if='order.shop.official.email'>{{order.shop.net.official.email}}</li>
-					<li class="order-ls__info-txt" v-if='!order.shop.official.email'>не указан</li>
+					<li class="order-ls__info-txt" v-if='order.shop.net.official.email'>{{order.shop.net.official.email}}</li>
+					<li class="order-ls__info-txt" v-if='!order.shop.net.official.email'>не указан</li>
 
 				</ul>
 			</div>
 
 			<div class="tabs__content sales_inf">
 				<ul class="order-ls__info-list">
-					<li class="order-ls__info-title">Торговый представитель</li>
-					<li class="order-ls__info-txt" v-if='order.sales_name'>{{order.sales_name}}</li>
-					<li class="order-ls__info-txt" v-if='!order.sales_name'>в обработке</li>
+					<li class="order-ls__info-title" v-if='order.sales_name'>Торговый представитель</li>
+					<li class="order-ls__info-txt"   v-if='order.sales_name'>{{order.sales_name}}</li>
 
-					<li class="order-ls__info-title">Телефон представителя</li>
-					<li class="order-ls__info-txt" v-if='order.sales_phone'>{{order.sales_name}}</li>
-					<li class="order-ls__info-txt" v-if='!order.sales_phone'>в обработке</li>
 
-					<li class="order-ls__info-title">Имя водителя</li>
-					<li class="order-ls__info-txt" v-if='order.deliver_name'>{{order.deliver_name}}</li>
-					<li class="order-ls__info-txt" v-if='!order.deliver_name'>в обработке</li>
+					<li class="order-ls__info-title" v-if='order.sales_phone'>Телефон представителя</li>
+					<li class="order-ls__info-txt"   v-if='order.sales_phone'>{{order.sales_phone}}</li>
 
-					<li class="order-ls__info-title">Телефон водителя</li>
-					<li class="order-ls__info-txt" v-if='order.deliver_phone'>{{order.deliver_phone}}</li>
-					<li class="order-ls__info-txt" v-if='!order.deliver_phone'>в обработке</li>
+					<li class="order-ls__info-title" v-if='order.deliver_name'>Имя водителя</li>
+					<li class="order-ls__info-txt"   v-if='order.deliver_name'>{{order.deliver_name}}</li>
 
-					<li class="order-ls__info-title">Дата доставки</li>
-					<li class="order-ls__info-txt" v-if='order.deliver_date'>{{order.deliver_date.toLocaleDateString("ru-RU")}}</li>
-					<li class="order-ls__info-txt" v-if='!order.deliver_date'>в обработке</li>
 
-					<li class="order-ls__info-title">Период доставки</li>
-					<li class="order-ls__info-txt" v-if='order.deliver_interval'>{{order.deliver_interval}}</li>
-					<li class="order-ls__info-txt" v-if='!order.deliver_interval'>в обработке</li>
+					<li class="order-ls__info-title" v-if='order.deliver_name'>Телефон водителя</li>
+					<li class="order-ls__info-txt"   v-if='order.deliver_phone'>{{order.deliver_phone}}</li>
 
+					<li class="order-ls__info-title" v-if='order.deliver_date'>Дата доставки</li>
+					<li class="order-ls__info-txt"   v-if='order.deliver_date'>{{order.deliver_date.toLocaleDateString("ru-RU")}}</li>
+
+					<li class="order-ls__info-title" v-if='order.deliver_interval'>Период доставки</li>
+					<li class="order-ls__info-txt"   v-if='order.deliver_interval'>{{order.deliver_interval}}</li>
 				</ul>
 			</div>
 
