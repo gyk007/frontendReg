@@ -34,14 +34,15 @@
 					</div>
 
 				</div>
-				<div class="order__cell order__invoice">
-					<span class="order__title js-e" v-if='order.latch_number'>{{order.latch_number}}</span>
-					<span class="order__title js-e" v-if='!order.latch_number'>В обработке</span>
-				</div>
 
 				<div class="order__cell order__e">
 					<span class="order__title js-e" v-if='order.sales_name'>{{order.sales_name}}</span>
 					<span class="order__title js-e" v-if='!order.sales_name'>В обработке</span>
+				</div>
+
+				<div class="order__cell order__invoice">
+					<span class="order__title js-e" v-if='order.latch_number'>{{order.latch_number}}</span>
+					<span class="order__title js-e" v-if='!order.latch_number'>В обработке</span>
 				</div>
 
 				<div class="order__cell order__cost"><span class="js-cost">{{order.price}} <i class="rub">a</i></span></div>
