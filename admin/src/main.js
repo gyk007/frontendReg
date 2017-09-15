@@ -36,9 +36,6 @@ new Vue({
 		$('.wrapper').css('min-height', minHeight + 'px')
 	},
 	mounted: function() {
-		// устанавливаем локацию для даты
-		moment.lang('ru');
-
 		if ($('.js-nav-button').length) {
 			$('.js-nav-button').click(function () {
 				$(this).find('.tcon').addClass('tcon-transform');

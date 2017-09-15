@@ -247,10 +247,12 @@
   <div class="date-picker-container flex-center">
     <div class="date-picker-background flex-center" @click.stop.prevent="onClose"></div>
 
+
     <div class="calendar-container">
       <div class="calendar">
         <div :style="{ 'background-color': color }" class="calendar-header flex-center">
           <div>
+            <h2> {{ name }} </h2>
             <h3 :class="{ 'calendar-faint': selecting === 'date' }"
                 @click="setSelecting('year')">
               {{ selectedYear }}
@@ -299,19 +301,19 @@
           <table>
             <thead>
               <tr>
-                <td>S</td>
-                <td>M</td>
-                <td>T</td>
-                <td>W</td>
-                <td>T</td>
-                <td>F</td>
-                <td>S</td>
+                <td>Пн</td>
+                <td>Вт</td>
+                <td>Ср</td>
+                <td>Чт</td>
+                <td>Пт</td>
+                <td>Сб</td>
+                <td>Вс</td>
               </tr>
             </thead>
 
             <tbody>
               <tr v-for="days in calendar">
-                <td :style="{
+              <td :style="{
                       'color': day.currentDay && ! day.selected ? color : '',
                       'background-color': day.selected ? color : ''
                     }"
@@ -325,7 +327,8 @@
                     @keydown.enter="onInput"
                     @keydown.space.stop.prevent="onInput"
                     @keydown.esc="onClose"
-                    @click="setByDay(day)">{{ day.day }}</td>
+                    @click="day.day ? setByDay(day) : undefined">{{ day.day }}</td>
+
               </tr>
             </tbody>
           </table>
@@ -343,9 +346,9 @@
         </div>
 
         <div class="calendar-footer">
-          <button :style="{ 'color': color }" @click.stop.prevent="onClose">Cancel</button>
+          <button :style="{ 'color': color }" @click.stop.prevent="onClose">Отмена</button>
 
-          <button :style="{ 'color': color }" @click.stop.prevent="onInput">Ok</button>
+          <button :style="{ 'color': color }" @click.stop.prevent="onInput">Выбрать</button>
         </div>
       </div>
     </div>
@@ -358,28 +361,28 @@
    */
 
   const dayMap = {
-    0: 'Воскресенье',
-    1: 'Понедельник',
-    2: 'Вторник',
-    3: 'Среда',
-    4: 'Четверг',
-    5: 'Пятница',
-    6: 'Суббота',
+    0: 'Пн',
+    1: 'Вт',
+    2: 'Ср',
+    3: 'Чт',
+    4: 'Пт',
+    5: 'Сб',
+    6: 'Вс',
   }
 
   const monthMap = {
-    0: 'January',
-    1: 'February',
-    2: 'March',
-    3: 'April',
-    4: 'May',
-    5: 'June',
-    6: 'July',
-    7: 'August',
-    8: 'September',
-    9: 'October',
-    10: 'November',
-    11: 'December'
+    0: 'Январь',
+    1: 'Февраль',
+    2: 'Март',
+    3: 'Апрель',
+    4: 'Май',
+    5: 'Июнь',
+    6: 'Июль',
+    7: 'Август',
+    8: 'Сентябрь',
+    9: 'Октябрь',
+    10: 'Ноябрь',
+    11: 'Декабрь'
   }
 
   // Thanks, Lodash.
@@ -475,6 +478,11 @@
       },
 
       value: {
+        type: String,
+        required: false
+      },
+
+      name: {
         type: String,
         required: false
       }
@@ -607,7 +615,7 @@
 
         // Padding for the first row, e.g. if the month's first day starts on
         // Friday, the first array will be ['', '', '', '', '', '1', '2']
-        const startOfMonthDay = new Date(this.currentYear, this.currentMonth, 1).getDay()
+        const startOfMonthDay = new Date(this.currentYear, this.currentMonth, 0).getDay()
 
         for (let i = 0, len = startOfMonthDay; i < len; i++) {
           days.push('')

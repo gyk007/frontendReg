@@ -37,8 +37,8 @@ const store = new Vuex.Store({
 		isSendMail      : false,     // указывает отправлено ли письмо, если true - письмо отправлено
 		allOrderStatus  : undefined, // Все статусы заказа
 		ordersFilter    : {          // Фильтры заказа
-			dateTo    : moment().format('L'),                       // Начльная установка Даты До (сегодня)
-			dateFrom  : moment().subtract(1, 'months').format('L'), // Начальная установка Даты От (месяц назад)
+			dateTo    : moment(),                       // Начльная установка Даты До (сегодня)
+			dateFrom  : moment().subtract(1, 'months'), // Начальная установка Даты От (месяц назад)
 			search    : undefined,                                  // Поисковая строка
 			status    : undefined,                                  // Стату массив с id статусов
 		}
@@ -508,9 +508,13 @@ const store = new Vuex.Store({
 			commit('set', {type: 'loader', items: true})
 			commit('set', {type: 'orders', items: undefined});
 
+			// // Приводим даты в нужный формат
+			// state.ordersFilter.dateFrom = state.ordersFilter.dateFrom.format('L');
+			// state.ordersFilter.dateTo   = state.ordersFilter.dateTo.format('L');
+
 			let arg = {
 				params:{
-					status : JSON.stringify(status),
+					filter : JSON.stringify(state.ordersFilter),
 				},
 				headers: {
 					'Content-Type': 'text/plain'

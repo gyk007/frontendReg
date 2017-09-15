@@ -31,6 +31,9 @@
 			orders() {
 				return this.$store.getters.orders
 			},
+			ordersFilter(){
+				return this.$store.getters.ordersFilter
+			},
 			allOrderStatus() {
 				if(this.$store.getters.allOrderStatus) {
 					this.$store.getters.allOrderStatus.forEach(key => {
@@ -51,7 +54,8 @@
 					}
 				});
 
-			 	this.$store.dispatch('getOrders', filter)
+				this.ordersFilter.status = filter;
+			 	this.$store.dispatch('getOrders')
 			},
 		},
 		created: function() {
