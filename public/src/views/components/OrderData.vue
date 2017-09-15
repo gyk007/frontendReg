@@ -74,7 +74,7 @@
 
 					<div class='order_div_block' v-if='order.ttn_date'>
 						<div class="order-ls__info-title order_div_title">Дата ТТН</div>
-						<div class="order-ls__info-txt order_div_txt">{{order.ttn_date.toLocaleDateString("ru-RU")}}</div>
+						<div class="order-ls__info-txt order_div_txt">{{order.ttn_date.format('L')}}</div>
 						<div class="clear"></div>
 					</div>
 
@@ -151,7 +151,7 @@
 
 				<div class='order_div_block' v-if='order.deliver_date'>
 					<div class="order-ls__info-title order_div_title" >Дата доставки</div>
-					<div class="order-ls__info-txt   order_div_txt">{{order.deliver_date.toLocaleDateString("ru-RU")}}</div>
+					<div class="order-ls__info-txt   order_div_txt">{{order.deliver_date.format('L')}}</div>
 					<div class="clear"></div>
 				</div>
 

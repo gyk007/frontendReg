@@ -22,7 +22,7 @@
 							<span v-if='!order.num'>В обработке</span>
 							<div class="js-cost-clone"></div>
 						</span>
-						<span  class="order__date">{{order.ctime.toLocaleDateString("ru-RU")}}</span>
+						<span  class="order__date">{{order.ctime.format('L')}}</span>
 						<div class="order__invoice-mob">
 							<div class="order__invoice-mob--item js-e-clone">
 								<div class="js-e-title-clone"></div>

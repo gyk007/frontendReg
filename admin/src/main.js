@@ -8,6 +8,7 @@ import Order      from './views/Order.vue'
 import Promotion  from './views/Promotion.vue'
 import Client     from './views/Client.vue'
 import Statistic  from './views/Statistic.vue'
+import moment     from 'moment'
 
 import $          from 'jquery'
 import 'malihu-custom-scrollbar-plugin'
@@ -35,6 +36,9 @@ new Vue({
 		$('.wrapper').css('min-height', minHeight + 'px')
 	},
 	mounted: function() {
+		// устанавливаем локацию для даты
+		moment.lang('ru');
+
 		if ($('.js-nav-button').length) {
 			$('.js-nav-button').click(function () {
 				$(this).find('.tcon').addClass('tcon-transform');

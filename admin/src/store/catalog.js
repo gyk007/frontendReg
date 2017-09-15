@@ -2,6 +2,8 @@ import Vue         from 'vue'
 import Vuex        from 'vuex'
 import VueResource from 'vue-resource'
 import Conf        from '../conf/conf.js'
+import moment      from 'moment'
+import 'moment/locale/ru'
 
 Vue.use(Vuex)
 Vue.use(VueResource)
@@ -34,6 +36,12 @@ const store = new Vuex.Store({
 		sendMailLoader  : false,     // отвечает за лоадер при отправке почты , если true - лодер включен
 		isSendMail      : false,     // указывает отправлено ли письмо, если true - письмо отправлено
 		allOrderStatus  : undefined, // Все статусы заказа
+		ordersFilter    : {          // Фильтры заказа
+			dateTo    : moment().format('L'),                       // Начльная установка Даты До (сегодня)
+			dateFrom  : moment().subtract(1, 'months').format('L'), // Начальная установка Даты От (месяц назад)
+			search    : undefined,                                  // Поисковая строка
+			status    : undefined,                                  // Стату массив с id статусов
+		}
 	},
 	getters: {
 		allProducts(state){
@@ -116,6 +124,9 @@ const store = new Vuex.Store({
 		},
 		allOrderStatus(state){
 			return state.allOrderStatus
+		},
+		ordersFilter(state){
+			return state.ordersFilter
 		},
 	},
 	mutations: {
@@ -478,9 +489,9 @@ const store = new Vuex.Store({
 					} else {
 						commit('set', {type: 'error', items: undefined})
 
-						if (body.order.ttn_date)     body.order.ttn_date     = new Date(body.order.ttn_date);
-						if (body.order.deliver_date) body.order.deliver_date = new Date(body.order.deliver_date);
-						if (body.order.ctime)        body.order.ctime        = new Date(body.order.ctime);
+						if (body.order.ttn_date)     body.order.ttn_date     = moment(body.order.ttn_date);
+						if (body.order.deliver_date) body.order.deliver_date = moment(body.order.deliver_date);
+						if (body.order.ctime)        body.order.ctime        = moment(body.order.ctime);
 
 						commit('set', {type: 'order', items: body.order})
 						commit('set', {type: 'documents', items: body.documents})
@@ -492,20 +503,20 @@ const store = new Vuex.Store({
 				}
 			)
 		},
-		getOrders({commit}, status) {
+		getOrders({state, commit}, status) {
 			// Включаем лоадер
 			commit('set', {type: 'loader', items: true})
 			commit('set', {type: 'orders', items: undefined});
 
 			let arg = {
 				params:{
-					status : JSON.stringify(status)
+					status : JSON.stringify(status),
 				},
 				headers: {
 					'Content-Type': 'text/plain'
 				}
 			}
-			console.log(arg);
+
 			Vue.http.get(Conf.url.order, arg).then(
 				response => {
 					let body = response.body
@@ -515,7 +526,7 @@ const store = new Vuex.Store({
 						commit('set', {type: 'error', items: undefined})
 						if (body.orders)
 							body.orders.forEach(key => {
-					 			key.ctime = new Date(key.ctime)
+					 			key.ctime = moment(key.ctime)
 					 		});
 
 					 	commit('set', {type: 'orders', items: body.orders});

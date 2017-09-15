@@ -4,6 +4,8 @@ import VueResource from 'vue-resource'
 import Conf        from '../conf/conf.js'
 import Cookies     from 'js-cookie'
 import $           from 'jquery'
+import moment      from 'moment'
+import 'moment/locale/ru'
 
 
 Vue.use(Vuex)
@@ -400,9 +402,9 @@ const catalogStore = new Vuex.Store({
 							document.location = '/#/auth'
 					} else {
 
-						if (body.order.ttn_date)     body.order.ttn_date     = new Date(body.order.ttn_date);
-						if (body.order.deliver_date) body.order.deliver_date = new Date(body.order.deliver_date);
-						if (body.order.ctime)        body.order.ctime        = new Date(body.order.ctime);
+						if (body.order.ttn_date)     body.order.ttn_date     = moment(body.order.ttn_date);
+						if (body.order.deliver_date) body.order.deliver_date = moment(body.order.deliver_date);
+						if (body.order.ctime)        body.order.ctime        = moment(body.order.ctime);
 
 						commit('set', {type: 'order',     items: body.order})
 						commit('set', {type: 'documents', items: body.documents})
@@ -439,7 +441,7 @@ const catalogStore = new Vuex.Store({
 					} else {
 						if (body.orders)
 							body.orders.forEach(key => {
-					 			key.ctime = new Date(key.ctime)
+					 			key.ctime = moment(key.ctime)
 					 		});
 					 	commit('set', {type: 'orders', items: body.orders});
 					 	// Выключаем лоадер
