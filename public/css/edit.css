@@ -333,3 +333,16 @@
 .product__cost-item {
     font-size: 12px !important;
 }
+
+.order_div_block{
+	height: 100%;
+	margin-bottom: 20px;
+}
+
+.order_div_title, .order_div_txt {
+	float: left;
+}
+
+.container {
+	margin-bottom: 25px;
+}
