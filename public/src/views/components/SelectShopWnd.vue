@@ -5,7 +5,13 @@
 				<div v-if="$route.fullPath != '/select_shop'" class='modal-close' @click="close"><img src="img/close.png" alt="Закрыть"></div>
 				<div class="modal-container-select-shop">
 					<div class="modal__hdr">Выберите торговую точку</div>
-					<v-select  :on-change="selectShop" :value.sync="selected" :options="shopsInSelect" placeholder="Выберите торговую точку"></v-select>
+
+					<v-select
+						:on-change="selectShop"
+						:value.sync="selected"
+						:options="shopsInSelect"
+						placeholder="Выберите торговую точку"></v-select>
+
 					</br>
 
 					<div v-if="$route.fullPath != '/select_shop'" class='btn_list'>

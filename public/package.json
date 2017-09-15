@@ -8,7 +8,7 @@
     "build": "cross-env NODE_ENV=production webpack"
   },
   "dependencies": {
-    "jquery": "file:./src/jquery",
+    "jquery": "file:./src/modules/jquery",
     "jquery-json": "^2.6.0",
     "jquery-mousewheel": "^3.1.13",
     "js-cookie": "^2.1.4",
@@ -20,7 +20,7 @@
     "vue-js-toggle-button": "^1.1.2",
     "vue-lazyload": "^1.0.6",
     "vue-router": "^2.0.1",
-    "vue-select": "sagalbot/vue-select",
+    "vue-select": "file:./src/modules/vue-select",
     "vue-slider-component": "^2.3.4",
     "vuex": "^2.3.1"
   },

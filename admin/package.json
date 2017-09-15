@@ -8,7 +8,7 @@
     "build": "cross-env NODE_ENV=production webpack"
   },
   "dependencies": {
-    "jquery": "file:./src/jquery",
+    "jquery": "file:./src/modules/jquery",
     "jquery-json": "^2.6.0",
     "jquery-mousewheel": "^3.1.13",
     "malihu-custom-scrollbar-plugin": "^3.1.5",
@@ -17,7 +17,7 @@
     "vue": "^2.0.0",
     "vue-fancybox": "^1.0.2",
     "vue-js-toggle-button": "^1.1.2",
-    "vue-md-date-picker": "file:./src/vue-md-date-picker",
+    "vue-md-date-picker": "file:./src/modules/vue-md-date-picker",
     "vue-router": "^2.0.1",
     "vue-slider-component": "^2.3.4",
     "vuejs-paginate": "^1.2.0",
