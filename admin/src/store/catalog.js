@@ -39,8 +39,8 @@ const store = new Vuex.Store({
 		ordersFilter    : {          // Фильтры заказа
 			dateTo    : moment(),                       // Начльная установка Даты До (сегодня)
 			dateFrom  : moment().subtract(1, 'months'), // Начальная установка Даты От (месяц назад)
-			search    : undefined,                                  // Поисковая строка
-			status    : undefined,                                  // Стату массив с id статусов
+			search    : undefined,                      // Поисковая строка
+			status    : undefined,                      // Стату массив с id статусов
 		}
 	},
 	getters: {
@@ -503,14 +503,10 @@ const store = new Vuex.Store({
 				}
 			)
 		},
-		getOrders({state, commit}, status) {
+		getOrders({state, commit}) {
 			// Включаем лоадер
 			commit('set', {type: 'loader', items: true})
 			commit('set', {type: 'orders', items: undefined});
-
-			// // Приводим даты в нужный формат
-			// state.ordersFilter.dateFrom = state.ordersFilter.dateFrom.format('L');
-			// state.ordersFilter.dateTo   = state.ordersFilter.dateTo.format('L');
 
 			let arg = {
 				params:{

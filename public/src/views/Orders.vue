@@ -24,7 +24,7 @@ export default {
 	computed: {
 		order() {
 			return this.$store.getters.order
-		},
+		}
 	},
 }
 

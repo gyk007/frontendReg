@@ -26,7 +26,6 @@
 
 		</div>
 
-
 		<date-picker  :format="selectDateFrom"
 			name='ДАТА ОТ'
 			color="#03a9f4"

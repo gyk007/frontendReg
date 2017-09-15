@@ -22,6 +22,7 @@
     "vue-lazyload": "^1.0.6",
     "vue-router": "^2.0.1",
     "vue-select": "file:./src/modules/vue-select",
+    "vue-md-date-picker": "file:./src/modules/vue-md-date-picker",
     "vue-slider-component": "^2.3.4",
     "vuex": "^2.3.1"
   },

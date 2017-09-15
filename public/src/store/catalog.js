@@ -38,6 +38,12 @@ const catalogStore = new Vuex.Store({
 		merchant       : undefined, // представитель
 		regError       : false,     // указывает на ошибку при регистрации
 		isSentMail     : false,     // указывает отправлино ли письмо
+		ordersFilter    : {          // Фильтры заказа
+			dateTo    : moment(),                       // Начльная установка Даты До (сегодня)
+			dateFrom  : moment().subtract(1, 'months'), // Начальная установка Даты От (месяц назад)
+			search    : undefined,                      // Поисковая строка
+			status    : undefined,                      // Стату массив с id статусов
+		}
 	},
 	getters: {
 		allOrderStatus(state) {
@@ -114,6 +120,9 @@ const catalogStore = new Vuex.Store({
 		},
 		sendMailLoader(state){
 			return state.sendMailLoader
+		},
+		ordersFilter(state){
+			return state.ordersFilter
 		},
 	},
 	mutations: {
@@ -416,7 +425,7 @@ const catalogStore = new Vuex.Store({
 				}
 			)
 		},
-		getOrders({commit}, status) {
+		getOrders({state, commit}) {
 			// Включаем лоадер
 			commit('set', {type: 'loader', items: true})
 			commit('set', {type: 'orders', items: undefined});
@@ -424,7 +433,7 @@ const catalogStore = new Vuex.Store({
 			let arg = {
 				params:{
 					token  : Cookies.get('token'),
-					status : JSON.stringify(status),
+					filter : JSON.stringify(state.ordersFilter),
 				},
 				headers: {
 					'Content-Type': 'text/plain'

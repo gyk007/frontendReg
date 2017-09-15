@@ -5,13 +5,13 @@
                 <div class="aa-order__filter-item">
                     <div class="aa-order__filter-hdr">Статус</div>
 
-
-
                     <div class="aa-order__filter-chb" v-for='status in allOrderStatus'>
+
                         <label>
                             <toggle-button :value="true"  :sync="true" @change="selectStatus(status)"/>
                             <span>{{status.description}}</span>
                         </label>
+
                     </div>
 
                 </div>
@@ -30,6 +30,9 @@
 		computed: {
 			orders() {
 				return this.$store.getters.orders
+			},
+			ordersFilter(){
+				return this.$store.getters.ordersFilter
 			},
 			allOrderStatus() {
 				if(this.$store.getters.allOrderStatus) {
@@ -50,14 +53,13 @@
 						filter.push(key.id);
 					}
 				});
-			 	this.$store.dispatch('getOrders', filter)
+				this.ordersFilter.status = filter;
+
+			 	this.$store.dispatch('getOrders')
 			},
 		},
 		created: function() {
 			this.$store.dispatch('getStatus')
 		},
-		mounted: function() {
-
-		}
 	}
 </script>
