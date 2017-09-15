@@ -137,9 +137,9 @@
 					<div class="clear"></div>
 				</div>
 
-				<div class='order_div_block' v-if='order.deliver_phone'>
+				<div class='order_div_block' v-if='order.deliver_name'>
 					<div class="order-ls__info-title order_div_title">Имя водителя</div>
-					<div class="order-ls__info-txt   order_div_txt">{{order.deliver_phone}}</div>
+					<div class="order-ls__info-txt   order_div_txt">{{order.deliver_name}}</div>
 					<div class="clear"></div>
 				</div>
 
