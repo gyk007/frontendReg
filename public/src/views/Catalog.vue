@@ -1,9 +1,6 @@
 <template>
 	<section class="catalog" id='catalog'>
-		<div class="a-catalog__hdr">
-			<!-- <div class="a-catalog__hdr-title"></div> -->
-			<Search></Search>
-		</div>
+		<Search></Search>
 		<div class="shop__container">
 		<CatalogTree></CatalogTree>
 		<Catalog></Catalog>

@@ -8,13 +8,6 @@
 				</div>
 			</ul>
 
-			<div class="aa-order__f-btn js-filter-trigger">
-				<span>Фильтр</span>
-				<svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#filter"></use></svg>
-			</div>
-
-
-
 			<div class="shop__table" v-if ='productList'>
 				<div class="shop__row shop__table-hdr">
 					<div class="shop__cell shop__table-hdr--name"><span>Название</span></div>
@@ -30,8 +23,6 @@
 						<div class="shop__cell-img"><img src="pic/batle.png" alt="product"></div>
 						<div class="shop__cell-main">
 							<span class="shop__cell-n">{{product.name}}</span>
-							<div class="shop__cell-status">&nbsp;</div>
-							<div class="js-availability-clone"></div>
 						</div>
 						<div class="js-cost-clone"></div>
 						<div class="shop__benefit-mob">
