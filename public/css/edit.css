@@ -515,6 +515,10 @@
 
 	/* Order */
 
+	.order {
+		padding-bottom: 0px;
+	}
+
 	.order__cell {
 		padding: 0;
 	}
@@ -537,6 +541,9 @@
 		font-size: 15px;
 	}
 
+	.order-ls.a-order {
+		padding-bottom: 10px;
+	}
 	.order-ls .a-catalog__hdr-title {
 		margin-top: 10px;
 	}
