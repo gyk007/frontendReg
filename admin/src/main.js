@@ -1,4 +1,5 @@
 import Vue          from 'vue'
+Vue.config.productionTip = false;
 import VueRouter    from 'vue-router'
 import ToggleButton from 'vue-js-toggle-button'
 
