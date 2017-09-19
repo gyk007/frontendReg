@@ -1,4 +1,4 @@
-<template id="modal-template">
+<template id="modal-template" v-on:keyup.enter='selectShop'>
 	<transition name="modal">
 		<div class="modal-mask">
 			<div class="modal-wrapper" >
@@ -77,7 +77,18 @@
 		close(){
 			this.$store.commit('set', {type: 'selectShopWnd', items: false})
 		}
-	}
+	},
+	mounted: function() {
+		// По нажатию кнопки Enter выбераем магазин,
+		// выполняем метод select()
+		let	$this = this;
+		document.onkeyup = function (e) {
+			e = e || window.event;
+			if (e.keyCode === 13) {
+				$this.select();
+			}
+			return false;
+		}
+	},
   }
 </script>
-

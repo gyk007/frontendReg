@@ -8,10 +8,10 @@
 					<div class="modal__hdr_error" v-if='authError'>Вы ввели неправильный пароль или email</div>
 
 					<div class="popup__product-form--holder">
-						<input type="email" class="input" v-model="login" placeholder="Email" />
+						<input type="email" class="input" v-model="login" placeholder="Email" v-on:keyup.enter='auth'/>
 					</div>
 					<div class="popup__product-form--holder">
-						<input type="password" class="input" v-model="password" placeholder="Password"/>
+						<input type="password" class="input" v-model="password" placeholder="Password" v-on:keyup.enter='auth'/>
 					</div>
 
 					<button class="modal_btn btn" v-on:click="auth">Вход</button>
@@ -42,6 +42,18 @@
 		auth() {
 			this.$store.dispatch('authorization', this.$data)
 		},
+	},
+	mounted: function() {
+		// По нажатию кнопки Enter выполняем авторизацию,
+		// выполняем метод auth()
+		let	$this = this;
+		document.onkeyup = function (e) {
+			e = e || window.event;
+			if (e.keyCode === 13) {
+				$this.auth();
+			}
+			return false;
+		}
 	},
   }
 </script>
