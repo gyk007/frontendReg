@@ -358,6 +358,31 @@
 	padding: 11px 17px 12px;
 }
 
+.header {
+	position: fixed;
+	z-index: 999;
+	top: 0px;
+	width: 100%;
+}
+
+.container {
+	margin-top: 90px;
+}
+
+.footer .container {
+	margin-top: 0px;
+}
+
+.header .container {
+	position: fixed;
+	right: 0;
+    left: 0;
+    margin-right: auto;
+    margin-left: auto;
+    width: 90%;
+	top: 0px;
+	margin-top: 0px !important;
+}
 
 
 
@@ -370,6 +395,7 @@
 
 	.container {
 		padding-top: 80px;
+		margin-top: 0px;
 	}
 
 	.wrapper {
@@ -415,6 +441,9 @@
 
 	.header div.container {
 		padding-top: 0px;
+		 margin-right: 0px;
+    	margin-left: 0px;
+    	width: 100%;
 	}
 
 	.header__logo{
@@ -489,6 +518,8 @@
 
 	.product__quantity .input {
     	width: 45px;
+    	padding: 0px;
+    	font-size: 10px;
 	}
 
 	.product__quantity {
