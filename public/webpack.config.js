@@ -52,21 +52,13 @@ module.exports = {
 }
 
 if (process.env.NODE_ENV === 'production') {
-  console.log(webpack.optimize.UglifyJsPlugin)
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"production"'
       },
-
     }),
     new MinifyPlugin(),
-    // new webpack.optimize.UglifyJsPlugin({
-    //   ecma: 6,
-    //   compress: {
-    //     warnings: false
-    //   }
-    // }),
     new webpack.optimize.OccurrenceOrderPlugin()
   ])
 }

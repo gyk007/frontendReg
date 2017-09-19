@@ -1,5 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
+var MinifyPlugin = require("babel-minify-webpack-plugin")
 
 module.exports = {
   entry: './src/main.js',
@@ -57,11 +58,7 @@ if (process.env.NODE_ENV === 'production') {
         NODE_ENV: '"production"'
       }
     }),
-    // new webpack.optimize.UglifyJsPlugin({
-    //   compress: {
-    //     warnings: false
-    //   }
-    // }),
+    new MinifyPlugin(),
     new webpack.optimize.OccurrenceOrderPlugin()
   ])
 }

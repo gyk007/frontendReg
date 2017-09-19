@@ -8,10 +8,10 @@
 					<div class="modal__hdr_error" v-if='authError'>Вы ввели неправильный пароль или email</div>
 
 					<div class="popup__product-form--holder">
-						<input type="email" class="input" v-model="login" placeholder="Email" v-on:keyup.enter='auth'/>
+						<input type="email" class="input" v-model="login" placeholder="Email"/>
 					</div>
 					<div class="popup__product-form--holder">
-						<input type="password" class="input" v-model="password" placeholder="Password" v-on:keyup.enter='auth'/>
+						<input type="password" class="input" v-model="password" placeholder="Password"/>
 					</div>
 
 					<button class="modal_btn btn" v-on:click="auth">Вход</button>
