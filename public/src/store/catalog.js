@@ -694,7 +694,7 @@ const catalogStore = new Vuex.Store({
 							};
 							let filterAlko  = {
 								min: body.filter.alko.min,
-								max: body.filter.alko.min,
+								max: body.filter.alko.max,
 							};
 
 							commit('set', {type: 'filterPrice', items: filterPrice})
