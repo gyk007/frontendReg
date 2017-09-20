@@ -3,8 +3,8 @@
 		<div class="a-catalog__hdr-title">Каталог</div>
 	 	<div class="a-catalog__hdr-search">
 	    <div class="search">
-	        <input type="text" class="input search__input" placeholder="Введите название" @keyup ='search'>
-	        <button  class="search__submit"></button>
+	        <input type="text" class="input search__input" placeholder="Введите название" v-model='searchVal' v-on:keyup.enter ='search'>
+	        <button  class="search__submit" @click ='search'></button>
 	        <div class="search__icon">
 	            <svg>
 	                <use xlink:href="#glass"></use>
@@ -22,6 +22,11 @@
 <script>
 
 export default {
+	 data() {
+        return {
+            searchVal : undefined,
+        }
+    },
 	computed: {
 		productList() {
 			return this.$store.getters.productList
@@ -29,17 +34,10 @@ export default {
 	},
 	methods: {
 		search() {
-			let searchStr = $(event.target).val().toUpperCase()
-
-			this.productList.forEach(key => {
-				let name  = key.name ? key.name.toUpperCase() : ""
-
-				if (~name.indexOf(searchStr)) {
-					key.search = true
-				} else {
-					key.search = false
-				}
-			})
+			if (this.$data.searchVal && this.$data.searchVal.trim()) {
+				this.$data.searchVal = this.$data.searchVal.trim();
+				this.$store.dispatch('searchProduct', this.$data.searchVal);
+			}
 		},
 	},
 	mounted: function() {

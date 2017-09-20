@@ -647,6 +647,70 @@ const catalogStore = new Vuex.Store({
 				}
 			)
 		},
+		searchProduct ({commit}, search) {
+			// Очищаем список продуктов
+			commit('set', {type: 'productList', items: undefined})
+			// Включаем лоадер
+			commit('set', {type: 'loader', items: true})
+
+			let arg = {
+				params:{
+					search : search,
+					token  : Cookies.get('token'),
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.get(Conf.url.category, arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR);
+						if (body.ERROR.AUTH)
+							document.location = '/#/auth'
+					} else {
+						// Очищаем список продуктов
+						commit('set', {type: 'productList', items: undefined})
+						commit('set', {type: 'filters',     items: undefined})
+						if (body.products)
+							body.products.forEach(function(key) {
+								// Добавляем поиск
+								key.search = true;
+								// Добавляем фильтры
+								key.filterPrice = true;
+								key.filterAlko  = true;
+								key.filterOffer = true;
+								// Количесво в корзине по умолчанию
+								key.cartQuantity = 1;
+							})
+							commit('set', {type: 'productList', items: body.products})
+						if (body.filter) {
+							// Начальные значения фильтров
+							let filterPrice = {
+								min: body.filter.price.min,
+								max: body.filter.price.max,
+							};
+							let filterAlko  = {
+								min: body.filter.alko.min,
+								max: body.filter.alko.min,
+							};
+
+							commit('set', {type: 'filterPrice', items: filterPrice})
+							commit('set', {type: 'filterAlko',  items: filterAlko})
+						}
+						// Выключаем лоадер
+						commit('set', {type: 'loader', items: false})
+						// Выключаем вкладку с индивидуальными предложениями
+						commit('set', {type: 'selectOffer', items: false})
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
 		selectCategory({commit}, category) {
 			commit('set', {type: 'category', items: category})
 			if (category)

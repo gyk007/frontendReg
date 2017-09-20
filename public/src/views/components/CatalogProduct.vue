@@ -32,15 +32,18 @@
 							</div>
 						</div>
 					</div>
-					<div class="shop__cell shop__cell-availability"><span class='js-availability'>{{product.properties[7].value ? 'В наличии' : 'Нет в наличии' }}</span></div>
+					<div class="shop__cell shop__cell-availability" v-for='prop in product.properties' v-if="prop.name == 'Qty'">
+						<span class='js-availability'>{{prop.value ? 'В наличии' : 'Нет в наличии' }}</span>
+					</div>
 					<div class="shop__cell shop__cell-benefit">
 						<span class="js-benefit offer" v-if='product.offer'>{{product.offer}}%</span>
 						<span class="js-benefit" v-if='!product.offer'>нет</span>
 					</div>
-					<!-- <div class="shop__cell shop__cell-a"> -->
-						<!-- <span class="js-a">14%</span> -->
-					<!-- </div> -->
-					<div class="shop__cell shop__cell-a"><span class="js-a">{{product.properties[5].value}}</span></div>
+
+					<div class="shop__cell shop__cell-a"  v-for='prop in product.properties' v-if="prop.name == 'Pack'">
+						<span class="js-a">{{prop.value}}</span>
+					</div>
+
 					<div class="shop__cell shop__cell-price">
 						<span class="js-price">{{parseFloat(product.price).toFixed(2)}}&nbsp;<i class="rub">a</i></span>
 					</div>
@@ -59,7 +62,7 @@
 		<!-- Лоадер -->
 		<div class='product_loader fixed-loader'   v-if='loader'><img src="pic/loading.gif"></div>
 		<div class='text-no-category'      v-if='!productList && !loader && idActiveCat'>В категории нет товаров</div>
-		<div class='text-no-category'      v-if='!idActiveCat && !loader'>Выберите категорию</div>
+		<div class='text-no-category'      v-if='!idActiveCat && !loader && !productList'>Выберите категорию</div>
 		<div class='text-no-category-long' v-if='!isOffers && selectOffer && !loader'>В данной категории у Вас нет индивидуальных предложений </div>
 	</section>
 </template>
