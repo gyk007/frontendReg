@@ -93,7 +93,6 @@
 		mounted: function() {
 		 	materializeInput();
 		},
-
 	}
 
 	//materialize input

@@ -503,3 +503,8 @@ select[readonly],
 .v-select input[type=search], .v-select input[type=search]:focus {
 	width: 10em !important;
 }
+
+.activ_sort {
+	color:  #3f51b5;
+	font-weight: bold;
+}

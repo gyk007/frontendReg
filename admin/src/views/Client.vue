@@ -39,7 +39,7 @@
 
 import NetList       from './components/NetList.vue'
 import Search        from './components/SearchClient.vue'
-import NewClient     from './components/NewClient.vue'
+import NewClient     from './components/Net.vue'
 import ShopsWnd      from './components/ShopsWnd.vue'
 import MerchantWnd   from './components/MerchantWnd.vue'
 import store         from '../store/catalog.js'
@@ -56,7 +56,7 @@ export default {
 		},
 		clientPageCount() {
 			return this.$store.getters.clientPageCount
-		},		 
+		},
 		showShopsWnd() {
 			return this.$store.getters.showShopsWnd
 		},
@@ -64,7 +64,7 @@ export default {
 			return this.$store.getters.showMerchantWnd
 		},
 	},
-	methods: {		 
+	methods: {
 		clickPage(pageNum){
 			this.$store.dispatch('getNetList', pageNum - 1)
 		},
@@ -78,7 +78,7 @@ export default {
 	created: function() {
 		this.$store.commit('set', {type: 'netList', items: undefined})
 		this.$store.commit('set', {type: 'loader',  items: undefined})
-		this.$store.commit('set', {type: 'net',     items: undefined}) 
+		this.$store.commit('set', {type: 'net',     items: undefined})
 	},
 	mounted: function() {
 		this.$store.dispatch('getNetList', this.$route.params.page)

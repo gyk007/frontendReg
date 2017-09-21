@@ -1,3 +1,7 @@
+<!--
+	Компонет сеть, окно показывает данные сети.
+	Пока работает на JQ fancybox
+-->
 <template>
 	<section class="popup popup__category" id="popup__client" v-if="net &&  net.official">
 

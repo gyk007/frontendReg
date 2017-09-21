@@ -1,3 +1,6 @@
+<!--
+	Компонет продукты, выводится на странице каталог
+-->
 <template>
 		<section class="catalog__products-holder">
 			<div class="catalog__products-scroll jq-scroll">
@@ -12,8 +15,27 @@
 					<div class="shop__table" v-if='productList'>
 
 						<div class="shop__row shop__table-hdr">
-							<div class="shop__cell shop__table-hdr--name"><span>Название</span></div>
-							<div class="shop__cell shop__cell-availability"><span>Количесво</span></div>
+
+							<div style='cursor:pointer;'
+								class="shop__cell shop__table-hdr--name"
+								:class="[sortName == 'name' ? 'activ_sort' : '']"
+								@click="sort('name')"><span>Название</span></div>
+
+							<div style='cursor:pointer;'
+								class="shop__cell shop__cell-availability"
+								:class="[sortName == 'qty' ? 'activ_sort' : '']"
+								@click="sort('qty')"><span>Количесво</span></div>
+
+							<div style='cursor:pointer;'
+								class="shop__cell shop__cell-availability"
+								:class="[sortName == 'litr' ? 'activ_sort' : '']"
+								@click="sort('litr')"><span>Емкость</span></div>
+
+							<div style='cursor:pointer;'
+								class="shop__cell shop__cell-availability"
+								:class="[sortName == 'pack' ? 'activ_sort' : '']"
+								@click="sort('pack')"><span>Фасовка</span></div>
+
 							<div class="shop__cell shop__cell-order">&nbsp;</div>
 						</div>
 
@@ -25,7 +47,19 @@
 									<div class="js-availability-clone"></div>
 								</div>
 							</div>
-							<div class="shop__cell shop__cell-availability"><span class='js-availability'>{{product.properties[7].value}}</span></div>
+
+							<div class="shop__cell shop__cell-availability" v-for='prop in product.properties' v-if="prop.name == 'Qty'">
+								<span class='js-availability'>{{prop.value}}</span>
+							</div>
+
+							<div class="shop__cell shop__cell-availability" v-for='prop in product.properties' v-if="prop.name == 'Litr'">
+								<span class='js-availability'>{{prop.value}}</span>
+							</div>
+
+							<div class="shop__cell shop__cell-availability" v-for='prop in product.properties' v-if="prop.name == 'Pack'">
+								<span class='js-availability'>{{prop.value}}</span>
+							</div>
+
 							<div class="shop__cell shop__cell-order">
 								 <a data-fancybox data-src="#popup__product" href="javascript:;" class="btn btn--reject" v-on:click="editProduct(product)">Просмотр</a>
 							</div>
@@ -45,6 +79,13 @@
 	import $     from "jquery"
 
 	export default {
+		data() {
+			return {
+				// Название сортировки, в зависимости от названия
+				// добавляем класс activ_sort название колонки
+				sortName  : undefined,
+			}
+		},
 		computed: {
 			idActiveCat() {
 				return this.$store.getters.idActiveCat
@@ -69,6 +110,33 @@
 			},
 			editProduct(product){
 				this.$store.dispatch('selectProduct', product)
+			},
+			sort(name) {
+				this.$data.sortName = name;
+				switch(name) {
+					case 'name':
+						if (this.productList) {
+							this.productList.sort(compareName);
+						}
+						break;
+					case 'qty':
+						if (this.productList) {
+							this.productList.sort(compareQty);
+						}
+						break;
+					case 'litr':
+						if (this.productList) {
+							this.productList.sort(compareLitr);
+						}
+						break;
+					case 'pack':
+						if (this.productList) {
+							this.productList.sort(comparePack);
+						}
+						break;
+					default:
+						break
+				}
 			}
 		},
 		created: function() {
@@ -85,4 +153,62 @@
 			});
 		}
 	}
+
+
+// Функция сортирует товары по имени
+function compareName(prodA, prodB) {
+	return prodA.name.localeCompare(prodB.name);
+}
+
+// Функция сортирует товары количесву
+function compareQty(prodA, prodB) {
+	let qtyA, qtyB;
+
+	prodA.properties.forEach(key => {
+		if (key.name == 'Qty') qtyA = key.value;
+	});
+
+	prodB.properties.forEach(key => {
+		if (key.name == 'Qty') qtyB = key.value;
+	});
+
+	if (qtyA < qtyB)  return -1;
+	if (qtyA == qtyB) return  0;
+	if (qtyA > qtyB)  return  1;
+}
+
+// Функция сортирует товары литражу
+function compareLitr(prodA, prodB) {
+	let qtyA, qtyB;
+
+	prodA.properties.forEach(key => {
+		if (key.name == 'Litr')	qtyA = key.value;
+	});
+
+	prodB.properties.forEach(key => {
+		if (key.name == 'Litr')	qtyB = key.value;
+	});
+
+	if (qtyA < qtyB) return -1;
+	if (qtyA == qtyB) return  0;
+	if (qtyA > qtyB) return  1;
+}
+
+// Функция сортирует товары фасовке
+function comparePack(prodA, prodB) {
+	let qtyA, qtyB;
+
+	prodA.properties.forEach(key => {
+		if (key.name == 'Pack')	qtyA = key.value;
+	});
+
+	prodB.properties.forEach(key => {
+		if (key.name == 'Pack')	qtyB = key.value;
+	});
+
+	if (qtyA < qtyB) return -1;
+	if (qtyA == qtyB) return  0;
+	if (qtyA > qtyB) return  1;
+}
+
 </script>
