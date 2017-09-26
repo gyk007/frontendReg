@@ -538,6 +538,7 @@ select[readonly],
 }
 
 .product_in_this_category_true {
+	cursor: pointer;
 	width: 15px;
 	height: 14px;
 	background: url(../img/check.gif) 0px 0px no-repeat;
@@ -550,6 +551,7 @@ select[readonly],
 }
 
 .product_in_this_category_undefined, .product_in_this_category_false {
+	cursor: pointer;
 	width: 15px;
 	height: 14px;
 	background: url(../img/check.gif) 0px 0px no-repeat;

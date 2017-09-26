@@ -22,7 +22,7 @@
   import 'vue-webix'
 
   export default {
-  	data() {
+	data() {
 		return {
 			selectedProduct : undefined,
 		}
@@ -52,9 +52,9 @@
 					}
 				})
 
- 			return this.$store.getters.allProducts
- 		},
- 		idActiveCat() {
+			return this.$store.getters.allProducts
+		},
+		idActiveCat() {
 			return this.$store.getters.idActiveCat
 		},
 		table(){
@@ -66,7 +66,7 @@
 				select : true,
 				columns:[
 					{ id:"name", editor:"text",	sort:"string", header:["<span class='product_tbl_header'>Выбор товара</span>", {content:"textFilter"}], css:'product_tbl_row', fillspace:true},
-					{ template:"<div id='in_cat_checbox' class='product_in_this_category_#inThisCat#'></div>", header:"В категории" , width:100, sort:"text"},
+					{ template:"<div id='in_cat_checbox' class='product_in_this_category_#inThisCat#'></div>", header:"В категории" , width:100, sort:sortByInThisCat},
 				], on:{
 					onAfterSelect: function(id, e, node){
 						$this.$data.selectedProduct = this.getItem(id);
@@ -113,5 +113,14 @@
 		this.$store.dispatch('getAllProducts')
 	}
   }
+
+// Сортировка по пораметру входит ли  товар в категорию
+function sortByInThisCat (a, b) {
+	a = a.inThisCat;
+	b = b.inThisCat;
+	return (a === b)? 0 : a? -1 : 1;
+}
+
+
 </script>
 
