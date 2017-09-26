@@ -66,7 +66,7 @@
 				select : true,
 				columns:[
 					{ id:"name", editor:"text",	sort:"string", header:["<span class='product_tbl_header'>Выбор товара</span>", {content:"textFilter"}], css:'product_tbl_row', fillspace:true},
-					{ template:"<div id='in_cat_checbox' class='product_in_this_category_#inThisCat#'></div>", header:"В категории" , width:100, sort:sortByInThisCat},
+					{ template:"<div id='in_cat_checbox' class='product_in_this_category_#inThisCat#'></div>", header:"В категории" , width:120, sort:sortByInThisCat},
 				], on:{
 					onAfterSelect: function(id, e, node){
 						$this.$data.selectedProduct = this.getItem(id);

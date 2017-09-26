@@ -1,5 +1,25 @@
 .webix_column>div.webix_row_select {
     color: #fff;
-    background: #2196f3;
+    background: #888;
     font-weight: bold;
+}
+
+.webix_dd_drag_column, .webix_ss_header, .webix_ss_header td, .webix_ss_vscroll_header {
+    font-size: 15px;
+    color: #000;
+    font-family: proxima-nova, sans-serif;
+    background: rgb(247, 247, 247);
+}
+
+.webix_ss_header td {
+    border-right: 1px solid #CCC;
+    border-bottom: 1px solid #CCC;
+}
+
+.webix_dtable .webix_ss_vscroll_header {
+    border-bottom: 1px solid #CCC;
+}
+
+.webix_ss_vscroll_header {
+    border-left: 1px solid #CCC;
 }

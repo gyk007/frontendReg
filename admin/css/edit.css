@@ -527,9 +527,6 @@ select[readonly],
 
 .product_tbl_header {
 	font-size: 20px;
-	font-weight: bold;
-	text-align: center;
-	font-family: "Ubuntu";
 }
 
 .product_tbl_row {
@@ -543,7 +540,7 @@ select[readonly],
 	height: 14px;
 	background: url(../img/check.gif) 0px 0px no-repeat;
 	background-position: 0px -14px;
-	margin: 6px auto;
+	margin: 9px auto;
 }
 
 .product_in_this_category_true:hover {
