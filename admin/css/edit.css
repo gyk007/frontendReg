@@ -504,7 +504,7 @@ select[readonly],
 	width: 10em !important;
 }
 
-.activ_sort {
-	color:  #3f51b5;
-	font-weight: bold;
+.activ_sort span sup{
+	font-size: 10px;
 }
+

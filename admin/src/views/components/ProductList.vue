@@ -11,7 +11,7 @@
 							<svg><use xlink:href="#filter"></use></svg>
 					</div>
 
-
+					<!-- Шапка таблицы -->
 					<div class="shop__table" v-if='productList'>
 
 						<div class="shop__row shop__table-hdr">
@@ -19,27 +19,50 @@
 							<div style='cursor:pointer;'
 								class="shop__cell shop__table-hdr--name"
 								:class="[sortName == 'name' ? 'activ_sort' : '']"
-								@click="sort('name')"><span>Название</span></div>
+								@click="sort('name')"><span>Название</span>
+								<span v-if ="sortName == 'name'">
+									<sup v-if="sortType == 'ASC'" >∧</sup>
+									<sup v-if="sortType == 'DESC'">∨</sup>
+								</span>
+							</div>
 
 							<div style='cursor:pointer;'
 								class="shop__cell shop__cell-availability"
 								:class="[sortName == 'qty' ? 'activ_sort' : '']"
-								@click="sort('qty')"><span>Количесво</span></div>
+								@click="sort('qty')"><span>Количесво</span>
+								<span  v-if ="sortName == 'qty'">
+									<sup v-if="sortType == 'ASC'" >∧</sup>
+									<sup v-if="sortType == 'DESC'">∨</sup>
+								</span>
+							</div>
 
 							<div style='cursor:pointer;'
 								class="shop__cell shop__cell-availability"
 								:class="[sortName == 'litr' ? 'activ_sort' : '']"
-								@click="sort('litr')"><span>Емкость</span></div>
+								@click="sort('litr')"><span>Емкость</span>
+								<span  v-if ="sortName == 'litr'">
+									<sup v-if="sortType == 'ASC'" >∧</sup>
+									<sup v-if="sortType == 'DESC'">∨</sup>
+								</span>
+							</div>
 
 							<div style='cursor:pointer;'
 								class="shop__cell shop__cell-availability"
 								:class="[sortName == 'pack' ? 'activ_sort' : '']"
-								@click="sort('pack')"><span>Фасовка</span></div>
+								@click="sort('pack')"><span>Фасовка</span>
+								<span  v-if ="sortName == 'pack'">
+									<sup v-if="sortType == 'ASC'" >∧</sup>
+									<sup v-if="sortType == 'DESC'">∨</sup>
+								</span>
+							</div>
 
 							<div class="shop__cell shop__cell-order">&nbsp;</div>
+
 						</div>
 
+						<!-- Таблица с товарами -->
 						<div class="shop__row js-t-row normal" v-for='product in  productList' v-if='product.search'>
+
 							<div class="shop__cell shop__cell-name">
 								<div class="shop__cell-img"><img src="pic/batle.png" :alt="product.name"></div>
 								<div class="shop__cell-main">
@@ -63,6 +86,7 @@
 							<div class="shop__cell shop__cell-order">
 								 <a data-fancybox data-src="#popup__product" href="javascript:;" class="btn btn--reject" v-on:click="editProduct(product)">Просмотр</a>
 							</div>
+
 						</div>
 					</div>
 			</div>
@@ -84,6 +108,8 @@
 				// Название сортировки, в зависимости от названия
 				// добавляем класс activ_sort название колонки
 				sortName  : undefined,
+				// Тип сортировки ASC|DESC
+				sortType  : undefined,
 			}
 		},
 		computed: {
@@ -112,31 +138,57 @@
 				this.$store.dispatch('selectProduct', product)
 			},
 			sort(name) {
-				this.$data.sortName = name;
 				switch(name) {
 					case 'name':
 						if (this.productList) {
-							this.productList.sort(compareName);
+							if (this.$data.sortName == 'name' && this.$data.sortType != 'DESC') {
+								this.productList.sort(compareNameDESC);
+								this.$data.sortType = 'DESC';
+							}
+							else {
+								this.productList.sort(compareNameASC);
+								this.$data.sortType = 'ASC';
+							}
 						}
 						break;
 					case 'qty':
 						if (this.productList) {
-							this.productList.sort(compareQty);
+							if (this.$data.sortName == 'qty' && this.$data.sortType != 'DESC') {
+								this.productList.sort(compareQtyDESC);
+								this.$data.sortType = 'DESC';
+							} else {
+								this.productList.sort(compareQtyASC);
+								this.$data.sortType = 'ASC';
+							}
 						}
 						break;
 					case 'litr':
 						if (this.productList) {
-							this.productList.sort(compareLitr);
+							if (this.$data.sortName == 'litr' && this.$data.sortType != 'DESC') {
+								this.productList.sort(compareLitrDESC);
+								this.$data.sortType = 'DESC'
+							} else {
+								this.productList.sort(compareLitrASC);
+								this.$data.sortType = 'ASC';
+							}
 						}
 						break;
 					case 'pack':
 						if (this.productList) {
-							this.productList.sort(comparePack);
+							if (this.$data.sortName == 'pack' && this.$data.sortType != 'DESC') {
+								this.productList.sort(comparePackDESC);
+								this.$data.sortType = 'DESC'
+							} else {
+								this.productList.sort(comparePackASC);
+								this.$data.sortType = 'ASC';
+							}
 						}
 						break;
 					default:
 						break
 				}
+				// Указываем по какому пораметру была произведена сортировка
+				this.$data.sortName = name;
 			}
 		},
 		created: function() {
@@ -155,13 +207,18 @@
 	}
 
 
-// Функция сортирует товары по имени
-function compareName(prodA, prodB) {
+// Функция сортирует товары по имени (ASC)
+function compareNameASC(prodA, prodB) {
 	return prodA.name.localeCompare(prodB.name);
 }
 
-// Функция сортирует товары количесву
-function compareQty(prodA, prodB) {
+// Функция сортирует товары по имени (DESC)
+function compareNameDESC(prodA, prodB) {
+	return prodB.name.localeCompare(prodA.name);
+}
+
+// Функция сортирует товары количесву (ASC)
+function compareQtyASC(prodA, prodB) {
 	let qtyA, qtyB;
 
 	prodA.properties.forEach(key => {
@@ -177,8 +234,25 @@ function compareQty(prodA, prodB) {
 	if (qtyA > qtyB)  return  1;
 }
 
-// Функция сортирует товары литражу
-function compareLitr(prodA, prodB) {
+// Функция сортирует товары количесву (DESC)
+function compareQtyDESC(prodA, prodB) {
+	let qtyA, qtyB;
+
+	prodA.properties.forEach(key => {
+		if (key.name == 'Qty') qtyA = key.value;
+	});
+
+	prodB.properties.forEach(key => {
+		if (key.name == 'Qty') qtyB = key.value;
+	});
+
+	if (qtyA < qtyB)  return  1;
+	if (qtyA == qtyB) return  0;
+	if (qtyA > qtyB)  return -1;
+}
+
+// Функция сортирует товары по литражу (ASC)
+function compareLitrASC(prodA, prodB) {
 	let qtyA, qtyB;
 
 	prodA.properties.forEach(key => {
@@ -189,13 +263,31 @@ function compareLitr(prodA, prodB) {
 		if (key.name == 'Litr')	qtyB = key.value;
 	});
 
-	if (qtyA < qtyB) return -1;
+	if (qtyA < qtyB)  return -1;
 	if (qtyA == qtyB) return  0;
-	if (qtyA > qtyB) return  1;
+	if (qtyA > qtyB)  return  1;
 }
 
-// Функция сортирует товары фасовке
-function comparePack(prodA, prodB) {
+// Функция сортирует товары по литражу (DESC)
+function compareLitrDESC(prodA, prodB) {
+	let qtyA, qtyB;
+
+	prodA.properties.forEach(key => {
+		if (key.name == 'Litr')	qtyA = key.value;
+	});
+
+	prodB.properties.forEach(key => {
+		if (key.name == 'Litr')	qtyB = key.value;
+	});
+
+	if (qtyA < qtyB)  return  1;
+	if (qtyA == qtyB) return  0;
+	if (qtyA > qtyB)  return -1;
+}
+
+
+// Функция сортирует товары по фасовке (ASC)
+function comparePackASC(prodA, prodB) {
 	let qtyA, qtyB;
 
 	prodA.properties.forEach(key => {
@@ -206,9 +298,26 @@ function comparePack(prodA, prodB) {
 		if (key.name == 'Pack')	qtyB = key.value;
 	});
 
-	if (qtyA < qtyB) return -1;
+	if (qtyA < qtyB)  return -1;
 	if (qtyA == qtyB) return  0;
-	if (qtyA > qtyB) return  1;
+	if (qtyA > qtyB)  return  1;
+}
+
+// Функция сортирует товары по фасовке (DESC)
+function comparePackDESC(prodA, prodB) {
+	let qtyA, qtyB;
+
+	prodA.properties.forEach(key => {
+		if (key.name == 'Pack')	qtyA = key.value;
+	});
+
+	prodB.properties.forEach(key => {
+		if (key.name == 'Pack')	qtyB = key.value;
+	});
+
+	if (qtyA < qtyB)  return  1;
+	if (qtyA == qtyB) return  0;
+	if (qtyA > qtyB)  return -1;
 }
 
 </script>
