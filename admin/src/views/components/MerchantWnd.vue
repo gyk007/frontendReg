@@ -31,7 +31,6 @@
 
 					<div class='clear'></div>
 
-
 				</div>
 
 				<div class='btn_list' v-if='merchant'>

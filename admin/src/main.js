@@ -11,7 +11,6 @@ import Client     from './views/Client.vue'
 import Statistic  from './views/Statistic.vue'
 import moment     from 'moment'
 
-
 import $          from 'jquery'
 import 'malihu-custom-scrollbar-plugin'
 import 'jquery-mousewheel'

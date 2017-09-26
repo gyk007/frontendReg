@@ -389,6 +389,17 @@ select[readonly],
   box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
   transition: all .3s ease;
   font-family: Helvetica, Arial, sans-serif;
+  m
+}
+
+.modal-container-products {
+  width: 802px;
+  margin: 0px auto;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+  transition: all .3s ease;
+  font-family: Helvetica, Arial, sans-serif;
 }
 
 .modal-enter {
@@ -508,3 +519,30 @@ select[readonly],
 	font-size: 10px;
 }
 
+.in_this_category{
+	color: #fff;
+    background: #9fc957;
+    font-weight: bold;
+}
+
+.product_tbl_header {
+	font-size: 20px;
+	font-weight: bold;
+	text-align: center;
+	font-family: "Ubuntu";
+}
+
+.product_tbl_row {
+	font-size: 12px;
+	font-family: "Ubuntu";
+}
+
+.product_in_this_category_true {
+	width: 20px;
+	height: 20px;
+	background-size: 20px;
+	background-image: url(../img/yes.png);
+	background-position: center;
+	background-repeat: no-repeat;
+	margin: 6px auto;
+}

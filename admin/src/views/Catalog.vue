@@ -17,7 +17,7 @@
 								<a data-fancybox data-src="#popup__category" href="javascript:;" class="btn btn--edit">Редактировать</a>
 						</div>
 						<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if="category">
-							<a data-fancybox data-src="#popup__products" href="javascript:;" class="btn btn--edit" v-if="category.name">Выбрать товары</a>
+							<button class="btn btn--edit" v-if="category.name" v-on:click="productTblShow">Выбрать товары</button>
 						</div>
 						<div class="a-catalog__hdr-controls down_category" style="margin-right:10px" v-if="isHidden()">
 							<button class="btn btn--edit" title="Переместить категорию внизу" v-on:click="downCategoory(category)" v-if="!category.child.length" >&#8595;</button>
@@ -35,7 +35,7 @@
 		<NewCategory></NewCategory>
 		<NewProduct></NewProduct>
 		<DeleteWnd></DeleteWnd>
-		<ProductTable></ProductTable>
+		<ProductTable v-if='showProductTbl'></ProductTable>
 	</section>
 </template>
 
@@ -61,6 +61,9 @@ export default {
 		},
 		productList() {
 			return this.$store.getters.productList
+		},
+		showProductTbl() {
+			return this.$store.getters.showProductTbl
 		}
 	},
 	methods: {
@@ -83,6 +86,9 @@ export default {
 			if (this.category)
 				return true
 			return false
+		},
+		productTblShow(){
+			this.$store.commit('set', {type: 'showProductTbl', items: true})
 		}
 	},
 	created: function() {

@@ -1,44 +1,32 @@
-<template>
-	<section class="popup popup__category" id="popup__products">
-
-	<div class="popup__hdr">Выбор товаров</div>
-
-	<div class="a-catalog__hdr-search" style="margin-left:180px; margin-top: 25px">
-	<div class="search" style="margin-bottom: 25px;">
-        <input type="text" class="input search__input"placeholder="Введите название" @keyup ='search'>
-        <input type="button" class="search__submit">
-        <div class="search__icon">
-            <svg>
-                <use xlink:href="#glass"></use>
-            </svg>
-        </div>
-    </div>
-    </div>
-
-	<div class="popup__category-form  prod_table">
-		<div class="catalog__products-row js-t-row"  v-for="product in allProducts" v-if='product.search'>
-			<div class="catalog__products-col catalog__products-all">
-					<span class="catalog__products-name--title">
-						{{product.name}}
-						<span class="js-av-clone"></span>
-					</span>
-			</div>
-			<div class="catalog__products-col catalog__products-btn">
-				<input type="checkbox" class="checkbox" v-if='product.inThisCat' checked @click='addProduct(product.id)'>
-				<input type="checkbox" class="checkbox" v-if='!product.inThisCat' @click='addProduct(product.id)'>
+<template id="modal-template">
+	<transition name="modal">
+		<div class="modal-mask">
+			<div class="modal-wrapper">
+			<div class='modal-close' @click="close"><img src="img/close.png" alt="Закрыть"></div>
+				<div class="modal-container-products">
+					<webix-ui :config='table' v-model='allProducts' />
+					</br>
+					<button class="modal_btn btn" style="background-color: #f48c42; width: 181px" v-on:click="close" v-if="idActiveCat">Закрыть</button>
+					</br>
+				</div>
 			</div>
 		</div>
-	</div>
-	<button class="modal_btn btn" style="width: 181px" v-on:click="reloadCategory" v-if="idActiveCat">Редактировать</button>
-</section>
+	</transition>
 </template>
 
 
 <script>
   import store from '../../store/catalog.js'
   import $      from 'jquery'
+  import 'webix'
+  import 'vue-webix'
 
   export default {
+  	data() {
+		return {
+			selectedProduct : undefined,
+		}
+	},
 	computed: {
 		allProducts() {
 			if (this.$store.getters.allProducts)
@@ -69,29 +57,48 @@
  		idActiveCat() {
 			return this.$store.getters.idActiveCat
 		},
+		table(){
+			let $this = this;
+			return {
+				view   :"datatable",
+				height :600,
+				width  :800,
+				select : true,
+				columns:[
+					{ id:"name", editor:"text",	sort:"string", header:["<span class='product_tbl_header'>Выбор товара</span>", {content:"textFilter"}], css:'product_tbl_row', fillspace:true},
+					{ template:"<div class='product_in_this_category_#inThisCat#'></div>", header:"В категории" , width:100},
+				], on:{
+					onAfterSelect: function(id, e, node){
+						$this.$data.selectedProduct = this.getItem(id);
+					},
+					onItemDblClick:function(id, e, node) {
+						$this.$data.selectedProduct = this.getItem(id);
+						$this.addProduct($this.$data.selectedProduct.id, $this.$data.selectedProduct.inThisCat);
+						$this.$data.selectedProduct.inThisCat = !$this.$data.selectedProduct.inThisCat;
+						this.render();
+					},
+					onKeyPress: function(code, e){
+						if (code == 13) {
+							$this.addProduct($this.$data.selectedProduct.id, $this.$data.selectedProduct.inThisCat);
+							$this.$data.selectedProduct.inThisCat = !$this.$data.selectedProduct.inThisCat;
+							this.render();
+						}
+					}
+				}
+			}
+		}
 	},
 	methods: {
-		addProduct(id) {
-			if ($(event.target).is(':checked'))
-				this.$store.dispatch('addProdToCat', id)
-			else
+		addProduct(id, inThisCat) {
+			if (inThisCat)
 				this.$store.dispatch('deleteProdInCat', id)
+			else
+				this.$store.dispatch('addProdToCat', id)
 		},
-		search() {
-			let searchStr = $(event.target).val()
-
-			this.allProducts.forEach(key => {
-				if (~key.name.toUpperCase().indexOf(searchStr.toUpperCase())) {
-					key.search = true
-				} else {
-					key.search = false
-				}
-			})
-		},
-		reloadCategory(){
+		close() {
 			this.$store.dispatch('getProductList', this.idActiveCat)
-			$.fancybox.close()
-		}
+			this.$store.commit('set', {type: 'showProductTbl', items: false})
+		},
 	},
 	created: function() {
 		this.$store.dispatch('getAllProducts')
