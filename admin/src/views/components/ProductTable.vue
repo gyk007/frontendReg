@@ -66,7 +66,7 @@
 				select : true,
 				columns:[
 					{ id:"name", editor:"text",	sort:"string", header:["<span class='product_tbl_header'>Выбор товара</span>", {content:"textFilter"}], css:'product_tbl_row', fillspace:true},
-					{ template:"<div class='product_in_this_category_#inThisCat#'></div>", header:"В категории" , width:100},
+					{ template:"<div id='in_cat_checbox' class='product_in_this_category_#inThisCat#'></div>", header:"В категории" , width:100},
 				], on:{
 					onAfterSelect: function(id, e, node){
 						$this.$data.selectedProduct = this.getItem(id);
@@ -76,6 +76,15 @@
 						$this.addProduct($this.$data.selectedProduct.id, $this.$data.selectedProduct.inThisCat);
 						$this.$data.selectedProduct.inThisCat = !$this.$data.selectedProduct.inThisCat;
 						this.render();
+					},
+					onItemClick: function(id, e, node) {
+						$this.$data.selectedProduct = this.getItem(id);
+						if (e.target.id == 'in_cat_checbox') {
+							$this.addProduct($this.$data.selectedProduct.id, $this.$data.selectedProduct.inThisCat);
+							$this.$data.selectedProduct.inThisCat = !$this.$data.selectedProduct.inThisCat;
+							this.render();
+						}
+
 					},
 					onKeyPress: function(code, e){
 						if (code == 13) {
