@@ -552,7 +552,7 @@ select[readonly],
 	width: 15px;
 	height: 14px;
 	background: url(../img/check.gif) 0px 0px no-repeat;
-	margin: 6px auto;
+	margin: 9px auto;
 }
 .product_in_this_category_undefined:hover , .product_in_this_category_false:hover {
 	background-position: 0px -28px;
