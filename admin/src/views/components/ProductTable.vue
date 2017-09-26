@@ -60,12 +60,14 @@
 		table(){
 			let $this = this;
 			return {
-				view   :"datatable",
-				height :600,
-				width  :800,
-				select : true,
+				view    : "datatable",
+				height  : 600,
+				width   : 800,
+				footer  : true,
+				select  : true,
+				scrollX : false,
 				columns:[
-					{ id:"name", editor:"text",	sort:"string", header:["<span class='product_tbl_header'>Выбор товара</span>", {content:"textFilter"}], css:'product_tbl_row', fillspace:true},
+					{ id:"name", editor:"text",	sort:"string", header:["<span class='product_tbl_header'>Выбор товара</span>", {content:"textFilter"}], css:'product_tbl_row', fillspace:true , footer:{content:"countColumn", colspan: 2, css: "ta_l"}},
 					{ template:"<div id='in_cat_checbox' class='product_in_this_category_#inThisCat#'></div>", header:"В категории" , width:120, sort:sortByInThisCat},
 				], on:{
 					onAfterSelect: function(id, e, node){
@@ -120,6 +122,11 @@ function sortByInThisCat (a, b) {
 	b = b.inThisCat;
 	return (a === b)? 0 : a? -1 : 1;
 }
+
+webix.ui.datafilter.countColumn = webix.extend({
+	refresh:function(master, node, value){
+	node.firstChild.innerHTML = "Всего товаров: " + master.count();
+}}, webix.ui.datafilter.summColumn);
 
 
 </script>
