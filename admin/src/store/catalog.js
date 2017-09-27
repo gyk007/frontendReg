@@ -425,7 +425,6 @@ const store = new Vuex.Store({
 						commit('set', {type: 'error',           items: undefined})
 						commit('set', {type: 'netList',         items: body.clients})
 						commit('set', {type: 'clientPageCount', items: body.pages})
-						document.location = '/#/client/' + page
 						// Выключаем лоадер
 						commit('set', {type: 'loader', items: false})
 					}
