@@ -111,7 +111,6 @@
 							$this.$store.commit('set', {type: 'showNetWnd', items: true});
 						},
 						onKeyPress: function(code, e){
-							e.preventDefault();
 							if (code == 13 || code == 32) {
 								$this.$store.commit('set', {type: 'showNetWnd', items: true});
 								this.focusEditor();

@@ -96,7 +96,6 @@
 
 					},
 					onKeyPress: function(code, e){
-						e.preventDefault();
 						if (code == 13 || code == 32) {
 							$this.addProduct($this.$data.selectedProduct.id, $this.$data.selectedProduct.inThisCat);
 							$this.$data.selectedProduct.inThisCat = !$this.$data.selectedProduct.inThisCat;
