@@ -1,10 +1,16 @@
+<!--
+	Компонет табица с клиентами (организации),
+	выводится на странице клиенты
+-->
 <template>
 	 <div class="b-catalog__container">
-		<div class="b-catalog__table">
+
+	<!-- Страрая таблица для клиентов, решил пока не удалять  -->
+		<!-- <div class="b-catalog__table">
 
 			<div class="b-catalog__row js-t-row">
 				<div class="b-catalog__cell b-catalog__table-hdr">Название</div>
-				<div class="b-catalog__cell b-catalog__table-hdr">Имя представителя</div>
+				<div class="b-catalog__cell b-catalog__table-hdr">Имя менеджера</div>
 				<div class="b-catalog__cell b-catalog__table-hdr">Телефон</div>
 				<div class="b-catalog__cell b-catalog__table-hdr">ИНН</div>
 				<div class="b-catalog__cell b-catalog__table-hdr"></div>
@@ -28,16 +34,19 @@
 				<div class="b-catalog__cell b-catalog__table-history">{{net.official.taxcode}}</div>
 				<div class="b-catalog__cell b-catalog__table-history"><a data-fancybox  data-src="#popup__client" href="javascript:;" class="btn btn--edit">Просмотр</a></div>
 			</div>
-		</div>
-		<!-- Лоадер -->
-		<div class='product_loader' v-if='loader'><img src="pic/loading.gif"></div>
+		</div> -->
+	<!-- Коец страрой таблицы для клиентов, решил пока не удалять  -->
+
+		<webix-ui :config='table' v-model='netList' v-if='!loader' />
+		<div class='product_loader' v-if='loader'><img src='pic/loading.gif'></div>
 	</div>
-</div>
 </template>
 
 <script>
 	import store from '../../store/catalog.js'
 	import $     from 'jquery'
+	import 'webix'
+ 	import 'vue-webix'
 
 	export default {
 		computed: {
@@ -53,6 +62,63 @@
 			},
 			loader() {
 				return this.$store.getters.loader
+			},
+			table(){
+				let $this = this;
+				return {
+					view    : "datatable",
+					height  : $(window).height() / 1.4,
+					width   : $('.b-catalog__container').width(),
+					footer  : true,
+					select  : true,
+					scrollX : false,
+					columns:[
+						{
+							id        : "net_name",
+							sort      : "string",
+							header    : ["Название", {content:"textFilter"}],
+							css       : 'product_tbl_row',
+							width     : 500,
+							footer    : {content:"countColumn", colspan: 3}
+						},
+						{
+							id        : "merchant_name",
+							sort      : "string",
+							header    : ["Имя менеджера", {content:"textFilter"}],
+							css       : 'product_tbl_row',
+							fillspace : true,
+						},
+						{
+							id     : "merchant_phone",
+							sort   : "string",
+							header : ["Телефон", {content:"textFilter"}],
+							css    : 'product_tbl_row',
+							width  : 250,
+						},
+						{
+							id     : "net_taxcode",
+							sort   : "string",
+							header : ["ИНН", {content:"textFilter"}],
+							css    : 'product_tbl_row',
+							width  : 250,
+						},
+					], on:{
+						onAfterSelect: function(id, e, node){
+							$this.selectNet(this.getItem(id));
+						},
+						onItemDblClick:function(id, e, node) {
+							$this.selectNet(this.getItem(id));
+							$this.$store.commit('set', {type: 'showNetWnd', items: true});
+						},
+						onKeyPress: function(code, e){
+							e.preventDefault();
+							if (code == 13 || code == 32) {
+								$this.$store.commit('set', {type: 'showNetWnd', items: true});
+								this.focusEditor();
+							}
+						}
+					}
+				}
 			}
 		},
 		methods: {
@@ -63,6 +129,11 @@
 		created: function() {
 			this.$store.commit('set', {type: 'clientsList', items: undefined})
 			this.$store.commit('set', {type: 'loader', items: undefined})
+
+			webix.ui.datafilter.countColumn = webix.extend({
+				refresh:function(master, node, value){
+				node.firstChild.innerHTML = "Всего организаций: " + master.count();
+			}}, webix.ui.datafilter.summColumn);
 		},
 		mounted: function() {
 			this.$store.dispatch('getNetList')

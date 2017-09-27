@@ -37,6 +37,7 @@ const store = new Vuex.Store({
 		isSendMail      : false,     // указывает отправлено ли письмо, если true - письмо отправлено
 		allOrderStatus  : undefined, // Все статусы заказа
 		showProductTbl  : false,     // Показать окно со списком продуктов, для добавления в категорию
+		showNetWnd      : false,     // Показать окно c данными сети
 		ordersFilter    : {          // Фильтры заказа
 			dateTo    : moment(),                       // Начльная установка Даты До (сегодня)
 			dateFrom  : moment().subtract(1, 'months'), // Начальная установка Даты От (месяц назад)
@@ -131,6 +132,9 @@ const store = new Vuex.Store({
 		},
 		showProductTbl(state){
 			return state.showProductTbl
+		},
+		showNetWnd(state){
+			return state.showNetWnd
 		},
 	},
 	mutations: {

@@ -1,5 +1,5 @@
 <template>
-	 <section class="a-catalog__hdr-search">
+	<!--  <section class="a-catalog__hdr-search">
         <div class="search">
             <input type="text" class="input search__input" placeholder="название, телефон, инн, имя представителя, адрес" v-model='query' v-on:keyup.enter='search'>
             <div class="search__submit" @click='search' v-if='!loader'></div>
@@ -10,7 +10,7 @@
                 </svg>
             </div>
         </div>
-    </section>
+    </section> -->
 </template>
 
 <script>

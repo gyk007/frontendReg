@@ -1,10 +1,17 @@
+<!--
+	Компонет таблица со всеми тварами,
+	для добавления товара в категорию,
+	отдельное модальное окно
+-->
 <template id="modal-template">
 	<transition name="modal">
 		<div class="modal-mask">
 			<div class="modal-wrapper">
 			<div class='modal-close' @click="close"><img src="img/close.png" alt="Закрыть"></div>
 				<div class="modal-container-products">
+
 					<webix-ui :config='table' v-model='allProducts' />
+
 					</br>
 					<button class="modal_btn btn" style="background-color: #f48c42; width: 181px" v-on:click="close" v-if="idActiveCat">Закрыть</button>
 					</br>
@@ -89,7 +96,8 @@
 
 					},
 					onKeyPress: function(code, e){
-						if (code == 13) {
+						e.preventDefault();
+						if (code == 13 || code == 32) {
 							$this.addProduct($this.$data.selectedProduct.id, $this.$data.selectedProduct.inThisCat);
 							$this.$data.selectedProduct.inThisCat = !$this.$data.selectedProduct.inThisCat;
 							this.render();
@@ -113,8 +121,13 @@
 	},
 	created: function() {
 		this.$store.dispatch('getAllProducts')
-	}
-  }
+
+		webix.ui.datafilter.countColumn = webix.extend({
+			refresh:function(master, node, value){
+			node.firstChild.innerHTML = "Всего товаров: " + master.count();
+		}}, webix.ui.datafilter.summColumn);
+	},
+}
 
 // Сортировка по пораметру входит ли  товар в категорию
 function sortByInThisCat (a, b) {
@@ -123,11 +136,4 @@ function sortByInThisCat (a, b) {
 	return (a === b)? 0 : a? -1 : 1;
 }
 
-webix.ui.datafilter.countColumn = webix.extend({
-	refresh:function(master, node, value){
-	node.firstChild.innerHTML = "Всего товаров: " + master.count();
-}}, webix.ui.datafilter.summColumn);
-
-
 </script>
-

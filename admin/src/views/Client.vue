@@ -1,5 +1,5 @@
 <template>
-<section class="b-catalog">
+<section>
 	<div class="a-catalog__hdr">
         <div class="a-catalog__hdr-title">Клиенты</div>
         <Search></Search>
@@ -11,10 +11,15 @@
 			<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if='net'>
 				<div class="btn btn btn--edit" @click="merchantWnd">Представитель</div>
 			</div>
+			<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if='net'>
+				<div class="btn btn btn--edit" @click="netWnd">Просмотр</div>
+			</div>
 		</div>
     </div>
 	<NetList></NetList>
-	<paginate v-if='clientPageCount'
+
+	<!--Постраничная навигация для Vue (ПОКА ЗАКОММЕНТИРУЮ)--->
+	<!-- <paginate v-if='clientPageCount'
 	    :page-count="clientPageCount"
 	    :page-range="3"
 	    :margin-pages="2"
@@ -26,9 +31,9 @@
 	    :page-class="'page-item'"
 	    :prev-class="'page-item'"
 	    :next-class="'page-item'">
-	</paginate>
+	</paginate> -->
 	<div class='clear'></div>
-	<NewClient></NewClient>
+	<Net         v-if='showNetWnd'></Net>
 	<ShopsWnd    v-if='showShopsWnd'></ShopsWnd>
 	<MerchantWnd v-if='showMerchantWnd'></MerchantWnd>
 
@@ -39,7 +44,7 @@
 
 import NetList       from './components/NetList.vue'
 import Search        from './components/SearchClient.vue'
-import NewClient     from './components/Net.vue'
+import Net           from './components/Net.vue'
 import ShopsWnd      from './components/ShopsWnd.vue'
 import MerchantWnd   from './components/MerchantWnd.vue'
 import store         from '../store/catalog.js'
@@ -48,7 +53,7 @@ import $             from 'jquery'
 
 export default {
 	name: 'users',
-	components: {NetList, NewClient, ShopsWnd, Search, Paginate, MerchantWnd},
+	components: {NetList, Net, ShopsWnd, Search, Paginate, MerchantWnd},
 	store: store,
 	computed: {
 		net() {
@@ -63,6 +68,9 @@ export default {
 		showMerchantWnd() {
 			return this.$store.getters.showMerchantWnd
 		},
+		showNetWnd() {
+			return this.$store.getters.showNetWnd
+		},
 	},
 	methods: {
 		clickPage(pageNum){
@@ -73,7 +81,10 @@ export default {
 		},
 		merchantWnd(){
 			this.$store.commit('set', {type: 'showMerchantWnd', items: true})
-		}
+		},
+		netWnd(){
+			this.$store.commit('set', {type: 'showNetWnd', items: true})
+		},
 	},
 	created: function() {
 		this.$store.commit('set', {type: 'netList', items: undefined})
