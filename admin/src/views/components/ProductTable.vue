@@ -71,10 +71,10 @@
 				height  : 800,
 				width   : 1000,
 				footer  : true,
-				select  : true,
-				scrollX : false,
-				rowHeight: 88,
-				rowLineHeight:22,
+				select        : true,
+				scrollX       : false,
+				rowLineHeight :25,
+				rowHeight     :25 ,
 				fixedRowHeight:false,
 				columns:[
 					{
@@ -82,23 +82,24 @@
 						sort      : "string",
 						header    : ["Название товара", {content:"textFilter"}],
 						css       : 'product_tbl_row',
-						width     : 440,
+						width     : 540,
 						footer    : {content:"countColumn", colspan: 2, css: "ta_l"}
 					},
 					{
 						id        : "link",
 						format    : value => {
 							let str_name = '';
-							value.forEach( key => {
-								if(key.name_category)
-									str_name += key.name_category + '; ';
-							})
+							if (value)
+								value.forEach( key => {
+									if(key.name_category)
+										str_name += key.name_category + '; ';
+								});
 							return str_name;
 						},
 						sort      : "string",
 						header    : ["Название категории", {content:"textFilter", compare:categoryCompare}],
 						css       : 'product_tbl_row',
-						fillspace : 440,
+						fillspace : 340,
 						footer    : {content:"countColumn", colspan: 2, css: "ta_l"}
 					},
 					{
@@ -108,6 +109,9 @@
 						sort     : sortByInThisCat
 					}
 				], on:{
+					onAfterRender : function(id, e, node){
+           				this.adjustRowHeight('link', true);
+        			},
 					onAfterSelect: function(id, e, node){
 						$this.$data.selectedProduct = this.getItem(id);
 					},
