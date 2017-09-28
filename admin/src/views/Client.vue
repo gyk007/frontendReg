@@ -2,7 +2,6 @@
 <section>
 	<div class="a-catalog__hdr">
         <div class="a-catalog__hdr-title">Клиенты</div>
-        <Search></Search>
         <div class="catalog__controls">
 			<div class="a-catalog__hdr-controls" v-if='net'>
 				<div class="btn btn btn--edit" @click="shopsWnd">Торговые точки</div>
@@ -43,7 +42,6 @@
 <script>
 
 import NetList       from './components/NetList.vue'
-import Search        from './components/SearchClient.vue'
 import Net           from './components/Net.vue'
 import ShopsWnd      from './components/ShopsWnd.vue'
 import MerchantWnd   from './components/MerchantWnd.vue'
@@ -53,14 +51,14 @@ import $             from 'jquery'
 
 export default {
 	name: 'users',
-	components: {NetList, Net, ShopsWnd, Search, Paginate, MerchantWnd},
+	components: {NetList, Net, ShopsWnd, MerchantWnd},
 	store: store,
 	computed: {
 		net() {
 			return this.$store.getters.net
 		},
-		clientPageCount() {
-			return this.$store.getters.clientPageCount
+		netList() {
+			return this.$store.getters.netList
 		},
 		showShopsWnd() {
 			return this.$store.getters.showShopsWnd
@@ -71,11 +69,11 @@ export default {
 		showNetWnd() {
 			return this.$store.getters.showNetWnd
 		},
+		showNetWnd() {
+			return this.$store.getters.showNetWnd
+		},
 	},
 	methods: {
-		clickPage(pageNum){
-			this.$store.dispatch('getNetList', pageNum - 1)
-		},
 		shopsWnd(){
 			this.$store.commit('set', {type: 'showShopsWnd', items: true})
 		},
@@ -87,13 +85,9 @@ export default {
 		},
 	},
 	created: function() {
-		this.$store.commit('set', {type: 'netList', items: undefined})
 		this.$store.commit('set', {type: 'loader',  items: undefined})
 		this.$store.commit('set', {type: 'net',     items: undefined})
 	},
-	mounted: function() {
-		this.$store.dispatch('getNetList', this.$route.params.page)
-	}
 }
 
 </script>

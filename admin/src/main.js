@@ -10,10 +10,12 @@ import Promotion  from './views/Promotion.vue'
 import Client     from './views/Client.vue'
 import Statistic  from './views/Statistic.vue'
 import moment     from 'moment'
+import store      from './store/catalog.js'
 
 import $          from 'jquery'
 import 'malihu-custom-scrollbar-plugin'
 import 'jquery-mousewheel'
+
 
 Vue.use(VueRouter)
 Vue.use(ToggleButton)
@@ -33,6 +35,12 @@ var router = new VueRouter({
 new Vue({
 	el: '#app',
 	router: router,
+	store: store,
+	computed: {
+		netList() {
+			return this.$store.getters.netList
+		},
+	},
 	created: function() {
 		let minHeight = $(window).outerHeight() - $('.js-footer').outerHeight()
 		$('.wrapper').css('min-height', minHeight + 'px')
@@ -61,6 +69,10 @@ new Vue({
 				$(this).hide();
 				$('.header__drop').fadeOut(200);
 			});
+		}
+		// Згружаем список клиентов в фоне
+		if (!this.netList) {
+			this.$store.dispatch('getNetList')
 		}
 	}
 })

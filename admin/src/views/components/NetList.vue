@@ -37,8 +37,8 @@
 		</div> -->
 	<!-- Коец страрой таблицы для клиентов, решил пока не удалять  -->
 
-		<webix-ui :config='table' v-model='netList' v-if='!loader' />
-		<div class='product_loader' v-if='loader'><img src='pic/loading.gif'></div>
+		<webix-ui :config='table' v-model='netList' v-if='!loaderNetList' />
+		<div class='product_loader' v-if='loaderNetList'><img src='pic/loading.gif'></div>
 	</div>
 </template>
 
@@ -60,8 +60,8 @@
 					return undefined
 				}
 			},
-			loader() {
-				return this.$store.getters.loader
+			loaderNetList() {
+				return this.$store.getters.loaderNetList
 			},
 			table(){
 				let $this = this;
@@ -71,36 +71,43 @@
 					width   : $('.b-catalog__container').width(),
 					footer  : true,
 					select  : true,
-					scrollX : false,
 					columns:[
 						{
 							id        : "net_name",
 							sort      : "string",
 							header    : ["Название", {content:"textFilter"}],
 							css       : 'product_tbl_row',
-							width     : 500,
-							footer    : {content:"countColumn", colspan: 3}
+							width     : 250,
+							footer    : {content:"countColumn", colspan: 5}
 						},
 						{
-							id        : "merchant_name",
-							sort      : "string",
-							header    : ["Имя менеджера", {content:"textFilter"}],
-							css       : 'product_tbl_row',
-							fillspace : true,
+							id      : "merchant_name",
+							sort    : "string",
+							header  : ["Имя менеджера", {content:"textFilter"}],
+							css     : 'product_tbl_row',
+							width   : 200,
 						},
 						{
 							id     : "merchant_phone",
 							sort   : "string",
 							header : ["Телефон", {content:"textFilter"}],
 							css    : 'product_tbl_row',
-							width  : 250,
+							width  : 200,
 						},
 						{
 							id     : "net_taxcode",
 							sort   : "string",
 							header : ["ИНН", {content:"textFilter"}],
 							css    : 'product_tbl_row',
-							width  : 250,
+							width  : 150,
+						},
+						{
+							id        : "net_regaddress",
+							sort      : "string",
+							header    : ["Адрес", {content:"textFilter"}],
+							css       : 'product_tbl_row',
+							fillspace : true,
+							minWidth  : 250,
 						},
 					], on:{
 						onAfterSelect: function(id, e, node){
@@ -126,16 +133,10 @@
 			},
 		},
 		created: function() {
-			this.$store.commit('set', {type: 'clientsList', items: undefined})
-			this.$store.commit('set', {type: 'loader', items: undefined})
-
 			webix.ui.datafilter.countColumn = webix.extend({
 				refresh:function(master, node, value){
 				node.firstChild.innerHTML = "Всего организаций: " + master.count();
 			}}, webix.ui.datafilter.summColumn);
 		},
-		mounted: function() {
-			this.$store.dispatch('getNetList')
-		}
 	}
 </script>

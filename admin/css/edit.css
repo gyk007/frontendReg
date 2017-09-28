@@ -573,3 +573,19 @@ select[readonly],
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+.fix_controls {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	padding-top: 10px;
+	padding-left: 30px;
+	padding-right: 20px;
+	margin: 0px !important;
+	background-color: #FFF !important;
+	z-index: 999;
+	box-shadow: 0 3px 15px #ebebeb;
+	height: 64px;
+	width: 100%
+}

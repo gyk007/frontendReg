@@ -16,7 +16,6 @@ const store = new Vuex.Store({
 		product         : undefined, // выбранный продукт
 		idActiveCat     : undefined, // id выбранной категории
 		netList         : undefined, // список сетей
-		clientPageCount : undefined, // количесво страниц в компоненте Client
 		net             : undefined, // выбранная сеть
 		shop            : undefined, // выбранный магазин
 		order           : undefined, // выбранный заказ
@@ -24,6 +23,7 @@ const store = new Vuex.Store({
 		documents       : undefined, // документы в заказе
 		allProducts     : undefined, // Все продукты, для добавления и удаления из категории
 		loader          : false,     // отвечает за лоадер, если true - лодер включен
+		loaderNetList   : false,     // отвечает за лоадер для списка организаций
 		shopList        : undefined, // торговые точки длч выбранного клиента
 		showShopsWnd    : false,     // показать окно торговых точек
 		merchant        : undefined, // торговый пердставитель сети
@@ -67,9 +67,6 @@ const store = new Vuex.Store({
 		netList(state) {
 			return  state.netList
 		},
-		clientPageCount(state) {
-			return  state.clientPageCount
-		},
 		net(state) {
 			return state.net
 		},
@@ -84,6 +81,9 @@ const store = new Vuex.Store({
 		},
 		loader(state){
 			return state.loader
+		},
+		loaderNetList(state){
+			return state.loaderNetList
 		},
 		product(state){
 			return state.product
@@ -396,9 +396,9 @@ const store = new Vuex.Store({
 				}
 			)
 		},
-		getNetList({commit}, page) {
+		getNetList({commit}) {
 			// Включаем лоадер
-			commit('set', {type: 'loader', items: true})
+			commit('set', {type: 'loaderNetList', items: true})
 			// Очищаем спсок поиска киентов
 			commit('set', {type: 'searchClient', items: undefined})
 			// Очищаем список клиентов
@@ -406,27 +406,17 @@ const store = new Vuex.Store({
 			// Убираем выделение сети
 			commit('set', {type: 'net', items: undefined})
 
-			let arg = {
-				params:{
-					page : page
-				},
-				headers: {
-					'Content-Type': 'text/plain'
-				}
-			}
-
-			Vue.http.get(Conf.url.clients, arg).then(
+			Vue.http.get(Conf.url.clients).then(
 				response => {
 					let body = response.body;
 					if (body.ERROR) {
 						console.log(body.ERROR)
 						commit('set', {type: 'error', items: body.ERROR})
 					} else {
-						commit('set', {type: 'error',           items: undefined})
-						commit('set', {type: 'netList',         items: body.clients})
-						commit('set', {type: 'clientPageCount', items: body.pages})
+						commit('set', {type: 'error',   items: undefined})
+						commit('set', {type: 'netList', items: body.net_list})
 						// Выключаем лоадер
-						commit('set', {type: 'loader', items: false})
+						commit('set', {type: 'loaderNetList', items: false})
 					}
 				},
 				error => {
@@ -776,47 +766,6 @@ const store = new Vuex.Store({
 				},
 				error => {
 					console.log(error);
-				}
-			)
-		},
-		searchNet({commit}, search) {
-			// Включаем лоадер
-			commit('set', {type: 'loader', items: true})
-			// Очищаем список клиентов
-			commit('set', {type: 'netList',  items: undefined})
-			// Убираем постраничную навигацию
-			commit('set', {type: 'clientPageCount', items: undefined})
-			// Убираем выделение сети
-			commit('set', {type: 'net', items: undefined})
-
-			let arg = {
-				params:{
-					search : search
-				},
-				headers: {
-					'Content-Type': 'text/plain'
-				}
-			}
-
-			Vue.http.get(Conf.url.clients, arg).then(
-				response => {
-					let body = response.body;
-					if (body.ERROR) {
-						commit('set', {type: 'error', items: body.ERROR})
-					} else {
-						commit('set', {type: 'error', items: undefined})
-						// Удаляем список клиентов
-						commit('set', {type: 'netList', items: body.clients})
-						if (body.pages) {
-							commit('set', {type: 'clientPageCount', items: body.pages})
-						}
-						document.location = '/#/client/' + 0
-						// Выключаем лоадер
-						commit('set', {type: 'loader', items: false})
-					}
-				},
-				error => {
-				 	console.log(error);
 				}
 			)
 		},
