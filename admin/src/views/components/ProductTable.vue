@@ -68,14 +68,45 @@
 			let $this = this;
 			return {
 				view    : "datatable",
-				height  : 600,
-				width   : 800,
+				height  : 800,
+				width   : 1000,
 				footer  : true,
 				select  : true,
 				scrollX : false,
+				rowHeight: 88,
+				rowLineHeight:22,
+				fixedRowHeight:false,
 				columns:[
-					{ id:"name", editor:"text",	sort:"string", header:["<span class='product_tbl_header'>Выбор товара</span>", {content:"textFilter"}], css:'product_tbl_row', fillspace:true , footer:{content:"countColumn", colspan: 2, css: "ta_l"}},
-					{ template:"<div id='in_cat_checbox' class='product_in_this_category_#inThisCat#'></div>", header:"В категории" , width:120, sort:sortByInThisCat},
+					{
+						id        : "name",
+						sort      : "string",
+						header    : ["Название товара", {content:"textFilter"}],
+						css       : 'product_tbl_row',
+						width     : 440,
+						footer    : {content:"countColumn", colspan: 2, css: "ta_l"}
+					},
+					{
+						id        : "link",
+						format    : value => {
+							let str_name = '';
+							value.forEach( key => {
+								if(key.name_category)
+									str_name += key.name_category + '; ';
+							})
+							return str_name;
+						},
+						sort      : "string",
+						header    : ["Название категории", {content:"textFilter", compare:categoryCompare}],
+						css       : 'product_tbl_row',
+						fillspace : 440,
+						footer    : {content:"countColumn", colspan: 2, css: "ta_l"}
+					},
+					{
+						template : "<div id='in_cat_checbox' class='product_in_this_category_#inThisCat#'></div>",
+						header   : "В категории" ,
+						width    : 120,
+						sort     : sortByInThisCat
+					}
 				], on:{
 					onAfterSelect: function(id, e, node){
 						$this.$data.selectedProduct = this.getItem(id);
@@ -119,13 +150,39 @@
 		},
 	},
 	created: function() {
-		this.$store.dispatch('getAllProducts')
+		if (!this.allProducts) {
+			this.$store.dispatch('getAllProducts')
+		}
 
 		webix.ui.datafilter.countColumn = webix.extend({
 			refresh:function(master, node, value){
 			node.firstChild.innerHTML = "Всего товаров: " + master.count();
 		}}, webix.ui.datafilter.summColumn);
 	},
+	mounted: function() {
+		// По нажатию кнопки ESC закрываем окно,
+		// выполняем метод close()
+		let	$this = this;
+		document.onkeyup = function (e) {
+			e = e || window.event;
+			if (e.keyCode === 27) {
+				$this.close();
+			}
+			return false;
+		}
+	},
+}
+
+function categoryCompare(value, filter){
+	let str_name = '';
+	value.forEach( key => {
+		if(key.name_category)
+			str_name += key.name_category + '; ';
+	})
+
+    str_name = str_name.toString().toLowerCase();
+    filter = filter.toString().toLowerCase();
+    return str_name.indexOf(filter) === 0;
 }
 
 // Сортировка по пораметру входит ли  товар в категорию
