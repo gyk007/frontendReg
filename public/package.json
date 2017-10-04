@@ -24,7 +24,9 @@
     "vue-select": "file:./src/modules/vue-select",
     "vue-md-date-picker": "file:./src/modules/vue-md-date-picker",
     "vue-slider-component": "^2.3.4",
-    "vuex": "^2.3.1"
+    "vuex": "^2.3.1",
+    "vue-webix": "^1.2.0",
+    "webix": "^4.4.0"
   },
   "devDependencies": {
     "@fancyapps/fancybox": "^3.1.20",

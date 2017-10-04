@@ -792,10 +792,10 @@ const catalogStore = new Vuex.Store({
 		updateQtyProdInCart({state, commit}, product) {
 			let arg = {
 				params: {
-				   action             : 'add',
+				   action             : 'add_qty',
 				   token              : Cookies.get('token'),
-				   'product.id'       : product.id_product,
-				   'product.quantity' : product.quantity,
+				   'product.id'       : product.id,
+				   'product.quantity' : product.qty,
 				},
 				headers: {
 					'Content-Type': 'text/plain'

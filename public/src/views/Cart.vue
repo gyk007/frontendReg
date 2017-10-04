@@ -1,7 +1,7 @@
 <template>
  <div class="p-card">
  	<div class="p-card__container">
-	<div class="page-title">Корзина</div>
+	<div class="page-title_cart"><span>Продукция на сумму: {{cartPrice.toLocaleString('ru-RU')}} &nbsp;<i class="rub">a</i></span></div>
 	<CartAddress></CartAddress>
 	<CartProduct></CartProduct>
 	</div>
@@ -20,23 +20,11 @@ export default {
 	components: {CartAddress, CartProduct},
 	store: Store,
 	computed: {
-		category() {
-				return this.$store.getters.category
-			},
+		cartPrice() {
+			return this.$store.getters.cartPrice;
+		},
 	},
 	methods: {
-		unselectCategoory(){
-			$('.js-catalog-category a').removeClass('active')
-			this.$store.dispatch('selectCategory', null)
-		},
-		upCategoory(category){
-		 // $('.js-catalog-category a').removeClass('active')
-			this.$store.dispatch('leftCategory', category.id)
-		},
-		downCategoory(category){
-			$('.js-catalog-category a').removeClass('active')
-			this.$store.dispatch('rightCategory', category.id)
-		},
 	},
 	created: function() {
 		//this.$store.dispatch('selectCategory', null)

@@ -26,7 +26,7 @@
 			<div class="header__basket">
 					<div class="header__basket-stat">
 							<svg><use xlink:href="#bag"></use></svg>
-							<div class="header__basket-num">{{cartPrice}}&nbsp;<i class="rub">a</i></div>
+							<div class="header__basket-num">{{cartPrice.toLocaleString('ru-RU')}}&nbsp;<i class="rub">a</i></div>
 					</div>
 			</div>
 			</router-link>

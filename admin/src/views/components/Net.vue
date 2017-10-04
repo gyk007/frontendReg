@@ -87,7 +87,7 @@
 
 					<div class="popup__product-form--holder client_holder">
 					<label>
-						<span style="font-size: 15px" >Юредический адрес</span>
+						<span style="font-size: 15px" >Юридический адрес</span>
 						<textarea v-model="net.official.regaddress" readonly="readonly"></textarea>
 					</label>
 					</div>

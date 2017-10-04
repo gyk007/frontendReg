@@ -14,6 +14,7 @@
 					<div class="shop__cell shop__cell-availability"><span>Наличие</span></div>
 					<div class="shop__cell ta_c"><span>Cкидка</span></div>
 					<div class="shop__cell"><span>Фасовка</span></div>
+					<div class="shop__cell"><span>Емкость</span></div>
 					<div class="shop__cell shop__cell-price"><span>Цена</span></div>
 					<div class="shop__cell shop__cell-order">&nbsp;</div>
 				</div>
@@ -44,8 +45,12 @@
 						<span class="js-a">{{prop.value}}</span>
 					</div>
 
+					<div class="shop__cell shop__cell-a"  v-for='prop in product.properties' v-if="prop.name == 'Litr'">
+						<span class="js-a">{{prop.value}}</span>
+					</div>
+
 					<div class="shop__cell shop__cell-price">
-						<span class="js-price">{{parseFloat(product.price).toFixed(2)}}&nbsp;<i class="rub">a</i></span>
+						<span class="js-price">{{Number(parseFloat(product.price).toFixed(2)).toLocaleString('ru-RU')}}&nbsp;<i class="rub">a</i></span>
 					</div>
 					<div class="shop__cell shop__cell-order">
 						<div class="js-order">
@@ -63,7 +68,7 @@
 		<div class='product_loader fixed-loader'   v-if='loader'><img src="pic/loading.gif"></div>
 		<div class='text-no-category'      v-if='!productList && !loader && idActiveCat'>В категории нет товаров</div>
 		<div class='text-no-category'      v-if='!idActiveCat && !loader && !productList'>Выберите категорию</div>
-		<div class='text-no-category-long' v-if='!isOffers && selectOffer && !loader'>В данной категории у Вас нет индивидуальных предложений </div>
+		<div class='text-no-category-long' v-if='!isOffers    && selectOffer && !loader'>В данной категории у Вас нет индивидуальных предложений </div>
 	</section>
 </template>
 

@@ -177,6 +177,7 @@
 	},
 }
 
+// Сравнение категорий( для поиска по категории)
 function categoryCompare(value, filter){
 	let str_name = '';
 	value.forEach( key => {

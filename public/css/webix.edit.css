@@ -1,0 +1,47 @@
+.webix_column>div.webix_row_select {
+    color: #000;
+    background-color: #d7ffaa;
+    font-weight: bold;
+}
+
+.webix_dd_drag_column, .webix_ss_header, .webix_ss_header td, .webix_ss_vscroll_header {
+    font-size: 15px;
+    color: #000;
+    font-family: proxima-nova, sans-serif;
+    background: rgb(247, 247, 247);
+}
+
+.webix_ss_header td {
+    border-right: 1px solid #CCC;
+    border-bottom: 1px solid #CCC;
+}
+
+.webix_dtable .webix_ss_vscroll_header {
+    border-bottom: 1px solid #CCC;
+}
+
+.webix_ss_vscroll_header {
+    border-left: 1px solid #CCC;
+}
+
+.webix_cell_midle {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  height: 75px;
+}
+
+.cell_img .webix_cell{
+    padding: 0;
+}
+
+.product_qty_middle .webix_cell{
+  text-align: center;
+  line-height: 70px !important;
+}
+
+.product_price_middle .webix_cell{
+  text-align: right;
+  line-height: 70px !important;
+}
+

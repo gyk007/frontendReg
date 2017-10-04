@@ -384,6 +384,67 @@
 	margin-top: 0px !important;
 }
 
+.shop__cell {
+	text-align: right;
+}
+
+.shop__cell-name{
+	text-align: left;
+}
+
+.product__row_header {
+	display: table-row;
+    height: 61px;
+    border-bottom: 1px solid #e8e8e8;
+    width: 100%;
+}
+
+
+.page-title_cart {
+    font-size: 30px;
+    display: block;
+    padding: 10px 0;
+    font-family: "Ubuntu";
+    cursor: default;
+}
+
+.p-card__data-form {
+    margin-top: 10px;
+}
+
+.p-card__data-title {
+    font-family: "Ubuntu";
+    font-size: 20px;
+}
+
+
+.p-card__data-form .input-field {
+    margin-top: 0;
+    margin-bottom: 35px;
+}
+
+.p-card__data {
+	padding: 37px 30px 37px 30px;
+	width: 23.3%;
+}
+
+
+.table_input {
+	padding: 0 5px;
+	display: inline-block;
+}
+
+.p-card__products {
+	width: 75.7%;
+}
+
+
+
+
+
+
+
+
 
 
 /*Мобилная версия*/
@@ -482,6 +543,11 @@
 		padding-bottom: 20px;
 	}
 
+	.p-card__data {
+		float: none;
+		width: 100%;
+	}
+
 	.product__offer {
 		display: none;
 	}
@@ -492,6 +558,8 @@
 
 	.p-card__products {
 		padding-bottom: 20px;
+		float: none;
+		width: 100%;
 	}
 
 	.p-card__products-header span{
