@@ -79,7 +79,7 @@
 		<!--
 			WEBIX
 		-->
-		<webix-ui :config='table' v-model='cart_products' />
+		<webix-ui :config='table' v-model='cartProducts' />
 	</div>
 </section>
 </template>
@@ -91,16 +91,15 @@
 	import 'vue-webix'
 
 	export default {
-		data() {
-			return {
-				selectedProduct : undefined,
-			}
-		},
+
 		computed: {
 			cart() {
 				return this.$store.getters.cart
 			},
-			cart_products() {
+			selectedCartProduct () {
+				return this.$store.getters.selectedCartProduct
+			},
+			cartProducts() {
 				let proucts = [];
 				if (this.$store.getters.cart && this.$store.getters.cart.products) {
 					this.$store.getters.cart.products.elements.forEach(key => {
@@ -126,8 +125,9 @@
 				let $this = this;
 				return {
 					view    : "datatable",
-					height  : 570,
+					height  : 610,
 					width   : $('.p-card__products').width(),
+					css     : 'table_cart_product',
 					footer  : true,
 					select  : true,
 					rowHeight:75,
@@ -196,22 +196,22 @@
 						},
 					], on:{
 						onAfterSelect: function(id, e, node){
-							$this.$data.selectedProduct = this.getItem(id);
+							// Выбрали товар в корзине
+							$this.$store.commit('set', {type: 'selectedCartProduct', items: this.getItem(id)})
+						},
+						onAfterUnSelect:function(id, e, node){
+							$this.$store.commit('set', {type: 'selectedCartProduct', items: undefined})
 						},
 						onDataUpdate: function(id, product){
-							console.log(product);
 							$this.calculateCartPrice(product);
 						},
-						// onItemDblClick:function(id, e, node) {
-						// 	$this.selectNet(this.getItem(id));
-						// 	$this.$store.commit('set', {type: 'showNetWnd', items: true});
-						// },
-						// onKeyPress: function(code, e){
-						// 	if (code == 13 || code == 32) {
-						// 		$this.$store.commit('set', {type: 'showNetWnd', items: true});
-						// 		this.focusEditor();
-						// 	}
-						// }
+						onKeyPress: function(code, e) {
+							// По нажатию кнопки DEL или Backspase
+							// показываем окно удаления товара из корзины.
+							if (code == 46 || code == 8) {
+								$this.$store.commit('set', {type: 'showDelCartProdWnd', items: true})
+							}
+						}
 					}
 				}
 			}

@@ -45,3 +45,6 @@
   line-height: 70px !important;
 }
 
+.table_cart_product .webix_column>div, .webix_table_cell {
+    border-right: none !important;
+}

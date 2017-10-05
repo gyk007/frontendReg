@@ -13,32 +13,34 @@ Vue.use(VueResource)
 
 const catalogStore = new Vuex.Store({
 	state: {
-		allOrderStatus : undefined, // все статусы заказа
-		catalogTree    : undefined, // дерево категорий
-		contactWnd     : false,     // true - показть окно "Контакты"
-		productList    : undefined, // список товаров в выбранной категории
-		idActiveCat    : undefined, // id выбранной категории
-		category       : undefined, // выбранная категория
-		filterPrice    : undefined, // начальные значени фильра "Цена"
-		filterAlko     : undefined, // начальные значения фильтра "Крепость об %"
-		product        : undefined, // выбранные продукт
-		cart           : undefined, // корзина
-		cartPrice      : 0,         // стоимость корзины
-		shops          : undefined, // список магазинов доступных данному пользователю
-		order          : undefined, // заказ
-		orders         : undefined, // список заказов
-		documents      : undefined, // список документов в заказе
-		user           : undefined, // данные пользователя
-		shop           : undefined, // выбраная торговая точка
-		loader         : false,     // отвечает за лоадер, если true - лодер включен
-		selectOffer    : false,     // вкладка с индивидуальными предложениями, если true - вкладка нажата
-		sendMailLoader : false,     // отвечает за лоадер при отправке почты , если true - лодер включен
-		selectShopWnd  : false,     // true - показать окно "Выбора торговой точки"
-		authError      : false,     // переменная указывает на ошибку авторизации
-		merchant       : undefined, // представитель
-		regError       : false,     // указывает на ошибку при регистрации
-		isSentMail     : false,     // указывает отправлино ли письмо
-		ordersFilter    : {          // Фильтры заказа
+		allOrderStatus      : undefined, // все статусы заказа
+		catalogTree         : undefined, // дерево категорий
+		contactWnd          : false,     // true - показть окно "Контакты"
+		productList         : undefined, // список товаров в выбранной категории
+		idActiveCat         : undefined, // id выбранной категории
+		category            : undefined, // выбранная категория
+		filterPrice         : undefined, // начальные значени фильра "Цена"
+		filterAlko          : undefined, // начальные значения фильтра "Крепость об %"
+		product             : undefined, // выбранные продукт
+		cart                : undefined, // корзина
+		cartPrice           : 0,         // стоимость корзины
+		shops               : undefined, // список магазинов доступных данному пользователю
+		order               : undefined, // заказ
+		orders              : undefined, // список заказов
+		documents           : undefined, // список документов в заказе
+		user                : undefined, // данные пользователя
+		shop                : undefined, // выбраная торговая точка
+		loader              : false,     // отвечает за лоадер, если true - лодер включен
+		selectOffer         : false,     // вкладка с индивидуальными предложениями, если true - вкладка нажата
+		sendMailLoader      : false,     // отвечает за лоадер при отправке почты , если true - лодер включен
+		selectShopWnd       : false,     // true - показать окно "Выбора торговой точки"
+		showDelCartProdWnd  : false,     // true - показать окно удаления товара из корзины
+		selectedCartProduct : undefined, // товар который выбран в корзине
+		authError           : false,     // переменная указывает на ошибку авторизации
+		merchant            : undefined, // представитель
+		regError            : false,     // указывает на ошибку при регистрации
+		isSentMail          : false,     // указывает отправлино ли письмо
+		ordersFilter : {          // Фильтры заказа
 			dateTo    : moment(),                       // Начльная установка Даты До (сегодня)
 			dateFrom  : moment().subtract(1, 'months'), // Начальная установка Даты От (месяц назад)
 			search    : undefined,                      // Поисковая строка
@@ -123,6 +125,12 @@ const catalogStore = new Vuex.Store({
 		},
 		ordersFilter(state){
 			return state.ordersFilter
+		},
+		selectedCartProduct(state){
+			return state.selectedCartProduct
+		},
+		showDelCartProdWnd(state){
+			return state.showDelCartProdWnd
 		},
 	},
 	mutations: {

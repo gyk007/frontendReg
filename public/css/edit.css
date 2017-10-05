@@ -404,6 +404,7 @@
     font-size: 30px;
     display: block;
     padding: 10px 0;
+    padding-bottom: 25px;
     font-family: "Ubuntu";
     cursor: default;
 }
@@ -439,8 +440,12 @@
 }
 
 
-
-
+.btn--delete {
+	background-color: transparent;
+	color: #f44336;
+	border: 1px solid #d5d5d5;
+	padding: 11px 17px 12px;
+}
 
 
 
