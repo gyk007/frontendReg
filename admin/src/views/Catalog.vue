@@ -1,6 +1,6 @@
 <template>
 	<section class="catalog" id='catalog'>
-		<div class="a-catalog__hdr" id='fix_controls'>
+		<div class="a-catalog__hdr" id='fix_controls' id='fix_catalog'>
 				<div class="a-catalog__hdr-title">Каталог</div>
 				<Search></Search>
 				<div class="catalog__controls">
@@ -106,9 +106,9 @@ export default {
 function fixControls () {
 	$(window).scroll(function () {
 		if ($(this).scrollTop() > 100) {
-			$('#fix_controls').addClass('fix_controls');
+			$('#fix_catalog').addClass('fix_controls');
 		} else {
-			$('#fix_controls').removeClass('fix_controls');
+			$('#fix_catalog').removeClass('fix_controls');
 		}
 	});
 }

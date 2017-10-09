@@ -36,6 +36,7 @@ const catalogStore = new Vuex.Store({
 		selectShopWnd       : false,     // true - показать окно "Выбора торговой точки"
 		showDelCartProdWnd  : false,     // true - показать окно удаления товара из корзины
 		selectedCartProduct : undefined, // товар который выбран в корзине
+		selectedProduct     : undefined, // товар который выбран в каталоге
 		authError           : false,     // переменная указывает на ошибку авторизации
 		merchant            : undefined, // представитель
 		regError            : false,     // указывает на ошибку при регистрации
@@ -131,6 +132,9 @@ const catalogStore = new Vuex.Store({
 		},
 		showDelCartProdWnd(state){
 			return state.showDelCartProdWnd
+		},
+		selectedProduct(state){
+			return state.selectedProduct
 		},
 	},
 	mutations: {
@@ -475,6 +479,8 @@ const catalogStore = new Vuex.Store({
 			commit('set', {type: 'productList', items: undefined})
 			// Включаем лоадер
 			commit('set', {type: 'loader', items: true})
+			// Удаляем выбранный товар
+			commit('set', {type: 'selectedProduct', items: undefined})
 			let arg = {
 				params:{
 					id    : idCategory,
@@ -504,8 +510,6 @@ const catalogStore = new Vuex.Store({
 								key.filterPrice = true;
 								key.filterAlko  = true;
 								key.filterOffer = true;
-								// Количесво в корзине по умолчанию
-								key.cartQuantity = 1;
 								// Свойства, делаем удобнее
 								key.properties = key.properties.elements[0].extend.properties.elements
 							})
@@ -660,6 +664,8 @@ const catalogStore = new Vuex.Store({
 			commit('set', {type: 'productList', items: undefined})
 			// Включаем лоадер
 			commit('set', {type: 'loader', items: true})
+			// Удаляем выбранный товар
+			commit('set', {type: 'selectedProduct', items: undefined})
 
 			let arg = {
 				params:{

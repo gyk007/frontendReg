@@ -109,8 +109,8 @@
 						product.img       = key.img ? key.img : 'pic/batle.png';
 						product.name      = '<div class="webix_cell_midle" style="text-align: left"><span style="white-space: pre-wrap; font-size: 15px">' + key.product.name + '</span></div>';
 						product.qty       = key.quantity;
-						product.price     = Number(parseFloat(key.product.price).toFixed(2)).toLocaleString('ru-RU')
-						product.allPrice  = Number(parseFloat(key.product.price * key.quantity).toFixed(2)).toLocaleString('ru-RU')
+						product.price     = parseFloat(key.product.price).toFixed(2);
+						product.allPrice  = parseFloat(key.product.price * key.quantity).toFixed(2);
 						product.offer     = key.product.offer ?
 											'<div class="webix_cell_midle"><span class="js-benefit offer" style="font-size: 15px">' + key.product.offer + '%</span></div>'
 											: '';
@@ -151,7 +151,7 @@
 						},
 						{
 							id      : "qty",
-							template:"<input type='number' aria-label='Шт.' name='qty' id='qty' min='1' max='9999' value='#qty#' class='input table_input' style='width:60px;'>",
+							template:"<input type='number' aria-label='Шт.' name='qty' id='qty' min='1' max='9999' maxlength='4' value='#qty#' class='input table_input cartQty' style='width:60px;'>",
 							editor  :"inline-text",
 							sort    : "int",
 							header  : ["Шт.", {content:"textFilter"}],
@@ -160,17 +160,23 @@
 						},
 						{
 							id     : "price",
-							sort   : "string",
+							sort   : priceSort,
 							header : ["Цена <i class='rub'>a</i>&nbsp;/&nbsp;шт ", {content:"textFilter"}],
 							css    : 'product_price_middle',
 							width  : 110,
+							format  : function(value) {
+								if (value) return Number(value).toLocaleString('ru-RU');
+							}
 						},
 						{
 							id     : "allPrice",
-							sort   : "string",
-							header : ["Цена <i class='rub'>a</i>", {content:"textFilter"}],
+							sort   : allPriceSort,
+							header : ["Сумма <i class='rub'>a</i>", {content:"textFilter"}],
 							css    : 'product_price_middle',
 							width  : 100,
+							format  : function(value) {
+								if (value) return Number(value).toLocaleString('ru-RU');
+							}
 						},
 						{
 							id     : "offer",
@@ -206,9 +212,13 @@
 							$this.calculateCartPrice(product);
 						},
 						onKeyPress: function(code, e) {
+							if (e.target.id == 'qty') {
+								// В inpute выставляем максимальное число символов = 4
+								inputMaxLength(e.target);
+							}
 							// По нажатию кнопки DEL или Backspase
 							// показываем окно удаления товара из корзины.
-							if (code == 46 || code == 8) {
+							if (code == 46) {
 								$this.$store.commit('set', {type: 'showDelCartProdWnd', items: true})
 							}
 						}
@@ -219,6 +229,14 @@
 		methods: {
 			deletProduct(idProduct) {
 				this.$store.dispatch('deletProdInCart', idProduct)
+			},
+			// Функция устанавливает максимальное число символов для Input type="number"
+			inputMaxLength(value){
+				let maxLength = 4;
+				if (value.length > maxLength)  {
+					value = value.slice(0, maxLength);
+					$(event.target).val(value);
+				}
 			},
 			calculateCartPrice(product) {
 				this.$store.dispatch('updateQtyProdInCart', product)
@@ -233,6 +251,40 @@
 				node.firstChild.innerHTML = "Всего наименований: " + master.count();
 			}}, webix.ui.datafilter.summColumn);
 		},
+	}
 
+	/**
+	 * Функция устанавливает максимальное число символов для Input type="number"
+	 * @param {input} - объект Input
+	 */
+	function inputMaxLength(input) {
+		if (input) {
+			let maxLength = 3;
+			let field = $(input);
+			let val    = input.value;
+
+			if(val.length > maxLength) {
+				val = val.slice(0, maxLength);
+				field.val(val);
+			}
+		}
+	}
+
+	// Сортировка по цене
+	function priceSort(a,b) {
+		a = parseFloat(a.price);
+		b = parseFloat(b.price);
+		if (a === b) return 0;
+		if (a > b)   return 1;
+		if (a < b)   return -1;
+	}
+
+	// Сортировка по сумме
+	function allPriceSort(a,b) {
+		a = parseFloat(a.allPrice);
+		b = parseFloat(b.allPrice);
+		if (a === b) return 0;
+		if (a > b)   return 1;
+		if (a < b)   return -1;
 	}
 </script>

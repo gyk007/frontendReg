@@ -39,11 +39,15 @@
 			</div>
 
 
-			<div class="header__user">
+			<div  v-if='shop'
+				class="header__user"
+				v-tooltip.bottom-left = " 'АДРЕС: '  + shop.official.address +
+										'</br>ИНН: ' + shop.net.official.taxcode +
+										'</br>КПП: ' + shop.official.taxreasoncode">
 					<div class="header__user--holder">
 
 							<div class="header__user-container">
-									<div class="header__user-name" v-if='shop'>
+									<div class="header__user-name">
 										<div class='link' @click='showSelectShopWnd'>{{shop.official.name}}</div>
 									</div>
 									<div class="header__user-logo">
@@ -74,6 +78,7 @@
 				return this.$store.getters.user
 			},
 			shop() {
+				console.log(this.$store.getters.shop)
 				return this.$store.getters.shop
 			}
 		},
