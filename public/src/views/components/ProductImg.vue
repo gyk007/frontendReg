@@ -32,7 +32,16 @@
 		}
 	},
 	mounted: function() {
-
-	}
+		// По нажатию кнопки ESC закрываем окно,
+		// выполняем метод close()
+		let	$this = this;
+		document.onkeyup = function (e) {
+			e = e || window.event;
+			if (e.keyCode === 27) {
+				$this.close();
+			}
+			return false;
+		}
+	},
   }
 </script>

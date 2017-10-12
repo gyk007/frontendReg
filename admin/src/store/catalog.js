@@ -27,6 +27,7 @@ const store = new Vuex.Store({
 		shopList        : undefined, // торговые точки длч выбранного клиента
 		showShopsWnd    : false,     // показать окно торговых точек
 		merchant        : undefined, // торговый пердставитель сети
+		selectedProduct : undefined, // выбранный товра (в каталоге или заказе)
 		showMerchantWnd : false,     // показать окно торговой точки
 		showRegWnd      : false,     // показать окно подтверждения сброса пароля
 		statNet         : undefined, // статистика сетей
@@ -37,6 +38,7 @@ const store = new Vuex.Store({
 		isSendMail      : false,     // указывает отправлено ли письмо, если true - письмо отправлено
 		allOrderStatus  : undefined, // Все статусы заказа
 		showProductTbl  : false,     // Показать окно со списком продуктов, для добавления в категорию
+		showImageWnd    : false,     // true - показать окно с картинкой товра
 		showNetWnd      : false,     // Показать окно c данными сети
 		ordersFilter    : {          // Фильтры заказа
 			dateTo    : moment(),                       // Начльная установка Даты До (сегодня)
@@ -133,8 +135,14 @@ const store = new Vuex.Store({
 		showProductTbl(state){
 			return state.showProductTbl
 		},
+		showImageWnd(state){
+			return state.showImageWnd
+		},
 		showNetWnd(state){
 			return state.showNetWnd
+		},
+		selectedProduct(state){
+			return state.selectedProduct
 		},
 	},
 	mutations: {

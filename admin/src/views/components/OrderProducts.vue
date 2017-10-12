@@ -11,7 +11,12 @@
 		<div class="product__row js-t-row"  v-for='el in order.products.elements'>
 			<div class="product__cell product__name">
 				<div class="product__name-img">
-					<img src="pic/batle.png" alt="product">
+					<img v-if='!el.product.img_small'src="pic/batle.png" :alt="el.product.name">
+					<img class='real_img'
+						v-if='el.product.img_small'
+						:src='el.product.img_small'
+						:alt="el.product.name"
+						@click="showImg(el.product)">
 				</div>
 				<div class="product__name-title">
 					{{el.product.name}}
@@ -36,16 +41,35 @@
 
 	</div>
 </div>
+<ProductImg v-if='showImageWnd && selectedProduct.img_big'></ProductImg>
 </section>
 </template>
 
 <script>
-	import store from '../../store/catalog.js'
-	import $     from 'jquery'
+	import store      from '../../store/catalog.js'
+	import $          from 'jquery'
+	import conf       from '../../conf/conf.js'
+	import ProductImg from './ProductImg.vue'
 
 	export default {
+		components: {ProductImg},
+		data() {
+			return {
+				// Url к картинкам
+				imgUrl : conf.url.img,
+			}
+		},
 		computed: {
 			order() {
+				if (this.$store.getters.order.products.elements.length)
+					this.$store.getters.order.products.elements.forEach(key => {
+						if (key.product.img_small) {
+							key.product.img_small = this.$data.imgUrl +"small/"+ key.product.img_small
+						}
+						if (key.product.img_big) {
+							key.product.img_big = this.$data.imgUrl +"big/"+ key.product.img_big
+						}
+					})
 				return this.$store.getters.order
 			},
 			orderPrice() {
@@ -55,7 +79,22 @@
 						orderPrice += parseFloat((key.price * key.qty).toFixed(2))
 					})
 				return orderPrice
+			},
+			showImageWnd(){
+				return this.$store.getters.showImageWnd
+			},
+			selectedProduct(){
+				return this.$store.getters.selectedProduct
 			}
-		}
+		},
+		methods: {
+			showImg(product) {
+				this.$store.commit('set', {type: 'selectedProduct', items: product})
+				this.$store.commit('set', {type: 'showImageWnd', items: true})
+			},
+		},
+		created: function() {
+			this.$store.commit('set', {type: 'selectedProduct', items: undefined})
+		},
 	}
 </script>

@@ -602,3 +602,10 @@ select[readonly],
 	margin: 0 auto;
 	cursor: pointer;
 }
+
+.show_img{
+	display: block;
+	margin: 0 auto;
+	max-height: 900px;
+	max-width: 1200px;
+}

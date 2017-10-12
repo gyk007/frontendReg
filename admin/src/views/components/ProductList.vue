@@ -67,7 +67,11 @@
 							<div class="shop__cell shop__cell-name">
 								<div class="shop__cell-img">
 									<img v-if='!product.img_small'src="pic/batle.png" :alt="product.name">
-									<img  class='real_img' v-if='product.img_small' :src='imgUrl +"small/"+ product.img_small'  :alt="product.name">
+									<img class='real_img'
+										v-if='product.img_small'
+										:src='product.img_small'
+										:alt="product.name"
+										@click="showImg(product)">
 								</div>
 								<div class="shop__cell-main">
 									<span class="shop__cell-n">{{product.name}}</span>
@@ -99,15 +103,18 @@
 		<div class='product_loader fixed-loader' v-if='loader'><img src="pic/loading.gif"></div>
 		<div class='text-no-category' v-if='!productList && !loader && idActiveCat'>В категории нет товаров</div>
 		<div class='text-no-category' v-if='!idActiveCat && !loade'>Выберите категорию</div>
+		<ProductImg v-if='showImageWnd && selectedProduct.img_big'></ProductImg>
 	</section>
 </template>
 
 <script>
-	import store from '../../store/catalog.js'
-	import $     from "jquery"
-	import conf  from '../../conf/conf.js'
+	import store      from '../../store/catalog.js'
+	import $          from "jquery"
+	import conf       from '../../conf/conf.js'
+	import ProductImg from './ProductImg.vue'
 
 	export default {
+		components: {ProductImg},
 		data() {
 			return {
 				// Название сортировки, в зависимости от названия
@@ -124,10 +131,30 @@
 				return this.$store.getters.idActiveCat
 			},
 			productList() {
+				if (this.$store.getters.productList) {
+					this.$store.getters.productList.forEach(key => {
+						if (key.img_small && !key.firstRender) {
+							key.img_small = this.$data.imgUrl +"small/"+ key.img_small
+						}
+						if (key.img_big && !key.firstRender) {
+							key.img_big = this.$data.imgUrl +"big/"+ key.img_big
+						}
+						// Указываем что это превый рендер
+						// Так как при сортировке происходит повторый рендер
+						// и картинки ломаются
+						key.firstRender = true;
+					})
+				}
 				return this.$store.getters.productList
 			},
 			loader() {
 				return this.$store.getters.loader
+			},
+			showImageWnd(){
+				return this.$store.getters.showImageWnd
+			},
+			selectedProduct(){
+				return this.$store.getters.selectedProduct
 			}
 		},
 		methods: {
@@ -137,6 +164,10 @@
 					.siblings()
 					.removeClass('active')
 				this.$store.dispatch('selectProduct', product)
+			},
+			showImg(product) {
+				this.$store.commit('set', {type: 'selectedProduct', items: product})
+				this.$store.commit('set', {type: 'showImageWnd', items: true})
 			},
 			deleteProduct(idProduct) {
 				console.log(idProduct);

@@ -90,7 +90,6 @@
 		<div class='text-no-category'      v-if='!productList && !loader && idActiveCat'>В категории нет товаров</div>
 		<div class='text-no-category'      v-if='!idActiveCat && !loader && !productList'>Выберите категорию</div>
 		<div class='text-no-category-long' v-if='!isOffers    && selectOffer && !loader'>В данной категории у Вас нет индивидуальных предложений </div>
-
 		<ProductImg v-if='showImageWnd && selectedProduct.img_big'></ProductImg>
 	</section>
 </template>
