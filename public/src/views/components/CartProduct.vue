@@ -79,22 +79,28 @@
 		<!--
 			WEBIX
 		-->
-		<webix-ui :config='table' v-model='cartProducts' />
+		<webix-ui  :config='table' v-model='cartProducts' />
+		<ProductImg v-if='showImageWnd && selectedCartProduct.img_big'></ProductImg>
 	</div>
 </section>
 </template>
 
 <script>
-	import store from '../../store/catalog.js'
-	import $     from 'jquery'
+	import store      from '../../store/catalog.js'
+	import $          from 'jquery'
+	import conf       from '../../conf/conf.js'
+	import ProductImg from './ProductImg.vue'
 	import 'webix'
 	import 'vue-webix'
 
 	export default {
-
+		components: {ProductImg},
 		computed: {
 			cart() {
 				return this.$store.getters.cart
+			},
+			showImageWnd() {
+				return this.$store.getters.showImageWnd
 			},
 			selectedCartProduct () {
 				return this.$store.getters.selectedCartProduct
@@ -106,7 +112,8 @@
 						let product       = {};
 
 						product.id        = key.id_product;
-						product.img       = key.img_small ? key.img_small : 'pic/batle.png';
+						product.img       = key.product.img_small ? conf.url.img + 'small/' +  key.product.img_small : 'pic/batle.png';
+						product.img_big   = key.product.img_big ? conf.url.img + 'big/' + key.product.img_big : undefined;
 						product.name      = '<div class="webix_cell_midle" style="text-align: left"><span style="white-space: pre-wrap; font-size: 15px">' + key.product.name + '</span></div>';
 						product.qty       = key.quantity;
 						product.price     = parseFloat(key.product.price).toFixed(2);
@@ -135,10 +142,10 @@
 					editable:true,
 					columns:[
 						{
-							template  :"<div class='webix_cell_midle'><img src='#img#' width='50' height='50'></div>",
+							template  :"<img id='show_image' class='real_img' src='#img#' height='75'>",
 							header    : "",
 							css       : 'cell_img',
-							width     : 50,
+							width     : 75,
 							footer    : {content:"countColumn", colspan: 7}
 						},
 						{
@@ -211,6 +218,13 @@
 						onDataUpdate: function(id, product){
 							$this.calculateCartPrice(product);
 						},
+						onItemClick: function(id, e, node) {
+							$this.$store.commit('set', {type: 'selectedCartProduct', items: this.getItem(id)})
+							// Показать картинку
+							if (e.target.id == 'show_image') {
+								$this.$store.commit('set', {type: 'showImageWnd', items: true})
+							}
+						},
 						onKeyPress: function(code, e) {
 							if (e.target.id == 'qty') {
 								// В inpute выставляем максимальное число символов = 4
@@ -245,6 +259,11 @@
 		},
 		created: function() {
 			this.$store.dispatch('getCart')
+
+			// Удаляем выбранный товар
+			this.$store.commit('set', {type: 'selectedProduct', items: undefined})
+			this.$store.commit('set', {type: 'selectedOrderProduct', items: undefined})
+			this.$store.commit('set', {type: 'selectedCartProduct', items: undefined})
 
 			webix.ui.datafilter.countColumn = webix.extend({
 				refresh:function(master, node, value){

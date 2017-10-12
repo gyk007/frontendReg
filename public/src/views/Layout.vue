@@ -11,7 +11,6 @@
 		<Contact v-if='contactWnd'></Contact>
 		<ExitWnd></ExitWnd>
 		<SelectShopWnd v-if='selectShopWnd'></SelectShopWnd>
-
 	</section>
 </template>
 
@@ -65,6 +64,9 @@ export default  {
 	computed: {
 		contactWnd() {
 			return this.$store.getters.contactWnd
+		},
+		showImageWnd() {
+			return this.$store.getters.showImageWnd
 		},
 		selectShopWnd() {
 			return this.$store.getters.selectShopWnd

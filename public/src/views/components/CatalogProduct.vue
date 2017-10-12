@@ -90,17 +90,21 @@
 		<div class='text-no-category'      v-if='!productList && !loader && idActiveCat'>В категории нет товаров</div>
 		<div class='text-no-category'      v-if='!idActiveCat && !loader && !productList'>Выберите категорию</div>
 		<div class='text-no-category-long' v-if='!isOffers    && selectOffer && !loader'>В данной категории у Вас нет индивидуальных предложений </div>
+
+		<ProductImg v-if='showImageWnd && selectedProduct.img_big'></ProductImg>
 	</section>
 </template>
 
 <script>
-	import store from '../../store/catalog.js'
-	import $     from 'jquery'
-	import conf  from '../../conf/conf.js'
+	import store      from '../../store/catalog.js'
+	import $          from 'jquery'
+	import conf       from '../../conf/conf.js'
+	import ProductImg from './ProductImg.vue'
 	import 'webix'
 	import 'vue-webix'
 
 	export default {
+		components: {ProductImg},
 		data() {
 			return {
 				// указывает на вкладку с индивидуальными предложениями
@@ -112,6 +116,9 @@
 		computed: {
 			category() {
 				return this.$store.getters.category
+			},
+			showImageWnd() {
+				return this.$store.getters.showImageWnd
 			},
 			selectedProduct () {
 				return this.$store.getters.selectedProduct
@@ -126,9 +133,10 @@
 						product.id    = prod.id;
 						product.name  = '<div class="webix_cell_midle" style="text-align: left"><span style="white-space: pre-wrap; font-size: 15px">' + prod.name + '</span></div>';
 
-						product.img   = prod.img_small ? conf.url.img + 'small/' + prod.img_small : 'pic/batle.png';
-						product.price = parseFloat(prod.price).toFixed(2);
-						product.offer = prod.offer ?
+						product.img     = prod.img_small ? conf.url.img + 'small/' + prod.img_small : 'pic/batle.png';
+						product.img_big = prod.img_big ? conf.url.img + 'big/' + prod.img_big : undefined;
+						product.price   = parseFloat(prod.price).toFixed(2);
+						product.offer   = prod.offer ?
 										'<div class="webix_cell_midle"><span class="js-benefit offer" style="font-size: 15px">' + prod.offer + '%</span></div>'
 										: '';
 
@@ -194,7 +202,7 @@
 					editable:true,
 					columns:[
 						{
-							template  :"<img class='real_img' src='#img#' height='75'>",
+							template  :"<img id='show_image' class='real_img' src='#img#' height='75'>",
 							header    : "",
 							css       : 'cell_img',
 							width     : 75,
@@ -283,14 +291,19 @@
 							$this.$store.commit('set', {type: 'selectedProduct', items: undefined})
 						},
 						onItemClick: function(id, e, node) {
+							$this.$store.commit('set', {type: 'selectedProduct', items: this.getItem(id)})
+							// Добавить в корзину
 							if (e.target.id == 'add_to_cart') {
-								$this.$store.commit('set', {type: 'selectedProduct', items: this.getItem(id)})
 								// Так как это работает асинхронно
 								// Необходимо усановить таймер
 								setTimeout(function(){
 									$this.addToCart($this.selectedProduct);
-								},100);
+								},200);
+							}
 
+							// Показать картинку
+							if (e.target.id == 'show_image') {
+								$this.$store.commit('set', {type: 'showImageWnd', items: true})
 							}
 						},
 						onDataUpdate: function(id, product){
@@ -346,6 +359,10 @@
 			this.$store.commit('set', {type: 'productList', items: undefined})
 			// Вкладка Все
 			this.$store.commit('set', {type: 'selectOffer', items: false})
+			// Удаляем выбранный товар
+			this.$store.commit('set', {type: 'selectedProduct', items: undefined})
+			this.$store.commit('set', {type: 'selectedOrderProduct', items: undefined})
+			this.$store.commit('set', {type: 'selectedCartProduct', items: undefined})
 
 			webix.ui.datafilter.countColumn = webix.extend({
 				refresh:function(master, node, value){

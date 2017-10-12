@@ -35,8 +35,10 @@ const catalogStore = new Vuex.Store({
 		sendMailLoader      : false,     // отвечает за лоадер при отправке почты , если true - лодер включен
 		selectShopWnd       : false,     // true - показать окно "Выбора торговой точки"
 		showDelCartProdWnd  : false,     // true - показать окно удаления товара из корзины
+		showImageWnd        : false,     // true - показать окно с картинкой товра
 		selectedCartProduct : undefined, // товар который выбран в корзине
 		selectedProduct     : undefined, // товар который выбран в каталоге
+		selectedOrderProduct: undefined, // товар который выбран в заказе
 		authError           : false,     // переменная указывает на ошибку авторизации
 		merchant            : undefined, // представитель
 		regError            : false,     // указывает на ошибку при регистрации
@@ -135,6 +137,12 @@ const catalogStore = new Vuex.Store({
 		},
 		selectedProduct(state){
 			return state.selectedProduct
+		},
+		selectedOrderProduct(state){
+			return state.selectedOrderProduct
+		},
+		showImageWnd(state){
+			return state.showImageWnd
 		},
 	},
 	mutations: {
