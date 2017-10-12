@@ -5,7 +5,8 @@ const conf = {
 		clients  : 'http://reg50.nixteam.ru/alko/admin/client/',
 		order    : 'http://reg50.nixteam.ru/alko/admin/order/',
 		// Путь к файлам
-		file    :  'http://localhost:9887/',
+		file    :  'http://localhost:9887/documents/',
+		img     :  'http://localhost:9885/product_img/',
 
 	}
 }

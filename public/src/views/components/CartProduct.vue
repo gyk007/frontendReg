@@ -106,7 +106,7 @@
 						let product       = {};
 
 						product.id        = key.id_product;
-						product.img       = key.img ? key.img : 'pic/batle.png';
+						product.img       = key.img_small ? key.img_small : 'pic/batle.png';
 						product.name      = '<div class="webix_cell_midle" style="text-align: left"><span style="white-space: pre-wrap; font-size: 15px">' + key.product.name + '</span></div>';
 						product.qty       = key.quantity;
 						product.price     = parseFloat(key.product.price).toFixed(2);

@@ -65,7 +65,10 @@
 						<div class="shop__row js-t-row normal" v-for='product in  productList' v-if='product.search'>
 
 							<div class="shop__cell shop__cell-name">
-								<div class="shop__cell-img"><img src="pic/batle.png" :alt="product.name"></div>
+								<div class="shop__cell-img">
+									<img v-if='!product.img_small'src="pic/batle.png" :alt="product.name">
+									<img  class='real_img' v-if='product.img_small' :src='imgUrl +"small/"+ product.img_small'  :alt="product.name">
+								</div>
 								<div class="shop__cell-main">
 									<span class="shop__cell-n">{{product.name}}</span>
 									<div class="js-availability-clone"></div>
@@ -102,6 +105,7 @@
 <script>
 	import store from '../../store/catalog.js'
 	import $     from "jquery"
+	import conf  from '../../conf/conf.js'
 
 	export default {
 		data() {
@@ -111,6 +115,8 @@
 				sortName  : undefined,
 				// Тип сортировки ASC|DESC
 				sortType  : undefined,
+				// Url к картинкам
+				imgUrl : conf.url.img,
 			}
 		},
 		computed: {

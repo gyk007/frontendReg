@@ -96,6 +96,7 @@
 <script>
 	import store from '../../store/catalog.js'
 	import $     from 'jquery'
+	import conf  from '../../conf/conf.js'
 	import 'webix'
 	import 'vue-webix'
 
@@ -125,7 +126,7 @@
 						product.id    = prod.id;
 						product.name  = '<div class="webix_cell_midle" style="text-align: left"><span style="white-space: pre-wrap; font-size: 15px">' + prod.name + '</span></div>';
 
-						product.img   = prod.img ? prod.img : 'pic/batle.png';
+						product.img   = prod.img_small ? conf.url.img + 'small/' + prod.img_small : 'pic/batle.png';
 						product.price = parseFloat(prod.price).toFixed(2);
 						product.offer = prod.offer ?
 										'<div class="webix_cell_midle"><span class="js-benefit offer" style="font-size: 15px">' + prod.offer + '%</span></div>'
@@ -193,10 +194,10 @@
 					editable:true,
 					columns:[
 						{
-							template  :"<div class='webix_cell_midle'><img src='#img#' width='50' height='50'></div>",
+							template  :"<img class='real_img' src='#img#' height='75'>",
 							header    : "",
 							css       : 'cell_img',
-							width     : 50,
+							width     : 75,
 							footer    : {content:"countColumn", colspan: 9}
 						},
 						{

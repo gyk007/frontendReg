@@ -7,6 +7,7 @@ const conf = {
 		client   : 'http://localhost:9888/alko/client/',
 		// Путь к файлам
 		file    :  'http://localhost:9887/',
+		img      : 'http://localhost:9885/product_img/',
 
 	}
 }

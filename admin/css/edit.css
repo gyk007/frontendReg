@@ -596,3 +596,9 @@ select[readonly],
 	height: 64px;
 	width: 100%
 }
+
+.real_img {
+	display: block !important;
+	margin: 0 auto;
+	cursor: pointer;
+}
