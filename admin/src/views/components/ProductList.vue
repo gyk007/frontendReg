@@ -231,6 +231,7 @@
 		},
 		created: function() {
 			this.$store.commit('set', {type: 'productList', items: undefined})
+			this.$store.commit('set', {type: 'selectedProduct', items: undefined})
 		},
 		mounted: function() {
 			$('.js-nav-open').click(function () {

@@ -3,11 +3,11 @@
 -->
 <template>
 	<section class="shop__data">
-		<div class="shop__data-body" :class="{'prod_width' : productList.length == 0 }" id='prod_fixed'>
-			<ul class="shop__sub-nav" style="padding-bottom:20px">
+		<div class="shop__data-body"   :class="{'prod_width' : !productList.length &&  !selectOffer}"  id='prod_fixed'>
+			<ul class="shop__sub-nav" style="padding-bottom:20px" v-if='productList.length || selectOffer'>
 				<div>
 					<li :class="{ active: !selectOffer, accent: selectOffer}"><a v-on:click="offers(false)">Все</a></li>
-					<li :class="{ active: selectOffer, accent: !selectOffer}"><a v-on:click="offers(true)">Индивидуальные предложения</a></li>
+					<li :class="{ active: selectOffer,  accent: !selectOffer}"><a v-on:click="offers(true)">Индивидуальные предложения</a></li>
 				</div>
 			</ul>
 
@@ -88,7 +88,7 @@
 		<!-- Лоадер -->
 		<div class='product_loader fixed-loader'   v-if='loader'><img src="pic/loading.gif"></div>
 		<div class='text-no-category'      v-if='!productList && !loader && idActiveCat'>В категории нет товаров</div>
-		<div class='text-no-category'      v-if='!idActiveCat && !loader && !productList'>Выберите категорию</div>
+		<div class='text-no-category'      v-if='!idActiveCat && !loader && !productList.length'>Выберите категорию</div>
 		<div class='text-no-category-long' v-if='!isOffers    && selectOffer && !loader'>В данной категории у Вас нет индивидуальных предложений </div>
 		<ProductImg v-if='showImageWnd && selectedProduct.img_big'></ProductImg>
 	</section>
@@ -200,7 +200,7 @@
 				return {
 					view    : "datatable",
 					height  : $(window).height() / 1.38,
-					width   : $(window).width() / 1.45,
+					width   : $('.shop__data-body').width(),
 					css     : 'table_cart_product',
 					footer  : true,
 					select  : true,

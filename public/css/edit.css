@@ -527,7 +527,8 @@
 }
 
 .p-card__products {
-	width: 75.7%;
+	min-width: 50%;
+	max-width: 75.7%;
 }
 
 
@@ -544,6 +545,7 @@
 
 .prod_width {
 	width: 100%;
+	box-shadow: none !important;
 }
 
 .prod_fixed {
@@ -564,14 +566,6 @@
 	max-height: 900px;
 	max-width: 1200px;
 }
-
-
-
-
-
-
-
-
 
 
 
