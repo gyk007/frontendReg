@@ -161,14 +161,14 @@
 							template:"<input type='number' aria-label='Шт.' name='qty' id='qty' min='1' max='9999' maxlength='4' value='#qty#' class='input table_input cartQty' style='width:60px;'>",
 							editor  :"inline-text",
 							sort    : "int",
-							header  : ["Шт.", {content:"textFilter"}],
+							header  : ["Шт.", {content:"textFilter" , compare:numerCompare}],
 							css     : 'product_qty_middle',
 							width   : 80,
 						},
 						{
 							id     : "price",
 							sort   : priceSort,
-							header : ["Цена <i class='rub'>a</i>&nbsp;/&nbsp;шт ", {content:"textFilter"}],
+							header : ["Цена <i class='rub'>a</i>&nbsp;/&nbsp;шт ", {content:"textFilter", compare:numerCompare}],
 							css    : 'product_price_middle',
 							width  : 110,
 							format  : function(value) {
@@ -178,7 +178,7 @@
 						{
 							id     : "allPrice",
 							sort   : allPriceSort,
-							header : ["Сумма <i class='rub'>a</i>", {content:"textFilter"}],
+							header : ["Сумма <i class='rub'>a</i>", {content:"textFilter", compare:numerCompare}],
 							css    : 'product_price_middle',
 							width  : 100,
 							format  : function(value) {
@@ -188,21 +188,21 @@
 						{
 							id     : "offer",
 							sort   : "string",
-							header : ["Скидка", {content:"textFilter"}],
+							header : "Скидка",
 							css    : 'product_price_middle',
 							width  : 90,
 						},
 						{
 							id        : "litr",
 							sort      : "string",
-							header    : ["Литраж", {content:"textFilter"}],
+							header    : ["Литраж", {content:"textFilter", compare:numerCompare}],
 							css    : 'product_price_middle',
 							width  : 80,
 						},
 						{
 							id        : "pack",
 							sort      : "string",
-							header    : ["Фасовка", {content:"textFilter"}],
+							header    : ["Фасовка", {content:"textFilter", compare:numerCompare}],
 							css    : 'product_price_middle',
 							width     : 80,
 							minWidth  : 250,
@@ -306,4 +306,91 @@
 		if (a > b)   return 1;
 		if (a < b)   return -1;
 	}
+
+
+	// Поиск по числу
+	function numerCompare(value, filter) {
+		// Указывает на условие >
+		var more = false;
+		// Указывает на условие <
+		var less = false;
+
+		// Указывает на условие >=
+		var moreEq = false;
+		// Указывает на условие <=
+		var lessEq = false;
+
+		// Удаляем проблы
+		filter = filter.replace(/\s/g, '');
+		// Меняе запятую на точку
+		filter = filter.replace(/,/g, '.');
+
+		if (filter.indexOf('>=') == 0 ) {
+			filter = filter.replace(/>=/g, '');
+			moreEq = true;
+		}
+
+		if (filter.indexOf('<=') == 0 ) {
+			filter = filter.replace(/<=/g, '');
+			lessEq = true;
+		}
+
+		if (filter.indexOf('>') == 0 ) {
+			filter = filter.replace(/>/g, '');
+			more = true;
+		}
+
+		if (filter.indexOf('<') == 0) {
+			filter = filter.replace(/</g, '');
+			less = true;
+		}
+
+
+	    filter = parseFloat(filter);
+
+
+	    if (!filter) {
+			return true;
+		}
+
+		console.log(lessEq)
+		if (moreEq) {
+	    	if (value >= filter) {
+	    		return true;
+	    	} else {
+	    		return false;
+	    	}
+	    }
+
+	    if (lessEq) {
+	    	if (value <= filter) {
+	    		return true;
+	    	} else {
+	    		return false;
+	    	}
+	    }
+
+	    if (less) {
+	    	if (value < filter) {
+	    		return true;
+	    	} else {
+	    		return false;
+	    	}
+	    }
+
+	    if (more) {
+	    	if (value > filter) {
+	    		return true;
+	    	} else {
+	    		return false;
+	    	}
+	    }
+
+    	if (value == filter) {
+    		return true;
+       	}  else {
+       		return false;
+       	}
+	}
+
 </script>

@@ -102,6 +102,14 @@
 	import 'webix'
 	import 'vue-webix'
 
+
+	var FILTERS_IN_PRODUCT_TABLE = {
+		name  : undefined,
+		pack  : undefined,
+		litr  : undefined,
+		price : undefined,
+	}
+
 	export default {
 		components: {ProductImg},
 		data() {
@@ -141,7 +149,7 @@
 
 						// Свойсвта товара
 						prod.properties.forEach(prop => {
-							if (prop.name == 'Litr') product.litr = prop.value;
+							if (prop.name == 'Litr') product.litr = parseFloat(prop.value).toFixed(2);
 							if (prop.name == 'Qty')  product.qty  = prop.value;
 							if (prop.name == 'Pack') product.pack = prop.value;
 						})
@@ -218,14 +226,14 @@
 						{
 							id     : "offer",
 							sort   : "string",
-							header : ["Скидка", {content:"textFilter"}],
+							header : "Скидка",
 							css    : 'product_price_middle',
 							width  : 90,
 						},
 						{
 							id        : "pack",
 							sort      : "string",
-							header    : ["Фасовка", {content:"textFilter"}],
+							header    : ["Фасовка", {content:"textFilter", compare:numerCompare}],
 							css       : 'product_price_middle',
 							width     : 80,
 							minWidth  : 250,
@@ -233,14 +241,17 @@
 						{
 							id     : "litr",
 							sort   : "string",
-							header : ["Емкость", {content:"textFilter"}],
+							header : ["Емкость", {content:"textFilter", compare:numerCompare}],
 							css    : 'product_price_middle',
 							width  : 80,
+							format  : function(value) {
+								if (value) return Number(value).toLocaleString('ru-RU');
+							}
 						},
 						{
 							id     : "price",
 							sort   : priceSort,
-							header : ["Цена <i class='rub'>a</i>&nbsp;/&nbsp;шт ", {content:"textFilter"}],
+							header : ["Цена <i class='rub'>a</i>&nbsp;/&nbsp;шт ", {content:"textFilter", compare:numerCompare}],
 							css    : 'product_price_middle',
 							width  : 110,
 							format  : function(value) {
@@ -266,7 +277,7 @@
 							template:"<input type='number' aria-label='Шт.' name='cartQuantity' id='cartQuantity' min='1' max='9999'value='#cartQuantity#' class='input table_input cartQty' style='width:60px;'>",
 							editor  :"inline-text",
 							sort    : "int",
-							header  : ["Шт.", {content:"textFilter"}],
+							header  : ["Шт."],
 							css     : 'product_qty_middle',
 							width   : 80,
 						},
@@ -280,6 +291,16 @@
 						},
 
 					], on:{
+						onAfterLoad: function() {
+							filterTable(this)
+						},
+						onAfterFilter: function(){
+							// Устанавливаем фильтры
+							FILTERS_IN_PRODUCT_TABLE.name  = this.getFilter("name").value;
+							FILTERS_IN_PRODUCT_TABLE.pack  = this.getFilter("pack").value;
+							FILTERS_IN_PRODUCT_TABLE.litr  = this.getFilter("litr").value;
+							FILTERS_IN_PRODUCT_TABLE.price = this.getFilter("price").value;
+						},
 						onAfterSelect: function(id, e, node){
 							$this.$data.rowId = id;
 							// Выбрали товар
@@ -314,9 +335,9 @@
 								inputMaxLength(e.target);
 							}
 
-							// По нажатию кнопки Enter добавляем товра в корзину
-							if (code == 13) {
-								$this.$store.dispatch('addToCart', $this.selectedProduct)
+							// По нажатию кнопки Enter показываем картинку
+							if (code == 13 && $this.selectedProduct.img_big) {
+								$this.$store.commit('set', {type: 'showImageWnd', items: true})
 							}
 						}
 					}
@@ -422,6 +443,123 @@
 		if (a === b) return 0;
 		if (a > b)   return 1;
 		if (a < b)   return -1;
+	}
+
+	// Поиск по числу
+	function numerCompare(value, filter) {
+		// Указывает на условие >
+		var more = false;
+		// Указывает на условие <
+		var less = false;
+
+		// Указывает на условие >=
+		var moreEq = false;
+		// Указывает на условие <=
+		var lessEq = false;
+
+		// Удаляем проблы
+		filter = filter.replace(/\s/g, '');
+		// Меняе запятую на точку
+		filter = filter.replace(/,/g, '.');
+
+		if (filter.indexOf('>=') == 0 ) {
+			filter = filter.replace(/>=/g, '');
+			moreEq = true;
+		}
+
+		if (filter.indexOf('<=') == 0 ) {
+			filter = filter.replace(/<=/g, '');
+			lessEq = true;
+		}
+
+		if (filter.indexOf('>') == 0 ) {
+			filter = filter.replace(/>/g, '');
+			more = true;
+		}
+
+		if (filter.indexOf('<') == 0) {
+			filter = filter.replace(/</g, '');
+			less = true;
+		}
+
+	    filter = parseFloat(filter);
+
+	    if (!filter) {
+			return true;
+		}
+
+		if (moreEq) {
+	    	if (value >= filter) {
+	    		return true;
+	    	} else {
+	    		return false;
+	    	}
+	    }
+
+	    if (lessEq) {
+	    	if (value <= filter) {
+	    		return true;
+	    	} else {
+	    		return false;
+	    	}
+	    }
+
+	    if (less) {
+	    	if (value < filter) {
+	    		return true;
+	    	} else {
+	    		return false;
+	    	}
+	    }
+
+	    if (more) {
+	    	if (value > filter) {
+	    		return true;
+	    	} else {
+	    		return false;
+	    	}
+	    }
+
+    	if (value == filter) {
+    		return true;
+       	}  else {
+       		return false;
+       	}
+	}
+
+	/**
+	 * Функция устанавливает максимальное число символов для Input type="number"
+	 * @param {table} - объект Таблицы
+	 */
+	function filterTable(table) {
+		table.getFilter("price").value = FILTERS_IN_PRODUCT_TABLE.price ? FILTERS_IN_PRODUCT_TABLE.price : '';
+		table.getFilter("name").value  = FILTERS_IN_PRODUCT_TABLE.name  ? FILTERS_IN_PRODUCT_TABLE.name  : '';
+		table.getFilter("pack").value  = FILTERS_IN_PRODUCT_TABLE.pack  ? FILTERS_IN_PRODUCT_TABLE.pack  : '';
+		table.getFilter("litr").value  = FILTERS_IN_PRODUCT_TABLE.litr  ? FILTERS_IN_PRODUCT_TABLE.litr  : '';
+
+		if (FILTERS_IN_PRODUCT_TABLE.price){
+			table.filter(function(obj){
+				return numerCompare(obj.price, FILTERS_IN_PRODUCT_TABLE.price);
+			})
+		}
+
+		if (FILTERS_IN_PRODUCT_TABLE.pack){
+			table.filter(function(obj){
+				return numerCompare(obj.pack, FILTERS_IN_PRODUCT_TABLE.pack);
+			})
+		}
+
+		if (FILTERS_IN_PRODUCT_TABLE.litr){
+			table.filter(function(obj){
+				return numerCompare(obj.litr, FILTERS_IN_PRODUCT_TABLE.litr);
+			})
+		}
+
+		if (FILTERS_IN_PRODUCT_TABLE.name){
+			table.filter(function(obj){
+				if (obj.name.toLowerCase().indexOf(FILTERS_IN_PRODUCT_TABLE.name.toLowerCase())!=-1) return true;
+			})
+		}
 	}
 
 </script>

@@ -92,7 +92,6 @@
 			showImg(product) {
 				this.$store.commit('set', {type: 'selectedOrderProduct', items: product})
 				this.$store.commit('set', {type: 'showImageWnd', items: true})
-
 			},
 		},
 		created: function() {
