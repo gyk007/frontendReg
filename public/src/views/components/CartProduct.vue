@@ -194,14 +194,14 @@
 						},
 						{
 							id        : "litr",
-							sort      : "string",
+							sort      : "int",
 							header    : ["Литраж", {content:"textFilter", compare:numerCompare}],
 							css    : 'product_price_middle',
 							width  : 80,
 						},
 						{
 							id        : "pack",
-							sort      : "string",
+							sort      : "int",
 							header    : ["Фасовка", {content:"textFilter", compare:numerCompare}],
 							css    : 'product_price_middle',
 							width     : 80,
