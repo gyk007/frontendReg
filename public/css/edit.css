@@ -295,6 +295,16 @@
   font-family: Helvetica, Arial, sans-serif;
 }
 
+.modal-container-files {
+  width: 800px;
+  margin: 0px auto;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+  transition: all .3s ease;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
 .modal-enter {
   opacity: 0;
 }
@@ -567,13 +577,11 @@
 	max-width: 1200px;
 }
 
-
-
-
-
-
-
-
+.no_files_text{
+	padding: 10px;
+	text-align: center;
+	font-size:  25px;
+}
 
 
 

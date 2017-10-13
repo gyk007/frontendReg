@@ -11,6 +11,7 @@
 		<Contact v-if='contactWnd'></Contact>
 		<ExitWnd></ExitWnd>
 		<SelectShopWnd v-if='selectShopWnd'></SelectShopWnd>
+		<FilesWnd  v-if='showFilesWnd'></FilesWnd>
 	</section>
 </template>
 
@@ -31,6 +32,7 @@ import Registration  from './Registration.vue'
 import SelectShopWnd from './components/SelectShopWnd.vue'
 import SelectShop    from './SelectShop.vue'
 import Contact       from './components/Contact.vue'
+import FilesWnd      from './components/FilesWnd.vue'
 import ExitWnd       from './components/ExitWnd.vue'
 import Store         from '../store/catalog.js'
 import $             from 'jquery'
@@ -60,13 +62,16 @@ var router = new VueRouter({
 export default  {
 	router: router,
 	store: Store,
-	components: {HeadareEl, Contact, ExitWnd, SelectShopWnd},
+	components: {HeadareEl, Contact, ExitWnd, SelectShopWnd, FilesWnd},
 	computed: {
 		contactWnd() {
 			return this.$store.getters.contactWnd
 		},
 		showImageWnd() {
 			return this.$store.getters.showImageWnd
+		},
+		showFilesWnd(){
+			return this.$store.getters.showFilesWnd
 		},
 		selectShopWnd() {
 			return this.$store.getters.selectShopWnd

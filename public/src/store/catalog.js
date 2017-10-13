@@ -36,6 +36,8 @@ const catalogStore = new Vuex.Store({
 		selectShopWnd       : false,     // true - показать окно "Выбора торговой точки"
 		showDelCartProdWnd  : false,     // true - показать окно удаления товара из корзины
 		showImageWnd        : false,     // true - показать окно с картинкой товра
+		showFilesWnd		: false,     // true - показать окно с файлами
+		files               : undefined, // массив с файлами организации
 		selectedCartProduct : undefined, // товар который выбран в корзине
 		selectedProduct     : undefined, // товар который выбран в каталоге
 		selectedOrderProduct: undefined, // товар который выбран в заказе
@@ -143,6 +145,12 @@ const catalogStore = new Vuex.Store({
 		},
 		showImageWnd(state){
 			return state.showImageWnd
+		},
+		showFilesWnd(state){
+			return state.showFilesWnd
+		},
+		files(state){
+			return state.files
 		},
 	},
 	mutations: {
@@ -404,6 +412,34 @@ const catalogStore = new Vuex.Store({
 					} else {
 						commit('set', {type: 'catalogTree', items: body.catalog.child})
 					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		getFiles({commit}) {
+			let arg = {
+				params:{
+					action     : 'files',
+					token      : Cookies.get('token'),
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.client, null,  arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR);
+						if (body.ERROR.AUTH)
+							document.location = '/#/auth'
+					} else {
+						console.log(body)
+						commit('set', {type: 'files',     items: body.files})
+					};
 				},
 				error => {
 					console.log(error);
