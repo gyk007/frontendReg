@@ -55,7 +55,7 @@
 					{
 						id        : "name",
 						template  : obj => {
-							let link = '<a href='+ conf.url.decFile + obj.path + '/' + obj.id + '.' + obj.ext + '>' + obj.name +'</a>'
+							let link = '<a href='+ conf.url.decFile + obj.path + '/' + obj.id + '.' + obj.ext + ' download=' + obj.name.replace(/\s/g, '') +'.' + obj.ext + '>' + obj.name +'</a>'
 							return link;
 						},
 						sort      : "string",

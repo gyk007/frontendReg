@@ -18,8 +18,10 @@
 					<li><router-link to="/orders"  active-class='active'>Заказы</router-link></li>
 					<li><router-link to="/catalog" active-class='active'>Каталог</router-link></li>
 					<li><a style="cursor:pointer" @click='showContactWnd'>Обратная связь</a></li>
-					<li><a style="cursor:pointer" @click='showFiles'>Файлы</a></li>
+					<li><a style="cursor:pointer" @click='showFiles'>Декларации</a></li>
 					<li><a data-fancybox data-src="#popup__exit"    href="javascript:;">Выход</a></li>
+					<li v-if='shop' style='padding-left:45px'>ИНН: {{shop.net.official.taxcode}}</li>
+					<li v-if='shop'>КПП: {{shop.official.taxreasoncode}} </li>
 				</ul>
 			</nav>
 
@@ -42,9 +44,7 @@
 
 			<div  v-if='shop'
 				class="header__user"
-				v-tooltip.bottom-left = " 'АДРЕС: '  + shop.official.address +
-										'</br>ИНН: ' + shop.net.official.taxcode +
-										'</br>КПП: ' + shop.official.taxreasoncode">
+				v-tooltip.bottom-left = " 'АДРЕС: '  + shop.official.address">
 					<div class="header__user--holder">
 
 							<div class="header__user-container">
