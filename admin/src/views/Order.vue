@@ -10,8 +10,8 @@
 
 		<div class="a-order__balance">
 			<div class="a-order__balance-txt">Баланс</div>
-			<div class="a-order__balance-sum negative" v-if='order.receivables'>{{order.receivables}}&nbsp;<i class="rub">a</i></div>
-			<div class="a-order__balance-sum negative" v-if='!order.receivables'>Обрабатывается</div>
+			<div class="a-order__balance-sum negative" v-if='order.debt'>{{order.debt}}&nbsp;<i class="rub">a</i></div>
+			<div class="a-order__balance-sum negative" v-if='!order.debt'>Обрабатывается</div>
 		</div>
 
 	</div>
