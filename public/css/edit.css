@@ -584,14 +584,14 @@
 	font-size:  25px;
 }
 
+.header__user--holder {
+    width: 300px;
+}
 
-
-
-
-
-
-
-
+.header__user--holder .link {
+    height: 40px;
+    overflow: hidden;
+}
 
 
 /*Мобилная версия*/
