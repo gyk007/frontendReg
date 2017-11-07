@@ -4,42 +4,44 @@ import VueResource from 'vue-resource'
 import Conf        from '../conf/conf.js'
 import moment      from 'moment'
 import 'moment/locale/ru'
+import 'webix'
 
 Vue.use(Vuex)
 Vue.use(VueResource)
 
 const store = new Vuex.Store({
 	state: {
-		catalogTree     : undefined, // все категории (дерево категорий)
-		productList     : undefined, // Продукты в категории
-		category        : undefined, // выбранная категория
-		product         : undefined, // выбранный продукт
-		idActiveCat     : undefined, // id выбранной категории
-		netList         : undefined, // список сетей
-		net             : undefined, // выбранная сеть
-		shop            : undefined, // выбранный магазин
-		order           : undefined, // выбранный заказ
-		orders          : undefined, // все заказы
-		documents       : undefined, // документы в заказе
-		allProducts     : undefined, // Все продукты, для добавления и удаления из категории
-		loader          : false,     // отвечает за лоадер, если true - лодер включен
-		loaderNetList   : false,     // отвечает за лоадер для списка организаций
-		shopList        : undefined, // торговые точки длч выбранного клиента
-		showShopsWnd    : false,     // показать окно торговых точек
-		merchant        : undefined, // торговый пердставитель сети
-		selectedProduct : undefined, // выбранный товра (в каталоге или заказе)
-		showMerchantWnd : false,     // показать окно торговой точки
-		showRegWnd      : false,     // показать окно подтверждения сброса пароля
-		statNet         : undefined, // статистика сетей
-		statShop        : undefined, // статистика торговых точек
-		statProduct     : undefined, // статистика товаров
-		error           : undefined, // в переменную записываем ошибку
-		sendMailLoader  : false,     // отвечает за лоадер при отправке почты , если true - лодер включен
-		isSendMail      : false,     // указывает отправлено ли письмо, если true - письмо отправлено
-		allOrderStatus  : undefined, // Все статусы заказа
-		showProductTbl  : false,     // Показать окно со списком продуктов, для добавления в категорию
-		showImageWnd    : false,     // true - показать окно с картинкой товра
-		showNetWnd      : false,     // Показать окно c данными сети
+		catalogTree            : undefined, // все категории (дерево категорий)
+		productList            : undefined, // Продукты в категории
+		category               : undefined, // выбранная категория
+		product                : undefined, // выбранный продукт
+		idActiveCat            : undefined, // id выбранной категории
+		netList                : undefined, // список сетей
+		net                    : undefined, // выбранная сеть
+		shop                   : undefined, // выбранный магазин
+		order                  : undefined, // выбранный заказ
+		orders                 : undefined, // все заказы
+		documents              : undefined, // документы в заказе
+		allProducts            : undefined, // Все продукты, для добавления и удаления из категории
+		loader                 : false,     // отвечает за лоадер, если true - лодер включен
+		loaderNetList          : false,     // отвечает за лоадер для списка организаций
+		shopList               : undefined, // торговые точки длч выбранного клиента
+		showShopsWnd           : false,     // показать окно торговых точек
+		merchant               : undefined, // торговый пердставитель сети
+		selectedProduct        : undefined, // выбранный товра (в каталоге или заказе)
+		showMerchantWnd        : false,     // показать окно торговой точки
+		showRegWnd             : false,     // показать окно подтверждения сброса пароля
+		statNet                : undefined, // статистика сетей
+		statShop               : undefined, // статистика торговых точек
+		statProduct            : undefined, // статистика товаров
+		error                  : undefined, // в переменную записываем ошибку
+		sendMailLoader         : false,     // отвечает за лоадер при отправке почты , если true - лодер включен
+		isSendMail             : false,     // указывает отправлено ли письмо, если true - письмо отправлено
+		allOrderStatus         : undefined, // Все статусы заказа
+		showProductTbl         : false,     // Показать окно со списком продуктов, для добавления в категорию
+		showImageWnd           : false,     // true - показать окно с картинкой товра
+		showNetWnd             : false,     // Показать окно c данными сети
+		showDeleteMerchanttWnd : false,     // Показать окно для удалени клиента
 		ordersFilter    : {          // Фильтры заказа
 			dateTo    : moment(),                       // Начльная установка Даты До (сегодня)
 			dateFrom  : moment().subtract(1, 'months'), // Начальная установка Даты От (месяц назад)
@@ -143,6 +145,9 @@ const store = new Vuex.Store({
 		},
 		selectedProduct(state){
 			return state.selectedProduct
+		},
+		showDeleteMerchanttWnd(state){
+			return state.showDeleteMerchanttWnd
 		},
 	},
 	mutations: {
@@ -268,6 +273,42 @@ const store = new Vuex.Store({
 				}
 			)
 		},
+		/**
+		 * Удалить представителя
+		 * @param {idMerchant} - id Предтавителя
+		 */
+		deleteMerchant({state, commit}, idMerchant) {
+			console.log(idMerchant);
+			let arg = {
+				params:{
+					id_merchant :  idMerchant,
+					action      : 'delete_merchant'
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.clients, null,  arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						['merchant_name', 'merchant_phone', 'merchant_email'].forEach(key => {
+							state.net[key] = '-';
+						});
+						$$('NetListDt').unselectAll();
+						commit('set', {type: 'showDeleteMerchanttWnd', items: false})
+						commit('set', {type: 'net', items: undefined})
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
 		deleteProdInCat({state, commit}, idProd) {
 			let arg = {
 				params:{
@@ -314,8 +355,7 @@ const store = new Vuex.Store({
 						commit('set', {type: 'error', items: body.ERROR})
 					} else {
 						commit('set', {type: 'error', items: undefined})
-						commit('relodClientList');
-						commit('set', {type: 'client', items: undefined})
+						commit('set', {type: 'net', items: undefined})
 					};
 				},
 				error => {

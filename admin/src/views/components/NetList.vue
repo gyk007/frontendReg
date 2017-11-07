@@ -50,6 +50,9 @@
 
 	export default {
 		computed: {
+			net() {
+				return this.$store.getters.net
+			},
 			netList() {
 				return this.$store.getters.netList
 			},
@@ -66,6 +69,7 @@
 			table(){
 				let $this = this;
 				return {
+					id      : "NetListDt",
 					view    : "datatable",
 					height  : $(window).height() / 1.4,
 					width   : $('.b-catalog__container').width(),
@@ -91,6 +95,13 @@
 							id     : "merchant_phone",
 							sort   : "string",
 							header : ["Телефон", {content:"textFilter"}],
+							css    : 'product_tbl_row',
+							width  : 200,
+						},
+						{
+							id     : "merchant_email",
+							sort   : "string",
+							header : ["Email", {content:"textFilter"}],
 							css    : 'product_tbl_row',
 							width  : 200,
 						},

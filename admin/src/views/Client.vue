@@ -13,6 +13,9 @@
 			<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if='net'>
 				<div class="btn btn btn--edit" @click="netWnd">Просмотр</div>
 			</div>
+			<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if='net && net.merchant_email != "-"'>
+				<div class="btn btn btn--edit"   style='background-color: #f48c42; color: #FFF' @click="deleteMerchant">Удалить представителя</div>
+			</div>
 		</div>
     </div>
 	<NetList></NetList>
@@ -32,26 +35,30 @@
 	    :next-class="'page-item'">
 	</paginate> -->
 	<div class='clear'></div>
-	<Net         v-if='showNetWnd'></Net>
-	<ShopsWnd    v-if='showShopsWnd'></ShopsWnd>
-	<MerchantWnd v-if='showMerchantWnd'></MerchantWnd>
+	<!-- Компоненты -->
+	<Net               v-if='showNetWnd'></Net>
+	<ShopsWnd          v-if='showShopsWnd'></ShopsWnd>
+	<MerchantWnd       v-if='showMerchantWnd'></MerchantWnd>
+	<MerchantWnd       v-if='showMerchantWnd'></MerchantWnd>
+	<DeleteMerchantWnd v-if='showDeleteMerchanttWnd'></DeleteMerchantWnd>
 
 </section>
 </template>
 
 <script>
 
-import NetList       from './components/NetList.vue'
-import Net           from './components/Net.vue'
-import ShopsWnd      from './components/ShopsWnd.vue'
-import MerchantWnd   from './components/MerchantWnd.vue'
-import store         from '../store/catalog.js'
-import Paginate      from 'vuejs-paginate'
-import $             from 'jquery'
+import NetList             from './components/NetList.vue'
+import Net                 from './components/Net.vue'
+import ShopsWnd            from './components/ShopsWnd.vue'
+import MerchantWnd         from './components/MerchantWnd.vue'
+import DeleteMerchantWnd   from './components/DeleteMerchantWnd.vue'
+import store               from '../store/catalog.js'
+import Paginate            from 'vuejs-paginate'
+import $                   from 'jquery'
 
 export default {
 	name: 'users',
-	components: {NetList, Net, ShopsWnd, MerchantWnd},
+	components: {NetList, Net, ShopsWnd, MerchantWnd, DeleteMerchantWnd},
 	store: store,
 	computed: {
 		net() {
@@ -72,6 +79,9 @@ export default {
 		showNetWnd() {
 			return this.$store.getters.showNetWnd
 		},
+		showDeleteMerchanttWnd(){
+			return this.$store.getters.showDeleteMerchanttWnd
+		}
 	},
 	methods: {
 		shopsWnd(){
@@ -83,6 +93,9 @@ export default {
 		netWnd(){
 			this.$store.commit('set', {type: 'showNetWnd', items: true})
 		},
+		deleteMerchant(){
+			this.$store.commit('set', {type: 'showDeleteMerchanttWnd', items: true})
+		}
 	},
 	created: function() {
 		this.$store.commit('set', {type: 'loader',  items: undefined})
