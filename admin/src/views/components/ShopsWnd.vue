@@ -41,8 +41,8 @@
 							<button
 								v-if  ='idSelectedShop == shop.id'
 								class ="btn btn--edit"
-								style ='width:130px; background-color: #00acc1; color: #fff; margin-left: 15px; font-size: 13px'
-								@click="merchantWnd">Представитель</button>
+								style ='width:100px; background-color: #00acc1; color: #fff; margin-left: 15px; font-size: 13px'
+								@click="merchantWnd">Менеджер</button>
 						</div>
 					</div>
 				</div>

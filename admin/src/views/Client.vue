@@ -8,7 +8,7 @@
 			</div>
 
 			<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if='net'>
-				<div class="btn btn btn--edit" @click="merchantWnd">Представитель</div>
+				<div class="btn btn btn--edit" @click="merchantWnd">Менеджер</div>
 			</div>
 			<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if='net'>
 				<div class="btn btn btn--edit" @click="netWnd">Просмотр</div>

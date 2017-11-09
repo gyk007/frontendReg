@@ -4,7 +4,7 @@
 			<div class="modal-wrapper">
 			<div class='modal-close' @click="close"><img src="img/close.png" alt="Закрыть"></div>
 				<div class="modal-container-merchant">
-				<div class="modal__hdr">Представитель</div>
+				<div class="modal__hdr">Менеджер</div>
 
 				<div class="popup__category-form client_form" v-if='merchant'>
 
