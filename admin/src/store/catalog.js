@@ -292,6 +292,10 @@ const store = new Vuex.Store({
 						commit('set', {type: 'showRegWnd',      items: false})
 						// Закрываем окно предсавителя
 						commit('set', {type: 'showMerchantWnd', items: false})
+						// Добаляем представителя в выбранный магазин
+						state.shop.merchant.name  = netAndMerchant.merchant.name;
+						state.shop.merchant.email = netAndMerchant.merchant.email;
+						state.shop.merchant.phone = netAndMerchant.merchant.phone;
 
 						// Убираем выделение в таблице Клиенты
 						commit('set', {type: 'shop', items: undefined})
@@ -383,9 +387,15 @@ const store = new Vuex.Store({
 						console.log(body.ERROR)
 						commit('set', {type: 'error', items: body.ERROR})
 					} else {
-						['merchant_name', 'merchant_phone', 'merchant_email'].forEach(key => {
-							state.net[key] = '-';
-						});
+						if (state.shop) {
+							['name', 'phone', 'email'].forEach(key => {
+								state.shop.merchant[key] = undefined;
+							});
+						} else {
+							['merchant_name', 'merchant_phone', 'merchant_email'].forEach(key => {
+								state.net[key] = '-';
+							});
+						}
 						$$('NetListDt').unselectAll();
 						commit('set', {type: 'showDeleteMerchanttWnd', items: false})
 						commit('set', {type: 'net', items: undefined})
