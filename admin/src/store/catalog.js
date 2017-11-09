@@ -17,8 +17,8 @@ const store = new Vuex.Store({
 		product                : undefined, // выбранный продукт
 		idActiveCat            : undefined, // id выбранной категории
 		netList                : undefined, // список сетей
-		net                    : undefined, // выбранная сеть
-		shop                   : undefined, // выбранный магазин
+		net                    : undefined, // выбранная сеть  ( выбераем ее о вкладке Клиенты)
+		shop                   : undefined, // выбранный магазин ( выбераем его во вкладке Клиент, при нажатии на кнопку Торговые точки)
 		order                  : undefined, // выбранный заказ
 		orders                 : undefined, // все заказы
 		documents              : undefined, // документы в заказе
@@ -28,6 +28,7 @@ const store = new Vuex.Store({
 		shopList               : undefined, // торговые точки длч выбранного клиента
 		showShopsWnd           : false,     // показать окно торговых точек
 		merchant               : undefined, // торговый пердставитель сети
+		merchantAlreadyReg     : undefined, // торговый пердставитель сети, который ужк зарегестрирован. Получаем его при регистрации нового представителя, когда такой емаил уже исспользует другой представитель
 		selectedProduct        : undefined, // выбранный товра (в каталоге или заказе)
 		showMerchantWnd        : false,     // показать окно торговой точки
 		showRegWnd             : false,     // показать окно подтверждения сброса пароля
@@ -149,6 +150,9 @@ const store = new Vuex.Store({
 		showDeleteMerchanttWnd(state){
 			return state.showDeleteMerchanttWnd
 		},
+		merchantAlreadyReg(state) {
+			return state.merchantAlreadyReg
+		}
 	},
 	mutations: {
 		set(state, {type, items}) {
@@ -211,6 +215,87 @@ const store = new Vuex.Store({
 					} else {
 						commit('set', {type: 'error', items: undefined})
 						commit('relodCatalogTree')
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		/**
+		 * Добавить для сети существующего представителя
+		 * @param {netAndMerchant} - объект содержит net - объект сети, merchant - объект менеджера
+		 */
+		addMerchantToNet({state, commit}, netAndMerchant) {
+			let arg = {
+				params:{
+					id_merchant : netAndMerchant.merchant.id,
+					id_net      : netAndMerchant.net.id,
+					action      : 'add_merchant_to_net'
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.clients, null,  arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						// Закрываем текущее окно
+						commit('set', {type: 'showRegWnd',      items: false})
+						// Закрываем окно предсавителя
+						commit('set', {type: 'showMerchantWnd', items: false})
+						// Добаляем представителя в выбранную организаци
+						state.net.merchant_name  = netAndMerchant.merchant.name;
+						state.net.merchant_email = netAndMerchant.merchant.email;
+						state.net.merchant_phone = netAndMerchant.merchant.phone;
+						// Убираем выделение в таблице Клиенты
+						commit('set', {type: 'net', items: undefined})
+						$$('NetListDt').unselectAll();
+						commit('set', {type: 'merchantAlreadyReg', items: undefined})
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+
+		},
+		/**
+		 * Добавить для сети существующего представителя
+		 * @param {addMerchantToShop} - объект содержит shop - объект магазина, merchant - объект менеджера
+		 */
+		addMerchantToShop({state, commit}, netAndMerchant) {
+			let arg = {
+				params:{
+					id_merchant : netAndMerchant.merchant.id,
+					id_shop     : netAndMerchant.shop.id,
+					action      : 'add_merchant_to_shop'
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.clients, null,  arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						// Закрываем текущее окно
+						commit('set', {type: 'showRegWnd',      items: false})
+						// Закрываем окно предсавителя
+						commit('set', {type: 'showMerchantWnd', items: false})
+
+						// Убираем выделение в таблице Клиенты
+						commit('set', {type: 'shop', items: undefined})
+						commit('set', {type: 'merchantAlreadyReg', items: undefined})
 					}
 				},
 				error => {
@@ -282,6 +367,8 @@ const store = new Vuex.Store({
 			let arg = {
 				params:{
 					id_merchant :  idMerchant,
+					id_shop     :  state.shop ? state.shop.id : undefined,
+					id_net      :  state.net.id,
 					action      : 'delete_merchant'
 				},
 				headers: {
@@ -835,7 +922,9 @@ const store = new Vuex.Store({
 				params:{
 					action      : 'registration',
 					email       : email,
-					id_merchant : state.merchant.id
+					id_merchant : state.merchant.id,
+					id_net      : state.net.id,
+					id_shop     : state.shop ? state.shop.id : undefined,
 				},
 				headers: {
 					'Content-Type': 'text/plain'
@@ -851,12 +940,17 @@ const store = new Vuex.Store({
 						commit('set', {type: 'sendMailLoader', items: false})
 					} else {
 						if (body.merchant) {
-							commit('set', {type: 'error', items: body.merchant})
-							commit('set', {type: 'sendMailLoader', items: false})
+							commit('set', {type: 'merchantAlreadyReg', items: body.merchant})
+							commit('set', {type: 'sendMailLoader',     items: false})
 						} else {
-							commit('set', {type: 'error', items: undefined})
-							commit('set', {type: 'sendMailLoader', items: false})
-							commit('set', {type: 'isSendMail', items: true})
+							// Добавляем емейл в выбранную сеть
+							state.net.merchant_email = email;
+							commit('set', {type: 'merchantAlreadyReg', items: undefined})
+							commit('set', {type: 'sendMailLoader',     items: false})
+							commit('set', {type: 'isSendMail',         items: true})
+							// Убираем выделение в таблице Клиенты
+							commit('set', {type: 'net', items: undefined})
+							$$('NetListDt').unselectAll();
 						}
 					}
 				},

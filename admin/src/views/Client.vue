@@ -14,7 +14,7 @@
 				<div class="btn btn btn--edit" @click="netWnd">Просмотр</div>
 			</div>
 			<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if='net && net.merchant_email != "-"'>
-				<div class="btn btn btn--edit"   style='background-color: #f48c42; color: #FFF' @click="deleteMerchant">Удалить представителя</div>
+				<div class="btn btn btn--edit"   style='background-color: #f48c42; color: #FFF' @click="deleteMerchant">Удалить менеджера</div>
 			</div>
 		</div>
     </div>

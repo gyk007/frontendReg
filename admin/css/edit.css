@@ -464,6 +464,10 @@ select[readonly],
 	margin-left: 0px;
 }
 
+.bigWnd{
+	width: 500px !important;
+}
+
 .modal__hdr_error {
 	font-family: "Ubuntu";
 	color: #f44336;
