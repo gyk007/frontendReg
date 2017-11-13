@@ -46,11 +46,12 @@
 	computed: {
 		shopsInSelect() {
 			let shopsInSelect = [];
+			console.log(this.$store.getters.shops);
 			if(this.$store.getters.shops)
 				this.$store.getters.shops.forEach((key) => {
 					let shop = {
 						id    : key.id,
-						label : key.official.name
+						label : key.net.net_name + ': ' + key.official.name
 					}
 					shopsInSelect.push(shop)
 				})
