@@ -46,7 +46,6 @@
 	computed: {
 		shopsInSelect() {
 			let shopsInSelect = [];
-			console.log(this.$store.getters.shops);
 			if(this.$store.getters.shops)
 				this.$store.getters.shops.forEach((key) => {
 					let shop = {
