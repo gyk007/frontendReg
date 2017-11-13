@@ -49,7 +49,7 @@
 
 							<div class="header__user-container">
 									<div class="header__user-name">
-										<div class='link' @click='showSelectShopWnd'>{{shop.official.name}}</div>
+										<div class='link' @click='showSelectShopWnd'>{{shop.net.net_name}} : {{shop.official.name}}</div>
 									</div>
 									<div class="header__user-logo">
 											<!-- <img src="pic/icon/name-logo.png" alt="logo"> -->
