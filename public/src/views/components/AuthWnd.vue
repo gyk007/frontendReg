@@ -3,7 +3,9 @@
 		<div class="modal-mask">
 			<div class="modal-wrapper">
 				<div class="modal-container">
-
+					<a href="http://grd77.shop/" class="auth_logo">
+						<img src="pic/logo.png" alt="logo">
+					</a>
 					<div class="modal__hdr">Авторизация</div>
 					<div class="modal__hdr_error" v-if='authError'>Вы ввели неправильный пароль или email</div>
 

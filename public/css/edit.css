@@ -593,6 +593,49 @@
     overflow: hidden;
 }
 
+.auth_logo{
+	height: 21px;
+    width: 206px;
+    text-align: center;
+    margin: 0 auto;
+    display: block;
+    margin-bottom: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*Мобилная версия*/
 @media screen and (min-width: 300px) and (max-width:650px) {
