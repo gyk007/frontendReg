@@ -35,7 +35,7 @@
 
 				<div class='btn_list' v-if='merchant'>
 					<button class="modal_btn_big_text btn_in_list modal_btn btn" v-on:click="regWnd" v-if='merchant.password'>Сбросить пароль</button>
-					<button class="modal_btn_big_text btn_in_list modal_btn btn" v-on:click="regWnd" v-if='!merchant.password'>Регистрация представителя</button>
+					<button class="modal_btn_big_text btn_in_list modal_btn btn" v-on:click="regWnd" v-if='!merchant.password'>Регистрация менеджера</button>
 					<button class="btn_in_list modal_btn btn" style='background-color: #f48c42;' v-on:click="close">Закрыть</button>
 					<div class="clear"></div>
 				</div>
