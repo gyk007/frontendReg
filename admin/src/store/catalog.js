@@ -367,12 +367,11 @@ const store = new Vuex.Store({
 		 * @param {idMerchant} - id Предтавителя
 		 */
 		deleteMerchant({state, commit}, idMerchant) {
-			console.log(idMerchant);
 			let arg = {
 				params:{
 					id_merchant :  idMerchant,
 					id_shop     :  state.shop ? state.shop.id : undefined,
-					id_net      :  state.net.id,
+					id_net      :  state.net  ? state.net.id  : undefined,
 					action      : 'delete_merchant'
 				},
 				headers: {
@@ -949,15 +948,27 @@ const store = new Vuex.Store({
 						commit('set', {type: 'error', items: body.ERROR})
 						commit('set', {type: 'sendMailLoader', items: false})
 					} else {
-						if (body.merchant) {
-							commit('set', {type: 'merchantAlreadyReg', items: body.merchant})
+						if (body.is_merchant) {
+							commit('set', {type: 'merchantAlreadyReg', items: body.is_merchant})
 							commit('set', {type: 'sendMailLoader',     items: false})
 						} else {
 							// Добавляем емейл в выбранную сеть
-							state.net.merchant_email = email;
+
+							if (state.shop) {
+								state.shop.merchant.email = body.merchant.email;
+								state.shop.merchant.id    = body.merchant.id;
+								state.shop.id_merchant    = body.merchant.id;
+							} else {
+								state.net.merchant.email = body.merchant.email;
+								state.net.merchant_email = body.merchant.email;
+								state.net.merchant.id    = body.merchant.id;
+								state.net.id_merchant    = body.merchant.id;
+							}
+
 							commit('set', {type: 'merchantAlreadyReg', items: undefined})
 							commit('set', {type: 'sendMailLoader',     items: false})
 							commit('set', {type: 'isSendMail',         items: true})
+							commit('set', {type: 'shop',               items: undefined})
 							// Убираем выделение в таблице Клиенты
 							commit('set', {type: 'net', items: undefined})
 							$$('NetListDt').unselectAll();
