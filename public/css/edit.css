@@ -610,7 +610,11 @@
 
 
 
-
+.info_block {
+	float: right;
+    margin-top: 24px;
+    margin-right: 15px;
+}
 
 
 
