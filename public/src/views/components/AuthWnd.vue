@@ -17,6 +17,8 @@
 					</div>
 
 					<button class="modal_btn btn" v-on:click="auth">Вход</button>
+
+					<a href="http://grd77.shop/" class="auth_back">Вернуться на сайт</a>
 			</div>
 		</div>
 		</div>

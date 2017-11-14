@@ -602,6 +602,11 @@
     margin-bottom: 20px;
 }
 
+.auth_back{
+	display: block;
+	margin-top: 10px;
+	text-align: center;
+}
 
 
 
