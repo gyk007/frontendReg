@@ -612,3 +612,11 @@ select[readonly],
 	max-height: 900px;
 	max-width: 1200px;
 }
+
+.b-catalog__cell:first-child {
+    padding-left: 0px !important;
+}
+
+.b-catalog__cell {
+	padding: 5px !important;
+}

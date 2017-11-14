@@ -100,8 +100,6 @@
 		close() {
 			// Закрываем текущее окно
 			this.$store.commit('set', {type: 'showRegWnd',      items: false})
-			// Закрываем окно предсавителя
-			this.$store.commit('set', {type: 'showMerchantWnd', items: false})
 			this.$store.commit('set', {type: 'merchantAlreadyReg', items: undefined})
 		},
 		sendMail() {

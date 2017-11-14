@@ -8,8 +8,8 @@
 			<div class="modal-wrapper" >
 				<div class='modal-close' @click="close"><img src="img/close.png" alt="Закрыть"></div>
 				<div class="modal-container-select-shop">
-					<div class="modal__hdr" v-if='shop'>Удалить представителя {{shop.name}} ?</div>
-					<div class="modal__hdr" v-else>Удалить представителя {{net.net_name}} ?</div>
+					<div class="modal__hdr" v-if='shop'>Удалить менеджера {{shop.name}} ?</div>
+					<div class="modal__hdr" v-else>Удалить менеджера {{net.net_name}} ?</div>
 
 					<div  class='btn_list'>
 						<button class=" btn_in_list modal_btn btn" style='background-color: #f48c42;' v-on:click="deleteMerchant">Удалить</button>
