@@ -2,7 +2,7 @@
 	Компонет товары в каталоге.
 -->
 <template>
-	<section class="shop__data">
+	<section class="shop__data"v-if='productList'>
 		<div class="shop__data-body"   :class="{'prod_width' : !productList.length &&  !selectOffer}"  id='prod_fixed'>
 			<ul class="shop__sub-nav" style="padding-bottom:20px" v-if='productList.length || selectOffer'>
 				<div>
@@ -102,7 +102,8 @@
 	import 'webix'
 	import 'vue-webix'
 
-
+	// Эта переменная хранит значение фильтров котроые ввел пользователь
+	// Для того чтобы сохранить их значение при выборе другой категории
 	var FILTERS_IN_PRODUCT_TABLE = {
 		name  : undefined,
 		pack  : undefined,
@@ -135,34 +136,21 @@
 				// Проверыем есть ли товар в корзине
 				if (this.$store.getters.productList) {
 					this.$store.getters.productList.forEach(prod => {
-						let product = {};
-
-						product.id    = prod.id;
-						product.name  = '<div class="webix_cell_midle" style="text-align: left"><span style="white-space: pre-wrap; font-size: 15px">' + prod.name + '</span></div>';
-
-						product.img     = prod.img_small ? conf.url.img + 'small/' + prod.img_small : 'pic/batle.png';
-						product.img_big = prod.img_big ? conf.url.img + 'big/' + prod.img_big : undefined;
-						product.price   = parseFloat(prod.price).toFixed(2);
-						product.offer   = prod.offer ?
-										'<div class="webix_cell_midle"><span class="js-benefit offer" style="font-size: 15px">' + prod.offer + '%</span></div>'
-										: '';
-
-						// Свойсвта товара
-						prod.properties.forEach(prop => {
-							if (prop.name == 'Litr') product.litr = parseFloat(prop.value).toFixed(2);
-							if (prop.name == 'Qty')  product.qty  = prop.value;
-							if (prop.name == 'Pack') product.pack = prop.value;
-						})
+						prod.img        = prod.img_small ? conf.url.img + 'small/' + prod.img_small : 'pic/batle.png';
+						prod.price      = parseFloat(prod.price).toFixed(2);
+						prod.img_medium = prod.img_medium ? conf.url.img + 'medium/' + prod.img_medium : undefined;
+						prod.Litr       = parseFloat(prod.Litr).toFixed(2);
 
 						// Количество товара которое нужно добавить в корзину
-						product.cartQuantity = 1;
+						prod.cartQuantity = 1;
+
 						// Указывает находится ли товар в корзине
-						product.inCart = false;
+						prod.inCart = false;
 						if (this.$store.getters.cart && this.$store.getters.cart.products) {
 							this.$store.getters.cart.products.elements.forEach(podInCart => {
 								if (prod.id === podInCart.id_product) {
 									// Количество товара в корзине
-									product.inCart = true;
+									prod.inCart = true;
 								}
 							});
 						}
@@ -173,7 +161,7 @@
 							&& prod.filterAlko
 							&& prod.search
 							&& prod.filterOffer) {
-							proucts.push(product);
+							proucts.push(prod);
 						}
 
 					});
@@ -222,6 +210,9 @@
 							css       : 'product_tbl_row',
 							fillspace : true,
 							minWidth  : 300,
+							format  : function(value) {
+								return "<div class='webix_cell_midle' style='text-align: left'><span style='white-space: pre-wrap; font-size: 15px'>"+value+"</span></div>";
+							}
 						},
 						{
 							id     : "offer",
@@ -229,9 +220,13 @@
 							header : "Скидка",
 							css    : 'product_price_middle',
 							width  : 90,
+							format  : function(value) {
+								if (value)
+									return '<div class="webix_cell_midle"><span class="js-benefit offer" style="font-size: 15px">' + value + '%</span></div>'
+							}
 						},
 						{
-							id        : "pack",
+							id        : "Pack",
 							sort      : "int",
 							header    : ["Фасовка", {content:"textFilter", compare:numerCompare}],
 							css       : 'product_price_middle',
@@ -239,7 +234,7 @@
 							minWidth  : 250,
 						},
 						{
-							id     : "litr",
+							id     : "Litr",
 							sort   : "int",
 							header : ["Емкость", {content:"textFilter", compare:numerCompare}],
 							css    : 'product_price_middle',
@@ -259,7 +254,7 @@
 							}
 						},
 						{
-							id      : "qty",
+							id      : "Qty",
 							editor  :"inline-text",
 							sort    : "int",
 							header  : ["Наличие"],
@@ -297,8 +292,8 @@
 						onAfterFilter: function(){
 							// Устанавливаем фильтры
 							FILTERS_IN_PRODUCT_TABLE.name  = this.getFilter("name").value;
-							FILTERS_IN_PRODUCT_TABLE.pack  = this.getFilter("pack").value;
-							FILTERS_IN_PRODUCT_TABLE.litr  = this.getFilter("litr").value;
+							FILTERS_IN_PRODUCT_TABLE.pack  = this.getFilter("Pack").value;
+							FILTERS_IN_PRODUCT_TABLE.litr  = this.getFilter("Litr").value;
 							FILTERS_IN_PRODUCT_TABLE.price = this.getFilter("price").value;
 						},
 						onAfterSelect: function(id, e, node){
@@ -528,14 +523,14 @@
 	}
 
 	/**
-	 * Функция устанавливает максимальное число символов для Input type="number"
+	 * Сохраняем фильтры при выборе другой категории
 	 * @param {table} - объект Таблицы
 	 */
 	function filterTable(table) {
 		table.getFilter("price").value = FILTERS_IN_PRODUCT_TABLE.price ? FILTERS_IN_PRODUCT_TABLE.price : '';
 		table.getFilter("name").value  = FILTERS_IN_PRODUCT_TABLE.name  ? FILTERS_IN_PRODUCT_TABLE.name  : '';
-		table.getFilter("pack").value  = FILTERS_IN_PRODUCT_TABLE.pack  ? FILTERS_IN_PRODUCT_TABLE.pack  : '';
-		table.getFilter("litr").value  = FILTERS_IN_PRODUCT_TABLE.litr  ? FILTERS_IN_PRODUCT_TABLE.litr  : '';
+		table.getFilter("Pack").value  = FILTERS_IN_PRODUCT_TABLE.pack  ? FILTERS_IN_PRODUCT_TABLE.pack  : '';
+		table.getFilter("Litr").value  = FILTERS_IN_PRODUCT_TABLE.litr  ? FILTERS_IN_PRODUCT_TABLE.litr  : '';
 
 		if (FILTERS_IN_PRODUCT_TABLE.price){
 			table.filter(function(obj){

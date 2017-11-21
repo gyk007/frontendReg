@@ -546,8 +546,9 @@ const catalogStore = new Vuex.Store({
 						// Очищаем список продуктов
 						commit('set', {type: 'productList', items: undefined})
 						commit('set', {type: 'filters',     items: undefined})
-						if (body.category.extend.products.elements.length)
-							body.category.extend.products.elements.forEach(function(key) {
+
+						if (body.category.products.length)
+							body.category.products.forEach(function(key) {
 								// Добавляем поиск
 								key.search = true;
 								// Добавляем фильтры
@@ -555,22 +556,24 @@ const catalogStore = new Vuex.Store({
 								key.filterAlko  = true;
 								key.filterOffer = true;
 								// Свойства, делаем удобнее
-								key.properties = key.properties.elements[0].extend.properties.elements
+
 							})
-							commit('set', {type: 'productList', items: body.category.extend.products.elements})
+						commit('set', {type: 'productList', items: body.category.products});
+
+						// Фильтры
 						if (body.category.filter) {
 							// Начальные значения фильтров
 							let filterPrice = {min: 0, max: 0};
 							let filterAlko  = {min: 0, max: 0};
 
-							body.category.filter.elements.forEach(function(key){
+							body.category.filter.forEach(function(key){
 								if(key.name == 'Price') {
-									filterPrice.min = key.filterarg.elements[0].filterarg.value;
-									filterPrice.max = key.filterarg.elements[1].filterarg.value;
+									filterPrice.min = key.min;
+									filterPrice.max = key.max;
 								}
 								if(key.name == 'Alko') {
-									filterAlko.min = key.filterarg.elements[0].filterarg.value;
-									filterAlko.max = key.filterarg.elements[1].filterarg.value;
+									filterAlko.min = key.min;
+									filterAlko.max = key.max;
 								}
 							})
 							commit('set', {type: 'filterPrice', items: filterPrice})

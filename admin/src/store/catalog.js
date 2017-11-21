@@ -701,18 +701,8 @@ const store = new Vuex.Store({
 					if (body.ERROR) {
 						commit('set', {type: 'error', items: body.ERROR})
 					} else {
-						commit('set', {type: 'error', items: undefined})
-						// Очищаем список продуктов
-						commit('set', {type: 'productList', items: undefined})
-						if (body.category.extend.products.elements.length) {
-							body.category.extend.products.elements.forEach(function(key) {
-								// Свойства, делаем удобнее
-								key.properties = key.properties.elements[0].extend.properties.elements
-								// Переменная для поиска
-								key.search = true
-							});
-							commit('set', {type: 'productList', items: body.category.extend.products.elements});
-						}
+						commit('set', {type: 'error',       items: undefined})
+						commit('set', {type: 'productList', items: body.category.products});
 						// Выключаем лоадер
 						commit('set', {type: 'loader', items: false})
 					}

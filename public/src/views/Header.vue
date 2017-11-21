@@ -59,8 +59,8 @@
 			</div>
 
 			<div class='info_block'>
-				<sapn v-if='shop'>ИНН: {{shop.net.official.taxcode}}</sapn>
-				<sapn v-if='shop' style='padding-left:10px'>КПП: {{shop.official.taxreasoncode}} </sapn>
+				<span v-if='shop'>ИНН: {{shop.net.official.taxcode}}</span>
+				<span v-if='shop' style='padding-left:10px'>КПП: {{shop.official.taxreasoncode}} </span>
 			</div>
 		</div>
 

@@ -4,7 +4,7 @@
 			<div class="modal-wrapper" >
 				<div class='modal-close' @click="close"><img src="img/close.png" alt="Закрыть"></div>
 
-				<img class='show_img' :src="selectedProduct.img_big">
+				<img class='show_img' :src="selectedProduct.img_medium">
 			</div>
 		</div>
 	</transition>
@@ -13,7 +13,8 @@
 
 <script>
   import store from '../../store/catalog.js'
-  import $      from 'jquery'
+  import $     from 'jquery'
+  import conf  from '../../conf/conf.js'
 
   export default {
   	computed: {
@@ -21,6 +22,12 @@
 			return this.$store.getters.showImageWnd
 		},
 		selectedProduct() {
+			this.$store.getters.selectedProduct
+			this.$store.getters.selectedProduct.img_medium =
+				this.$store.getters.selectedProduct.img_medium ?
+					conf.url.img + 'medium/' + this.$store.getters.selectedProduct.img_medium :
+					'pic/batle.png';
+
 			return this.$store.getters.selectedProduct;
 		},
 	},

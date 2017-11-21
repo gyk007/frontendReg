@@ -4,7 +4,7 @@
 -->
 <template>
 		<section class="catalog__products-holder">
-			<div class="catalog__products-scroll jq-scroll">
+			<div class="catalog__products-scroll jq-scroll" id='prod_fixed'>
 				<div class="catalog__products">
 
 					<div class="catalog__nav-open js-nav-open">
@@ -13,7 +13,7 @@
 					</div>
 
 					<!-- Шапка таблицы -->
-					<div class="shop__table" v-if='productList'>
+					<!-- <div class="shop__table" v-if='productList'>
 
 						<div class="shop__row shop__table-hdr">
 
@@ -59,10 +59,10 @@
 
 							<div class="shop__cell shop__cell-order">&nbsp;</div>
 
-						</div>
+						</div> -->
 
 						<!-- Таблица с товарами -->
-						<div class="shop__row js-t-row normal" v-for='product in  productList' v-if='product.search'>
+						<!-- <div class="shop__row js-t-row normal" v-for='product in  productList' v-if='product.search'>
 
 							<div class="shop__cell shop__cell-name">
 								<div class="shop__cell-img">
@@ -96,7 +96,9 @@
 							</div>
 
 						</div>
-					</div>
+					</div> -->
+
+					<webix-ui :config='table' v-model='productList' v-if='productList && productList.length'/>
 			</div>
 		</div>
 		<!-- Лоадер -->
@@ -112,6 +114,17 @@
 	import $          from "jquery"
 	import conf       from '../../conf/conf.js'
 	import ProductImg from './ProductImg.vue'
+	import 'webix'
+	import 'vue-webix'
+
+	// Эта переменная хранит значение фильтров котроые ввел пользователь
+	// Для того чтобы сохранить их значение при выборе другой категории
+	var FILTERS_IN_PRODUCT_TABLE = {
+		name  : undefined,
+		pack  : undefined,
+		litr  : undefined,
+		price : undefined,
+	}
 
 	export default {
 		components: {ProductImg},
@@ -133,16 +146,7 @@
 			productList() {
 				if (this.$store.getters.productList) {
 					this.$store.getters.productList.forEach(key => {
-						if (key.img_small && !key.firstRender) {
-							key.img_small = this.$data.imgUrl +"small/"+ key.img_small
-						}
-						if (key.img_big && !key.firstRender) {
-							key.img_big = this.$data.imgUrl +"big/"+ key.img_big
-						}
-						// Указываем что это превый рендер
-						// Так как при сортировке происходит повторый рендер
-						// и картинки ломаются
-						key.firstRender = true;
+						key.img  = key.img_small ? conf.url.img + 'small/' + key.img_small : 'pic/batle.png';
 					})
 				}
 				return this.$store.getters.productList
@@ -155,208 +159,272 @@
 			},
 			selectedProduct(){
 				return this.$store.getters.selectedProduct
-			}
-		},
-		methods: {
-			getProduct(product) {
-				$(event.target).closest('.js-t-row')
-					.addClass('active')
-					.siblings()
-					.removeClass('active')
-				this.$store.dispatch('selectProduct', product)
 			},
-			showImg(product) {
-				this.$store.commit('set', {type: 'selectedProduct', items: product})
-				this.$store.commit('set', {type: 'showImageWnd', items: true})
-			},
-			deleteProduct(idProduct) {
-				console.log(idProduct);
-			},
-			editProduct(product){
-				this.$store.dispatch('selectProduct', product)
-			},
-			sort(name) {
-				switch(name) {
-					case 'name':
-						if (this.productList) {
-							if (this.$data.sortName == 'name' && this.$data.sortType != 'DESC') {
-								this.productList.sort(compareNameDESC);
-								this.$data.sortType = 'DESC';
+			table(){
+				let $this = this;
+				return {
+					view    : "datatable",
+					height  : $(window).height() / 1.38,
+					width   : $('.shop__data-body').width(),
+					css     : 'table_cart_product',
+					footer  : true,
+					select  : true,
+					rowHeight:75,
+					rowLineHeight :25,
+					editable:true,
+					columns:[
+						{
+							template  :"<img id='show_image' class='real_img' src='#img#' height='75'>",
+							header    : "",
+							css       : 'cell_img',
+							width     : 75,
+							footer    : {content:"countColumn", colspan: 6}
+						},
+						{
+							id        : "name",
+							sort      : "string",
+							header    : ["Название", {content:"textFilter"}],
+							css       : 'product_tbl_row',
+							fillspace : true,
+							minWidth  : 300,
+							format  : function(value) {
+								return "<div class='webix_cell_midle' style='text-align: left'><span style='white-space: pre-wrap; font-size: 15px'>"+value+"</span></div>";
 							}
-							else {
-								this.productList.sort(compareNameASC);
-								this.$data.sortType = 'ASC';
+						},
+						{
+							id        : "Pack",
+							sort      : "int",
+							header    : ["Фасовка", {content:"textFilter", compare:numerCompare}],
+							css       : 'product_price_middle',
+							width     : 80,
+							minWidth  : 250,
+						},
+						{
+							id     : "Litr",
+							sort   : "int",
+							header : ["Емкость", {content:"textFilter", compare:numerCompare}],
+							css    : 'product_price_middle',
+							width  : 80,
+							format  : function(value) {
+								if (value) return Number(value).toLocaleString('ru-RU');
+							}
+						},
+						{
+							id     : "Price",
+							sort   : priceSort,
+							header : ["Цена <i class='rub'>a</i>&nbsp;/&nbsp;шт ", {content:"textFilter", compare:numerCompare}],
+							css    : 'product_price_middle',
+							width  : 110,
+							format  : function(value) {
+								if (value) return Number(value).toLocaleString('ru-RU');
+							}
+						},
+						{
+							id      : "Qty",
+							editor  :"inline-text",
+							sort    : "int",
+							header  : ["Наличие"],
+							css     : 'product_qty_middle',
+							width   : 80,
+						},
+					], on:{
+						onAfterLoad: function() {
+							filterTable(this)
+						},
+						onAfterFilter: function(){
+							// Устанавливаем фильтры
+							FILTERS_IN_PRODUCT_TABLE.name  = this.getFilter("name").value;
+							FILTERS_IN_PRODUCT_TABLE.pack  = this.getFilter("pack").value;
+							FILTERS_IN_PRODUCT_TABLE.litr  = this.getFilter("litr").value;
+							FILTERS_IN_PRODUCT_TABLE.price = this.getFilter("price").value;
+						},
+						onAfterSelect: function(id, e, node){
+							$this.$data.rowId = id;
+							// Выбрали товар
+							$this.$store.commit('set', {type: 'selectedProduct', items: this.getItem(id)})
+						},
+						onAfterUnSelect:function(id, e, node){
+							$this.$data.rowId = undefined;
+							$this.$store.commit('set', {type: 'selectedProduct', items: undefined})
+						},
+						onItemClick: function(id, e, node) {
+							$this.$store.commit('set', {type: 'selectedProduct', items: this.getItem(id)})
+
+							// Показать картинку
+							if (e.target.id == 'show_image') {
+								$this.$store.commit('set', {type: 'showImageWnd', items: true})
+							}
+						},
+						onDataUpdate: function(id, product){
+							$this.$store.commit('set', {type: 'selectedProduct', items: this.getItem(id)})
+						},
+						onKeyPress: function(code, e) {
+							if (e.target.id == 'cartQuantity') {
+								// В inpute выставляем максимальное число символов = 4
+								inputMaxLength(e.target);
+							}
+
+							// По нажатию кнопки Enter показываем картинку
+							if (code == 13 && $this.selectedProduct.img_big) {
+								$this.$store.commit('set', {type: 'showImageWnd', items: true})
 							}
 						}
-						break;
-					case 'qty':
-						if (this.productList) {
-							if (this.$data.sortName == 'qty' && this.$data.sortType != 'DESC') {
-								this.productList.sort(compareQtyDESC);
-								this.$data.sortType = 'DESC';
-							} else {
-								this.productList.sort(compareQtyASC);
-								this.$data.sortType = 'ASC';
-							}
-						}
-						break;
-					case 'litr':
-						if (this.productList) {
-							if (this.$data.sortName == 'litr' && this.$data.sortType != 'DESC') {
-								this.productList.sort(compareLitrDESC);
-								this.$data.sortType = 'DESC'
-							} else {
-								this.productList.sort(compareLitrASC);
-								this.$data.sortType = 'ASC';
-							}
-						}
-						break;
-					case 'pack':
-						if (this.productList) {
-							if (this.$data.sortName == 'pack' && this.$data.sortType != 'DESC') {
-								this.productList.sort(comparePackDESC);
-								this.$data.sortType = 'DESC'
-							} else {
-								this.productList.sort(comparePackASC);
-								this.$data.sortType = 'ASC';
-							}
-						}
-						break;
-					default:
-						break
+					}
 				}
-				// Указываем по какому пораметру была произведена сортировка
-				this.$data.sortName = name;
 			}
 		},
 		created: function() {
 			this.$store.commit('set', {type: 'productList', items: undefined})
 			this.$store.commit('set', {type: 'selectedProduct', items: undefined})
+
+			webix.ui.datafilter.countColumn = webix.extend({
+				refresh:function(master, node, value){
+				node.firstChild.innerHTML = "Всего наименований: " + master.count();
+			}}, webix.ui.datafilter.summColumn);
 		},
 		mounted: function() {
-			$('.js-nav-open').click(function () {
-					$('.catalog__nav').fadeIn(200);
-					$('body').css('overflow', 'hidden')
-			});
-			$('.catalog__nav-close').click(function () {
-				$('.catalog__nav').fadeOut(200);
-				$('body').css('overflow', 'auto')
-			});
+			fixProdTbl()
 		}
 	}
 
+	/**
+	 * Функция при прокрутке фиксирует таблицу с товарами
+	 */
+	function fixProdTbl () {
+		let tblHeader = document.getElementById('prod_fixed');
+	 	window.onscroll = function() {
+			if (window.pageYOffset > 100) {
+				tblHeader.classList.add('prod_fixed');
+			} else {
+				tblHeader.classList.remove('prod_fixed');
+			}
+		};
+	}
 
-// Функция сортирует товары по имени (ASC)
-function compareNameASC(prodA, prodB) {
-	return prodA.name.localeCompare(prodB.name);
-}
+	// Сортировка по цене
+	function priceSort(a,b) {
+		a = parseFloat(a.price);
+		b = parseFloat(b.price);
+		if (a === b) return 0;
+		if (a > b)   return 1;
+		if (a < b)   return -1;
+	}
 
-// Функция сортирует товары по имени (DESC)
-function compareNameDESC(prodA, prodB) {
-	return prodB.name.localeCompare(prodA.name);
-}
+ 	// Поиск по числу
+	function numerCompare(value, filter) {
+		// Указывает на условие >
+		var more = false;
+		// Указывает на условие <
+		var less = false;
 
-// Функция сортирует товары количесву (ASC)
-function compareQtyASC(prodA, prodB) {
-	let qtyA, qtyB;
+		// Указывает на условие >=
+		var moreEq = false;
+		// Указывает на условие <=
+		var lessEq = false;
 
-	prodA.properties.forEach(key => {
-		if (key.name == 'Qty') qtyA = key.value;
-	});
+		// Удаляем проблы
+		filter = filter.replace(/\s/g, '');
+		// Меняе запятую на точку
+		filter = filter.replace(/,/g, '.');
 
-	prodB.properties.forEach(key => {
-		if (key.name == 'Qty') qtyB = key.value;
-	});
+		if (filter.indexOf('>=') == 0 ) {
+			filter = filter.replace(/>=/g, '');
+			moreEq = true;
+		}
 
-	if (qtyA < qtyB)  return -1;
-	if (qtyA == qtyB) return  0;
-	if (qtyA > qtyB)  return  1;
-}
+		if (filter.indexOf('<=') == 0 ) {
+			filter = filter.replace(/<=/g, '');
+			lessEq = true;
+		}
 
-// Функция сортирует товары количесву (DESC)
-function compareQtyDESC(prodA, prodB) {
-	let qtyA, qtyB;
+		if (filter.indexOf('>') == 0 ) {
+			filter = filter.replace(/>/g, '');
+			more = true;
+		}
 
-	prodA.properties.forEach(key => {
-		if (key.name == 'Qty') qtyA = key.value;
-	});
+		if (filter.indexOf('<') == 0) {
+			filter = filter.replace(/</g, '');
+			less = true;
+		}
 
-	prodB.properties.forEach(key => {
-		if (key.name == 'Qty') qtyB = key.value;
-	});
+	    filter = parseFloat(filter);
 
-	if (qtyA < qtyB)  return  1;
-	if (qtyA == qtyB) return  0;
-	if (qtyA > qtyB)  return -1;
-}
+	    if (!filter) {
+			return true;
+		}
 
-// Функция сортирует товары по литражу (ASC)
-function compareLitrASC(prodA, prodB) {
-	let qtyA, qtyB;
+		if (moreEq) {
+	    	if (value >= filter) {
+	    		return true;
+	    	} else {
+	    		return false;
+	    	}
+	    }
 
-	prodA.properties.forEach(key => {
-		if (key.name == 'Litr')	qtyA = key.value;
-	});
+	    if (lessEq) {
+	    	if (value <= filter) {
+	    		return true;
+	    	} else {
+	    		return false;
+	    	}
+	    }
 
-	prodB.properties.forEach(key => {
-		if (key.name == 'Litr')	qtyB = key.value;
-	});
+	    if (less) {
+	    	if (value < filter) {
+	    		return true;
+	    	} else {
+	    		return false;
+	    	}
+	    }
 
-	if (qtyA < qtyB)  return -1;
-	if (qtyA == qtyB) return  0;
-	if (qtyA > qtyB)  return  1;
-}
+	    if (more) {
+	    	if (value > filter) {
+	    		return true;
+	    	} else {
+	    		return false;
+	    	}
+	    }
 
-// Функция сортирует товары по литражу (DESC)
-function compareLitrDESC(prodA, prodB) {
-	let qtyA, qtyB;
+    	if (value == filter) {
+    		return true;
+       	}  else {
+       		return false;
+       	}
+	}
 
-	prodA.properties.forEach(key => {
-		if (key.name == 'Litr')	qtyA = key.value;
-	});
+	/**
+	 * Сохраняем фильтры при выборе другой категории
+	 * @param {table} - объект Таблицы
+	 */
+	function filterTable(table) {
+		table.getFilter("Price").value = FILTERS_IN_PRODUCT_TABLE.price ? FILTERS_IN_PRODUCT_TABLE.price : '';
+		table.getFilter("name").value  = FILTERS_IN_PRODUCT_TABLE.name  ? FILTERS_IN_PRODUCT_TABLE.name  : '';
+		table.getFilter("Pack").value  = FILTERS_IN_PRODUCT_TABLE.pack  ? FILTERS_IN_PRODUCT_TABLE.pack  : '';
+		table.getFilter("Litr").value  = FILTERS_IN_PRODUCT_TABLE.litr  ? FILTERS_IN_PRODUCT_TABLE.litr  : '';
 
-	prodB.properties.forEach(key => {
-		if (key.name == 'Litr')	qtyB = key.value;
-	});
+		if (FILTERS_IN_PRODUCT_TABLE.price){
+			table.filter(function(obj){
+				return numerCompare(obj.Price, FILTERS_IN_PRODUCT_TABLE.price);
+			})
+		}
 
-	if (qtyA < qtyB)  return  1;
-	if (qtyA == qtyB) return  0;
-	if (qtyA > qtyB)  return -1;
-}
+		if (FILTERS_IN_PRODUCT_TABLE.pack){
+			table.filter(function(obj){
+				return numerCompare(obj.Pack, FILTERS_IN_PRODUCT_TABLE.pack);
+			})
+		}
 
+		if (FILTERS_IN_PRODUCT_TABLE.litr){
+			table.filter(function(obj){
+				return numerCompare(obj.Litr, FILTERS_IN_PRODUCT_TABLE.litr);
+			})
+		}
 
-// Функция сортирует товары по фасовке (ASC)
-function comparePackASC(prodA, prodB) {
-	let qtyA, qtyB;
-
-	prodA.properties.forEach(key => {
-		if (key.name == 'Pack')	qtyA = key.value;
-	});
-
-	prodB.properties.forEach(key => {
-		if (key.name == 'Pack')	qtyB = key.value;
-	});
-
-	if (qtyA < qtyB)  return -1;
-	if (qtyA == qtyB) return  0;
-	if (qtyA > qtyB)  return  1;
-}
-
-// Функция сортирует товары по фасовке (DESC)
-function comparePackDESC(prodA, prodB) {
-	let qtyA, qtyB;
-
-	prodA.properties.forEach(key => {
-		if (key.name == 'Pack')	qtyA = key.value;
-	});
-
-	prodB.properties.forEach(key => {
-		if (key.name == 'Pack')	qtyB = key.value;
-	});
-
-	if (qtyA < qtyB)  return  1;
-	if (qtyA == qtyB) return  0;
-	if (qtyA > qtyB)  return -1;
-}
+		if (FILTERS_IN_PRODUCT_TABLE.name){
+			table.filter(function(obj){
+				if (obj.name.toLowerCase().indexOf(FILTERS_IN_PRODUCT_TABLE.name.toLowerCase())!=-1) return true;
+			})
+		}
+	}
 
 </script>

@@ -621,3 +621,8 @@ select[readonly],
 	padding: 5px !important;
 }
 
+.prod_fixed {
+	position:fixed !important;
+	margin-top: 30px;
+	width: 69%
+}
