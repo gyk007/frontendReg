@@ -213,7 +213,7 @@
 				let maxPrice = val[1]
 				if(this.productList) {
 					this.productList.forEach(function(key) {
-						if (key.properties[0].value < minPrice || key.properties[0].value > maxPrice)
+						if (key.price < minPrice || key.price > maxPrice)
 							key.filterPrice = false
 						else
 							key.filterPrice = true
@@ -225,7 +225,7 @@
 				let maxAlko = val[1]
 				if(this.productList) {
 					this.productList.forEach(function(key) {
-						if (key.properties[4].value < minAlko || key.properties[4].value > maxAlko)
+						if (key.Alko < minAlko || key.Alko > maxAlko)
 							key.filterAlko = false
 						else
 							key.filterAlko = true
