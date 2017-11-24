@@ -100,6 +100,15 @@
 		beforeCreate: function() {
 			this.$store.dispatch('getUser')
 			this.$store.dispatch('getCart')
+
+			// Получаем все товары в кеш, для скорости загрузки
+			this.$store.dispatch('getProductListTcCache')
+
+			let $this = this;
+			// Загружаем все товары в кеш  через каждый час
+			var timerId = setInterval(function() {
+				$this.$store.dispatch('getProductListTcCache')
+			}, 3600000);
 		}
 	}
 </script>

@@ -17,10 +17,13 @@ const catalogStore = new Vuex.Store({
 		catalogTree         : undefined, // дерево категорий
 		contactWnd          : false,     // true - показть окно "Контакты"
 		productList         : undefined, // список товаров в выбранной категории
+		productListСache    : undefined, // список всех товаров для Кэша
 		idActiveCat         : undefined, // id выбранной категории
 		category            : undefined, // выбранная категория
 		filterPrice         : undefined, // начальные значени фильра "Цена"
 		filterAlko          : undefined, // начальные значения фильтра "Крепость об %"
+		filterPriceCache    : undefined, // начальные значения фильтра "Крепость об %" КЭШ для всех товаров
+		filterAlkoCache	    : undefined, // начальные значения фильтра "Крепость об %" КЭШ для всех товаров
 		product             : undefined, // выбранные продукт
 		cart                : undefined, // корзина
 		cartPrice           : 0,         // стоимость корзины
@@ -571,7 +574,25 @@ const catalogStore = new Vuex.Store({
 				}
 			)
 		},
-		getProductList({commit}, idCategory) {
+		getProductList({state, commit}, idCategory) {
+			// Если это "ВСЕ товары"" то берем их из кеша
+			if (idCategory == 1 && state.productListСache) {
+				// Очищаем список продуктов
+				commit('set', {type: 'productList', items: undefined})
+
+				// Удаляем выбранный товар
+				commit('set', {type: 'selectedProduct', items: undefined})
+
+				// Берем данные из кеша
+				commit('set', {type: 'filterPrice', items: state.filterPriceCache})
+				commit('set', {type: 'filterAlko',  items: state.filterAlkoCache})
+				commit('set', {type: 'productList', items: state.productListСache})
+
+				// Выключаем вкладку с индивидуальными предложениями
+				commit('set', {type: 'selectOffer', items: false})
+				return;
+			}
+
 			// Очищаем список продуктов
 			commit('set', {type: 'productList', items: undefined})
 			// Включаем лоадер
@@ -608,9 +629,8 @@ const catalogStore = new Vuex.Store({
 								key.filterPrice = true;
 								key.filterAlko  = true;
 								key.filterOffer = true;
-								// Свойства, делаем удобнее
-
 							})
+
 						commit('set', {type: 'productList', items: body.category.products});
 
 						// Фильтры
@@ -636,6 +656,67 @@ const catalogStore = new Vuex.Store({
 						commit('set', {type: 'loader', items: false})
 						// Выключаем вкладку с индивидуальными предложениями
 						commit('set', {type: 'selectOffer', items: false})
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		/**
+		 * Получаем все товары для кэша
+		 * @param {email} - почтовый адрес
+		 */
+		getProductListTcCache({commit}, idCategory) {
+			let arg = {
+				params:{
+					id    : 1, // Категория Всех товаров id = 1
+					token : Cookies.get('token'),
+				},
+				headers: {
+					//'Content-Type': 'application/json'
+				}
+			}
+
+			Vue.http.get(Conf.url.category, arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR);
+						if (body.ERROR.AUTH)
+							document.location = '/#/auth'
+					} else {
+						if (body.category.products.length)
+							body.category.products.forEach(function(key) {
+								// Добавляем поиск
+								key.search = true;
+								// Добавляем фильтры
+								key.filterPrice = true;
+								key.filterAlko  = true;
+								key.filterOffer = true;
+							})
+
+						commit('set', {type: 'productListСache', items: body.category.products});
+
+						// Фильтры
+						if (body.category.filter) {
+							// Начальные значения фильтров
+							let filterPrice = {min: 0, max: 0};
+							let filterAlko  = {min: 0, max: 0};
+
+							body.category.filter.forEach(function(key){
+								if(key.name == 'Price') {
+									filterPrice.min = key.min;
+									filterPrice.max = key.max;
+								}
+								if(key.name == 'Alko') {
+									filterAlko.min = key.min;
+									filterAlko.max = key.max;
+								}
+							})
+							commit('set', {type: 'filterPriceCache', items: filterPrice})
+							commit('set', {type: 'filterAlkoCache',  items: filterAlko})
+						}
 					}
 				},
 				error => {
