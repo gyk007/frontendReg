@@ -4,6 +4,7 @@ import VueRouter    from 'vue-router'
 import ToggleButton from 'vue-js-toggle-button'
 
 import Catalog    from './views/Catalog.vue'
+import Managers   from './views/Managers.vue'
 import Orders     from './views/Orders.vue'
 import Order      from './views/Order.vue'
 import Promotion  from './views/Promotion.vue'
@@ -29,6 +30,7 @@ var router = new VueRouter({
 		{ path: '/order/:id',    component: Order },
 		{ path: '/client',       component: Client },
 		{ path: '/statistic',    component: Statistic },
+		{ path: '/merchants',    component: Managers },
 	]
 })
 

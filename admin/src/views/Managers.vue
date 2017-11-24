@@ -1,24 +1,17 @@
 <template>
 <section>
 	<div class="a-catalog__hdr">
-        <div class="a-catalog__hdr-title">Клиенты</div>
+        <div class="a-catalog__hdr-title">Менеджеры</div>
         <div class="catalog__controls">
-			<div class="a-catalog__hdr-controls" v-if='net'>
-				<div class="btn btn btn--edit" @click="shopsWnd">Торговые точки</div>
+        	<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if='merchant'>
+				<div class="btn btn btn--edit" @click="merchantWnd">Просмотреть</div>
 			</div>
-
-			<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if='net'>
-				<div class="btn btn btn--edit" @click="merchantWnd">Менеджер</div>
-			</div>
-			<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if='net'>
-				<div class="btn btn btn--edit" @click="netWnd">Просмотр</div>
-			</div>
-			<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if='net && net.merchant_email != "-"'>
+			<div class="a-catalog__hdr-controls" style="margin-right:10px" v-if='merchant'>
 				<div class="btn btn btn--edit"   style='background-color: #f48c42; color: #FFF' @click="deleteMerchant">Удалить менеджера</div>
 			</div>
 		</div>
     </div>
-	<NetList></NetList>
+	<MerchantList></MerchantList>
 
 	<!--Постраничная навигация для Vue (ПОКА ЗАКОММЕНТИРУЮ)--->
 	<!-- <paginate v-if='clientPageCount'
@@ -36,8 +29,8 @@
 	</paginate> -->
 	<div class='clear'></div>
 	<!-- Компоненты -->
-	<Net               v-if='showNetWnd'></Net>
-	<ShopsWnd          v-if='showShopsWnd'></ShopsWnd>
+
+	<MerchantWnd       v-if='showMerchantWnd'></MerchantWnd>
 	<MerchantWnd       v-if='showMerchantWnd'></MerchantWnd>
 	<DeleteMerchantWnd v-if='showDeleteMerchanttWnd'></DeleteMerchantWnd>
 
@@ -46,9 +39,7 @@
 
 <script>
 
-import NetList             from './components/NetList.vue'
-import Net                 from './components/Net.vue'
-import ShopsWnd            from './components/ShopsWnd.vue'
+import MerchantList        from './components/MerchantList.vue'
 import MerchantWnd         from './components/MerchantWnd.vue'
 import DeleteMerchantWnd   from './components/DeleteMerchantWnd.vue'
 import store               from '../store/catalog.js'
@@ -56,24 +47,15 @@ import Paginate            from 'vuejs-paginate'
 import $                   from 'jquery'
 
 export default {
-	name: 'users',
-	components: {NetList, Net, ShopsWnd, MerchantWnd, DeleteMerchantWnd},
+	name: 'merchant',
+	components: {MerchantList, MerchantWnd, DeleteMerchantWnd},
 	store: store,
 	computed: {
-		net() {
-			return this.$store.getters.net
-		},
-		netList() {
-			return this.$store.getters.netList
-		},
-		showShopsWnd() {
-			return this.$store.getters.showShopsWnd
-		},
 		showMerchantWnd() {
 			return this.$store.getters.showMerchantWnd
 		},
-		showNetWnd() {
-			return this.$store.getters.showNetWnd
+		merchant() {
+			return this.$store.getters.merchant
 		},
 		showNetWnd() {
 			return this.$store.getters.showNetWnd
@@ -98,9 +80,13 @@ export default {
 	},
 	created: function() {
 		this.$store.commit('set', {type: 'loader',   items: undefined})
-		this.$store.commit('set', {type: 'net',      items: undefined})
 		this.$store.commit('set', {type: 'merchant', items: undefined})
+		this.$store.commit('set', {type: 'net',      items: undefined})
+		this.$store.commit('set', {type: 'shop',     items: undefined})
 	},
+	mounted: function() {
+		this.$store.dispatch('getMerchantList')
+	}
 }
 
 </script>

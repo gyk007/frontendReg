@@ -94,8 +94,11 @@
 			this.$data.validateEmail = false;
 		}
 	},
-	beforeCreate: function() {
-		this.$store.dispatch('getMerchant')
+	created: function() {
+		if (!this.merchant) {
+			console.log(this.merchant)
+			this.$store.dispatch('getMerchant')
+		}
 	},
 	mounted: function() {
 		// По нажатию кнопки ESC закрываем окно,

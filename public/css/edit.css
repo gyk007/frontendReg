@@ -616,7 +616,16 @@
     margin-right: 15px;
 }
 
-
+.forget_password {
+    margin-top: 10px;
+    text-align: center;
+	color: #5e97e3;
+    -webkit-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+    text-decoration: none;
+    line-height: 1;
+    cursor: pointer;
+}
 
 
 

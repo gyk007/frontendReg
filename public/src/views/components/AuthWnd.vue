@@ -19,6 +19,8 @@
 					<button class="modal_btn btn" v-on:click="auth">Вход</button>
 
 					<a href="http://grd77.shop/" class="auth_back">Вернуться на сайт</a>
+
+					<div class='forget_password' v-on:click="showForgetPswWnd">Забыли пароль?</div>
 			</div>
 		</div>
 		</div>
@@ -46,6 +48,9 @@
 		auth() {
 			this.$store.dispatch('authorization', this.$data)
 		},
+		showForgetPswWnd() {
+			this.$store.commit('set', {type: 'showForgetPswWnd', items: true})
+		}
 	},
 	mounted: function() {
 		// По нажатию кнопки Enter выполняем авторизацию,

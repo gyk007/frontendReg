@@ -25,9 +25,11 @@ const store = new Vuex.Store({
 		allProducts            : undefined, // Все продукты, для добавления и удаления из категории
 		loader                 : false,     // отвечает за лоадер, если true - лодер включен
 		loaderNetList          : false,     // отвечает за лоадер для списка организаций
+		loaderMerchantList     : false,     // отвечает за лоадер для списка представителей
 		shopList               : undefined, // торговые точки длч выбранного клиента
 		showShopsWnd           : false,     // показать окно торговых точек
-		merchant               : undefined, // торговый пердставитель сети
+		merchant               : undefined, // торговый пердставитель сети,
+		merchantList           : undefined, // все зарегестрированные менеджеры
 		merchantAlreadyReg     : undefined, // торговый пердставитель сети, который ужк зарегестрирован. Получаем его при регистрации нового представителя, когда такой емаил уже исспользует другой представитель
 		selectedProduct        : undefined, // выбранный товра (в каталоге или заказе)
 		showMerchantWnd        : false,     // показать окно торговой точки
@@ -152,7 +154,13 @@ const store = new Vuex.Store({
 		},
 		merchantAlreadyReg(state) {
 			return state.merchantAlreadyReg
-		}
+		},
+		loaderMerchantList(state) {
+			return state.loaderMerchantList
+		},
+		merchantList(state) {
+			return state.merchantList
+		},
 	},
 	mutations: {
 		set(state, {type, items}) {
@@ -370,9 +378,42 @@ const store = new Vuex.Store({
 			let arg = {
 				params:{
 					id_merchant :  idMerchant,
+					action      : 'delete_merchant'
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.clients, null,  arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						$$("ManagerListDt").remove(idMerchant);
+						commit('set', {type: 'showDeleteMerchanttWnd', items: false})
+						commit('set', {type: 'merchant',               items: undefined})
+
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		/**
+		 * Удалить представителя из магазина или из сети
+		 * @param {idMerchant} - id Предтавителя
+		 */
+		deleteMerchantFrom({state, commit}, idMerchant) {
+			let arg = {
+				params:{
+					id_merchant :  idMerchant,
 					id_shop     :  state.shop ? state.shop.id : undefined,
 					id_net      :  state.net  ? state.net.id  : undefined,
-					action      : 'delete_merchant'
+					action      : 'delete_merchant_from'
 				},
 				headers: {
 					'Content-Type': 'text/plain'
@@ -405,6 +446,10 @@ const store = new Vuex.Store({
 				}
 			)
 		},
+		/**
+		 * Удалить товар из коризины
+		 * @param {idProd} - id  товара
+		 */
 		deleteProdInCat({state, commit}, idProd) {
 			let arg = {
 				params:{
@@ -603,6 +648,39 @@ const store = new Vuex.Store({
 					} else {
 						commit('set', {type: 'error', items: undefined})
 						commit('set', {type: 'merchant', items: body.merchant})
+					}
+				},
+				error => {
+				 	console.log(error);
+				}
+			)
+		},
+		/**
+		 * Полчаем всех представителей
+		 */
+		getMerchantList({state, commit}) {
+			// Включаем лоадер
+			commit('set', {type: 'loaderMerchantList', items: true});
+
+			let arg = {
+				params:{
+					action  : 'get_merchant_list',
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.get(Conf.url.clients, arg).then(
+				response => {
+					let body = response.body;
+					if (body.ERROR) {
+						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error',              items: undefined})
+						commit('set', {type: 'loaderMerchantList', items: false});
+						commit('set', {type: 'merchantList', items: body.merchant_list});
 					}
 				},
 				error => {

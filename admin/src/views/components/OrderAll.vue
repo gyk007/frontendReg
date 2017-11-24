@@ -76,7 +76,7 @@
 			this.$store.commit('set', {type: 'orders', items: undefined})
 		},
 		mounted: function() {
-			this.$store.dispatch('getOrders', undefined)
+			this.$store.dispatch('getOrders')
 		}
 	}
 </script>

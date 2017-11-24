@@ -35,6 +35,7 @@ const catalogStore = new Vuex.Store({
 		sendMailLoader      : false,     // отвечает за лоадер при отправке почты , если true - лодер включен
 		selectShopWnd       : false,     // true - показать окно "Выбора торговой точки"
 		showDelCartProdWnd  : false,     // true - показать окно удаления товара из корзины
+		showForgetPswWnd    : false,     // true - показать окно для востановления пароля
 		showImageWnd        : false,     // true - показать окно с картинкой товра
 		showFilesWnd		: false,     // true - показать окно с файлами
 		files               : undefined, // массив с файлами организации
@@ -42,6 +43,8 @@ const catalogStore = new Vuex.Store({
 		selectedProduct     : undefined, // товар который выбран в каталоге
 		selectedOrderProduct: undefined, // товар который выбран в заказе
 		authError           : false,     // переменная указывает на ошибку авторизации
+		forgetPasswordError : false,     // переменная указывает на ошибку при введении Емайл когда забыли пароль
+		passwordWasResseted : false,     // переменная указывает что пароль был сброшен
 		merchant            : undefined, // представитель
 		regError            : false,     // указывает на ошибку при регистрации
 		isSentMail          : false,     // указывает отправлино ли письмо
@@ -151,6 +154,15 @@ const catalogStore = new Vuex.Store({
 		},
 		files(state){
 			return state.files
+		},
+		showForgetPswWnd(state){
+			return state.showForgetPswWnd
+		},
+		forgetPasswordError(state){
+			return state.forgetPasswordError
+		},
+		passwordWasResseted(state){
+			return state.passwordWasResseted
 		},
 	},
 	mutations: {
@@ -355,6 +367,47 @@ const catalogStore = new Vuex.Store({
 						commit('set', {type: 'cart', items: body.cart})
 						if (body.cart)
 							commit('calculateCartPrice', {products: body.cart.products.elements})
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		/**
+		 * Востановить пароль
+		 * @param {email} - почтовый адрес
+		 */
+		forgetPassword ({state, commit}, email) {
+			// Показываем окно отправки Email
+			commit('set', {type: 'sendMailLoader', items:true});
+
+			let arg = {
+				params:{
+				    email  : email,
+				    action : 'forget_password',
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.forgetPassword, null, arg).then(
+				response => {
+					let body = response.body;
+					if (body.ERROR) {
+						console.log(body.ERROR);
+						// Скрываем окно отправки Email
+						commit('set', {type: 'sendMailLoader', items:false});
+						// Ошибка, нет такгого email
+						commit('set', {type: 'forgetPasswordError', items:true});
+					} else {
+						// Скрываем окно отправки Email
+						commit('set', {type: 'sendMailLoader',      items:false});
+						// Сброс ошибки нет такгого email
+						commit('set', {type: 'forgetPasswordError', items:false});
+						// Указываем что пароль был сброшен
+						commit('set', {type: 'passwordWasResseted', items:true});
 					}
 				},
 				error => {

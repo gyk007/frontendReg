@@ -1,14 +1,15 @@
 const conf = {
 	url: {
-		catalog  : 'http://localhost:9888/alko/catalog/',
-		category : 'http://localhost:9888/alko/catalog/category/',
-		cart     : 'http://localhost:9888/alko/cart/',
-		order    : 'http://localhost:9888/alko/order/',
-		client   : 'http://localhost:9888/alko/client/',
+		catalog        : 'http://localhost:9888/alko/catalog/',
+		category       : 'http://localhost:9888/alko/catalog/category/',
+		cart           :  'http://localhost:9888/alko/cart/',
+		order          : 'http://localhost:9888/alko/order/',
+		client         : 'http://localhost:9888/alko/client/',
 		// Путь к файлам
-		file    :  'http://localhost:9887/',
-		img      : 'http://localhost:9885/product_img/',
-		decFile  : 'http://localhost:9885/',
+		file           :  http://localhost:9887/',
+		img            : 'http://localhost:9885/product_img/',
+		decFile        : 'http://localhost:9885/',
+		forgetPassword : 'http://client.grd77.shop/alko/main/'
 
 	}
 }
