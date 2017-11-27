@@ -766,6 +766,9 @@ const store = new Vuex.Store({
 			// Включаем лоадер
 			commit('set', {type: 'loader', items: true})
 
+			// Очищаем список продуктов
+			commit('set', {type: 'productList', items: undefined})
+
 			// Если это "ВСЕ товары"" то берем их из кеша
 			if (idCategory == 1) {
 				// Если еще не успели получить товары то выставляем инетвал и проверяем каждую секунду
@@ -774,8 +777,6 @@ const store = new Vuex.Store({
 						if (state.productListСache) {
 							// Удаляем инетрвал
 							clearInterval(intervalId);
-							// Очищаем список продуктов
-							commit('set', {type: 'productList', items: undefined});
 
 							// Удаляем выбранный товар
 							commit('set', {type: 'selectedProduct', items: undefined});
@@ -791,9 +792,6 @@ const store = new Vuex.Store({
 					return;
 				}
 
-				// Очищаем список продуктов
-				commit('set', {type: 'productList', items: undefined});
-
 				// Удаляем выбранный товар
 				commit('set', {type: 'selectedProduct', items: undefined});
 
@@ -805,11 +803,6 @@ const store = new Vuex.Store({
 
 				return;
 			}
-
-
-			// Очищаем список продуктов
-			commit('set', {type: 'productList', items: undefined})
-
 
 			let arg = {
 				params:{
