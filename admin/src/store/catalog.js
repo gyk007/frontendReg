@@ -13,6 +13,7 @@ const store = new Vuex.Store({
 	state: {
 		catalogTree            : undefined, // все категории (дерево категорий)
 		productList            : undefined, // Продукты в категории
+		productListСache       : undefined, // список всех товаров для Кэша
 		category               : undefined, // выбранная категория
 		product                : undefined, // выбранный продукт
 		idActiveCat            : undefined, // id выбранной категории
@@ -537,6 +538,9 @@ const store = new Vuex.Store({
 				}
 			)
 		},
+		/**
+		 * Получаем все товары для окна выбора товара в категорию
+		 */
 		getAllProducts({commit}) {
 			let arg = {
 				params:{
@@ -758,7 +762,24 @@ const store = new Vuex.Store({
 				}
 			)
 		},
-		getProductList({commit}, idCategory) {
+		getProductList({state, commit}, idCategory) {
+			// Если это "ВСЕ товары"" то берем их из кеша
+			if (idCategory == 1 && state.productListСache) {
+				// Очищаем список продуктов
+				commit('set', {type: 'productList', items: undefined});
+
+				// Удаляем выбранный товар
+				commit('set', {type: 'selectedProduct', items: undefined});
+
+				// Заменяем все товары данными из кеша
+				commit('set', {type: 'productList', items: state.productListСache});
+
+				// Выключаем лоадер
+				commit('set', {type: 'loader', items: false});
+
+				return;
+			}
+
 			// Очищаем список продуктов
 			commit('set', {type: 'productList', items: undefined})
 			// Включаем лоадер
@@ -779,10 +800,39 @@ const store = new Vuex.Store({
 					if (body.ERROR) {
 						commit('set', {type: 'error', items: body.ERROR})
 					} else {
-						commit('set', {type: 'error',       items: undefined})
-						commit('set', {type: 'productList', items: body.category.products});
+						commit('set', {type: 'error',           items: undefined})
+						commit('set', {type: 'productList',     items: body.category.products});
+						commit('set', {type: 'selectedProduct', items: undefined})
 						// Выключаем лоадер
 						commit('set', {type: 'loader', items: false})
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		/**
+		 * Получаем все товары для кэша
+		 */
+		getProductListTcCache({commit}) {
+			let arg = {
+				params:{
+					id: 1
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.get(Conf.url.category, arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error',            items: undefined});
+						commit('set', {type: 'productListСache', items: body.category.products});
 					}
 				},
 				error => {

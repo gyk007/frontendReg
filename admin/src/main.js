@@ -46,6 +46,15 @@ new Vue({
 	created: function() {
 		let minHeight = $(window).outerHeight() - $('.js-footer').outerHeight()
 		$('.wrapper').css('min-height', minHeight + 'px')
+
+		// Получаем все товары в кеш, для скорости загрузки
+		this.$store.dispatch('getProductListTcCache')
+
+		let $this = this;
+		// Загружаем все товары в кеш  через каждый час
+		var timerId = setInterval(function() {
+			$this.$store.dispatch('getProductListTcCache')
+		}, 3600000);
 	},
 	mounted: function() {
 		if ($('.js-nav-button').length) {
