@@ -4,7 +4,7 @@
 			<div class="modal-wrapper">
 				<div class="modal-container-merchant">
 
-					<div class="modal__hdr">Регистрация</div>
+					<div class="modal__hdr">Ваши данные</div>
 
 					<p style='color: #f44336' v-if ='regError || !merchant || isSetPassword'>Регистрация невозможна, обратитесь к администратору</p>
 					<p style='color: #f44336; text-align:center' v-if ='validate.confirmPassword'>Пароль не подтвержден</p>
@@ -51,7 +51,7 @@
 
 				</div>
 				</br>
-					<button class="modal_btn btn" style='width:170px' v-on:click="registration" v-if ='!regError'>Зарегистрировать</button>
+					<button class="modal_btn btn" style='width:170px' v-on:click="registration" v-if ='!regError'>Сохранить</button>
 			</div>
 		</div>
 		</div>
