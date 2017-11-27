@@ -575,8 +575,37 @@ const catalogStore = new Vuex.Store({
 			)
 		},
 		getProductList({state, commit}, idCategory) {
+			// Включаем лоадер
+			commit('set', {type: 'loader', items: true});
+
 			// Если это "ВСЕ товары"" то берем их из кеша
-			if (idCategory == 1 && state.productListСache) {
+			if (idCategory == 1) {
+				// Если еще не успели получить товары то выставляем инетвал и проверяем каждую секунду
+				if (!state.productListСache) {
+					var intervalId = setInterval(function(){
+						if (state.productListСache) {
+							// Удаляем инетрвал
+							clearInterval(intervalId);
+							// Очищаем список продуктов
+							commit('set', {type: 'productList', items: undefined})
+
+							// Удаляем выбранный товар
+							commit('set', {type: 'selectedProduct', items: undefined})
+
+							// Берем данные из кеша
+							commit('set', {type: 'filterPrice', items: state.filterPriceCache})
+							commit('set', {type: 'filterAlko',  items: state.filterAlkoCache})
+						    // Выключаем лоадер
+							commit('set', {type: 'loader', items: false})
+							commit('set', {type: 'productList', items: state.productListСache})
+
+							// Выключаем вкладку с индивидуальными предложениями
+							commit('set', {type: 'selectOffer', items: false})
+						}
+					}, 1000);
+
+					return;
+				}
 				// Очищаем список продуктов
 				commit('set', {type: 'productList', items: undefined})
 
@@ -586,17 +615,20 @@ const catalogStore = new Vuex.Store({
 				// Берем данные из кеша
 				commit('set', {type: 'filterPrice', items: state.filterPriceCache})
 				commit('set', {type: 'filterAlko',  items: state.filterAlkoCache})
+			    // Выключаем лоадер
+				commit('set', {type: 'loader', items: false})
 				commit('set', {type: 'productList', items: state.productListСache})
 
 				// Выключаем вкладку с индивидуальными предложениями
 				commit('set', {type: 'selectOffer', items: false})
+
+
 				return;
 			}
 
 			// Очищаем список продуктов
 			commit('set', {type: 'productList', items: undefined})
-			// Включаем лоадер
-			commit('set', {type: 'loader', items: true})
+
 			// Удаляем выбранный товар
 			commit('set', {type: 'selectedProduct', items: undefined})
 			let arg = {
@@ -632,6 +664,7 @@ const catalogStore = new Vuex.Store({
 							})
 
 						commit('set', {type: 'productList', items: body.category.products});
+
 
 						// Фильтры
 						if (body.category.filter) {

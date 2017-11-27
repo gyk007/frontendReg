@@ -763,8 +763,34 @@ const store = new Vuex.Store({
 			)
 		},
 		getProductList({state, commit}, idCategory) {
+			// Включаем лоадер
+			commit('set', {type: 'loader', items: true})
+
 			// Если это "ВСЕ товары"" то берем их из кеша
-			if (idCategory == 1 && state.productListСache) {
+			if (idCategory == 1) {
+				// Если еще не успели получить товары то выставляем инетвал и проверяем каждую секунду
+				if (!state.productListСache) {
+					var intervalId = setInterval(function(){
+						if (state.productListСache) {
+							// Удаляем инетрвал
+							clearInterval(intervalId);
+							// Очищаем список продуктов
+							commit('set', {type: 'productList', items: undefined});
+
+							// Удаляем выбранный товар
+							commit('set', {type: 'selectedProduct', items: undefined});
+
+							// Заменяем все товары данными из кеша
+							commit('set', {type: 'productList', items: state.productListСache});
+
+							// Выключаем лоадер
+							commit('set', {type: 'loader', items: false});
+						}
+					}, 1000);
+
+					return;
+				}
+
 				// Очищаем список продуктов
 				commit('set', {type: 'productList', items: undefined});
 
@@ -780,10 +806,10 @@ const store = new Vuex.Store({
 				return;
 			}
 
+
 			// Очищаем список продуктов
 			commit('set', {type: 'productList', items: undefined})
-			// Включаем лоадер
-			commit('set', {type: 'loader', items: true})
+
 
 			let arg = {
 				params:{
