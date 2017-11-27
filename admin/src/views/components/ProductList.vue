@@ -146,7 +146,7 @@
 			productList() {
 				if (this.$store.getters.productList) {
 					this.$store.getters.productList.forEach(key => {
-						key.img  = key.img_small ? conf.url.img + 'small/' + key.img_small : 'pic/batle.png';
+						if (!key.img) key.img = key.img_small ? conf.url.img + 'small/' + key.img_small : 'pic/batle.png';
 					})
 				}
 				return this.$store.getters.productList

@@ -858,6 +858,7 @@ const store = new Vuex.Store({
 						commit('set', {type: 'error', items: body.ERROR})
 					} else {
 						commit('set', {type: 'error',            items: undefined});
+
 						commit('set', {type: 'productListСache', items: body.category.products});
 					}
 				},
