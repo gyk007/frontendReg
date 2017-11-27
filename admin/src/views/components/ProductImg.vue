@@ -4,7 +4,7 @@
 			<div class="modal-wrapper" >
 				<div class='modal-close' @click="close"><img src="img/close.png" alt="Закрыть"></div>
 
-				<img class='show_img' :src="selectedProduct.img_medium">
+				<img class='show_img' :src="selectedProduct.img_main">
 			</div>
 		</div>
 	</transition>
@@ -22,11 +22,12 @@
 			return this.$store.getters.showImageWnd
 		},
 		selectedProduct() {
-			this.$store.getters.selectedProduct
-			this.$store.getters.selectedProduct.img_medium =
-				this.$store.getters.selectedProduct.img_medium ?
-					conf.url.img + 'medium/' + this.$store.getters.selectedProduct.img_medium :
-					'pic/batle.png';
+			if (!this.$store.getters.selectedProduct.img_main) {
+				this.$store.getters.selectedProduct.img_main =
+					this.$store.getters.selectedProduct.img_medium ?
+						conf.url.img + 'medium/' + this.$store.getters.selectedProduct.img_medium :
+						'pic/batle.png';
+			}
 
 			return this.$store.getters.selectedProduct;
 		},
