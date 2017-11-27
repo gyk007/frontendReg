@@ -397,6 +397,13 @@ const store = new Vuex.Store({
 						commit('set', {type: 'showDeleteMerchanttWnd', items: false})
 						commit('set', {type: 'merchant',               items: undefined})
 
+						state.netList.forEach(key => {
+							if (key.id_merchant == idMerchant) {
+								key.merchant_name  = '-';
+								key.merchant_phone = '-';
+								key.merchant_email = '-';
+							}
+						})
 					}
 				},
 				error => {
