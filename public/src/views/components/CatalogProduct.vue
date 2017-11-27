@@ -136,9 +136,9 @@
 				// Проверыем есть ли товар в корзине
 				if (this.$store.getters.productList) {
 					this.$store.getters.productList.forEach(prod => {
-						if (!prod.img) prod.img = prod.img_small ? conf.url.img + 'small/' + prod.img_small : 'pic/batle.png';
+						if (!prod.img) prod.img        = prod.img_small ? conf.url.img + 'small/' + prod.img_small : 'pic/batle.png';
 						prod.price      = parseFloat(prod.price).toFixed(2);
-						prod.img_medium = prod.img_medium ? conf.url.img + 'medium/' + prod.img_medium : undefined;
+						if (!prod.img_main) prod.img_main = prod.img_medium ? conf.url.img + 'medium/' + prod.img_medium : undefined;
 						prod.Litr       = parseFloat(prod.Litr).toFixed(2);
 
 						// Количество товара которое нужно добавить в корзину

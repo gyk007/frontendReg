@@ -4,7 +4,7 @@
 			<div class="modal-wrapper" >
 				<div class='modal-close' @click="close"><img src="img/close.png" alt="Закрыть"></div>
 
-				<img class='show_img' :src="selectedProduct.img_medium">
+				<img class='show_img' :src="selectedProduct.img_main">
 			</div>
 		</div>
 	</transition>
