@@ -2,8 +2,8 @@
 	Компонет товары в каталоге.
 -->
 <template>
-	<section class="shop__data"v-if='productList'>
-		<div class="shop__data-body"   :class="{'prod_width' : !productList.length &&  !selectOffer}"  id='prod_fixed'>
+	<section class="shop__data" v-if='productList'>
+		<div class="shop__data-body"   :class="{'prod_width' : !productList.length && !selectOffer}"  id='prod_fixed'>
 			<ul class="shop__sub-nav" style="padding-bottom:20px" v-if='productList.length || selectOffer'>
 				<div>
 					<li :class="{ active: !selectOffer, accent: selectOffer}"><a v-on:click="offers(false)">Все</a></li>
@@ -136,10 +136,10 @@
 				// Проверыем есть ли товар в корзине
 				if (this.$store.getters.productList) {
 					this.$store.getters.productList.forEach(prod => {
-						if (!prod.img) prod.img        = prod.img_small ? conf.url.img + 'small/' + prod.img_small : 'pic/batle.png';
-						prod.price      = parseFloat(prod.price).toFixed(2);
+						if (!prod.img) prod.img           = prod.img_small ? conf.url.img + 'small/' + prod.img_small : 'pic/batle.png';
 						if (!prod.img_main) prod.img_main = prod.img_medium ? conf.url.img + 'medium/' + prod.img_medium : undefined;
-						prod.Litr       = parseFloat(prod.Litr).toFixed(2);
+						prod.Litr  = parseFloat(prod.Litr).toFixed(2);
+						prod.price = parseFloat(prod.price).toFixed(2);
 
 						// Количество товара которое нужно добавить в корзину
 						prod.cartQuantity = 1;
@@ -163,7 +163,6 @@
 							&& prod.filterOffer) {
 							proucts.push(prod);
 						}
-
 					});
 				}
 
@@ -186,6 +185,7 @@
 			table(){
 				let $this = this;
 				return {
+					id      : 'productDt',
 					view    : "datatable",
 					height  : $(window).height() / 1.38,
 					width   : $('.shop__data-body').width(),
@@ -348,13 +348,15 @@
 				if(showOffer) {
 					// Указываем что вкалда 'Индивидуальные предложения' включена
 					this.$store.commit('set', {type: 'selectOffer', items: true})
+
 					// Если у продукта есть скидка, то показываем этот продукт
 					if (this.$store.getters.productList) {
 						this.$store.getters.productList.forEach(function(key){
-							if(!key.offer)
+							if(!key.offer) {
 								key.filterOffer = false;
-							else
+							} else {
 								isOffers = true;
+							}
 						});
 					}
 				} else {

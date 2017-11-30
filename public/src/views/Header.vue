@@ -1,6 +1,6 @@
 <template>
    <section class="header">
-		<div class="container">
+
 			<div class="nav__button js-nav-button">
 					<button type="button" class="tcon tcon-menu--xbutterfly" aria-label="toggle menu">
 							<span class="tcon-menu__lines" aria-hidden="true"></span>
@@ -46,8 +46,8 @@
 					<div class="header__user--holder">
 
 							<div class="header__user-container">
-									<div class="header__user-name">
-										<div class='link' @click='showSelectShopWnd'>{{shop.net.net_name}} : {{shop.official.name}}</div>
+									<div class="header__user-name"  v-if='shop && shop.net' >
+										<div class='link'   @click='showSelectShopWnd'>{{shop.net.net_name}} : {{shop.official.name}}</div>
 									</div>
 									<div class="header__user-logo">
 											<!-- <img src="pic/icon/name-logo.png" alt="logo"> -->
@@ -59,10 +59,10 @@
 			</div>
 
 			<div class='info_block'>
-				<span v-if='shop'>ИНН: {{shop.net.official.taxcode}}</span>
-				<span v-if='shop' style='padding-left:10px'>КПП: {{shop.official.taxreasoncode}} </span>
+				<span v-if='shop && shop.net'>ИНН: {{shop.net.official.taxcode}}</span>
+				<span v-if='shop && shop.official' style='padding-left:10px'>КПП: {{shop.official.taxreasoncode}} </span>
 			</div>
-		</div>
+
 
 	</section>
 </template>
@@ -82,7 +82,6 @@
 				return this.$store.getters.user
 			},
 			shop() {
-				console.log(this.$store.getters.shop)
 				return this.$store.getters.shop
 			}
 		},

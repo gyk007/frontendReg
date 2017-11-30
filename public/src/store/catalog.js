@@ -13,17 +13,17 @@ Vue.use(VueResource)
 
 const catalogStore = new Vuex.Store({
 	state: {
-		allOrderStatus      : undefined, // все статусы заказа
+		allOrderStatus      : undefined, // вcе статуcы заказа
 		catalogTree         : undefined, // дерево категорий
 		contactWnd          : false,     // true - показть окно "Контакты"
 		productList         : undefined, // список товаров в выбранной категории
-		productListСache    : undefined, // список всех товаров для Кэша
+		productListCache    : undefined, // список всех товаров для Кэша
 		idActiveCat         : undefined, // id выбранной категории
 		category            : undefined, // выбранная категория
 		filterPrice         : undefined, // начальные значени фильра "Цена"
 		filterAlko          : undefined, // начальные значения фильтра "Крепость об %"
 		filterPriceCache    : undefined, // начальные значения фильтра "Крепость об %" КЭШ для всех товаров
-		filterAlkoCache	    : undefined, // начальные значения фильтра "Крепость об %" КЭШ для всех товаров
+		filterAlkoCache     : undefined, // начальные значения фильтра "Крепость об %" КЭШ для всех товаров
 		product             : undefined, // выбранные продукт
 		cart                : undefined, // корзина
 		cartPrice           : 0,         // стоимость корзины
@@ -33,12 +33,12 @@ const catalogStore = new Vuex.Store({
 		documents           : undefined, // список документов в заказе
 		user                : undefined, // данные пользователя
 		shop                : undefined, // выбраная торговая точка
-		loader              : false,     // отвечает за лоадер, если true - лодер включен
-		selectOffer         : false,     // вкладка с индивидуальными предложениями, если true - вкладка нажата
-		sendMailLoader      : false,     // отвечает за лоадер при отправке почты , если true - лодер включен
+		loader              : false,     // отвечает за лоадер, еCли true - лодер включен
+		selectOffer         : false,     // вкладка с индивидуальными предложениями, еCли true - вкладка нажата
+		sendMailLoader      : false,     // отвечает за лоадер при отправке почты , еCли true - лодер включен
 		selectShopWnd       : false,     // true - показать окно "Выбора торговой точки"
 		showDelCartProdWnd  : false,     // true - показать окно удаления товара из корзины
-		showForgetPswWnd    : false,     // true - показать окно для востановления пароля
+		showForgetPswWnd    : false,     // true - показать окно для воCтановления пароля
 		showImageWnd        : false,     // true - показать окно с картинкой товра
 		showFilesWnd		: false,     // true - показать окно с файлами
 		files               : undefined, // массив с файлами организации
@@ -53,9 +53,9 @@ const catalogStore = new Vuex.Store({
 		isSentMail          : false,     // указывает отправлино ли письмо
 		ordersFilter : {          // Фильтры заказа
 			dateTo    : moment(),                       // Начльная установка Даты До (сегодня)
-			dateFrom  : moment().subtract(1, 'months'), // Начальная установка Даты От (месяц назад)
-			search    : undefined,                      // Поисковая строка
-			status    : undefined,                      // Стату массив с id статусов
+			dateFrom  : moment().subtract(1, 'months'), // Начальная усановка Даты От (месяц назад)
+			search    : undefined,                      // ПоиCковая строка
+			status    : undefined,                      // стату массив с id статусов
 		}
 	},
 	getters: {
@@ -176,7 +176,7 @@ const catalogStore = new Vuex.Store({
 			state[type].push(item)
 		},
 		deleteItemFromArry(state, {type, key, value}) {
-			// поиск индекс для удаления
+			// поиCк индекC для удаления
 			let indexToRemove = state[type].findIndex(item => item[key] == value);
 			state[type].splice(indexToRemove , 1);
 		},
@@ -187,6 +187,21 @@ const catalogStore = new Vuex.Store({
 					if (key.product.price)
 						state.cartPrice +=	key.quantity * key.product.price
 				})
+		},
+
+		/**
+		 * ЧиCтим фильтры во "вCех товарах" которые находятCя в кешк
+		 * Так как товары из других категорий не кешируютCя то у них вCе фильтры Cразу Cброшены
+		 */
+		clearFilterInProductListCache(state) {
+			if (state.productListCache.length)
+				state.productListCache.forEach( prod => {
+					prod.filterPrice = true;
+					prod.filterAlko  = true;
+					prod.search      = true;
+					prod.filterOffer = true;
+
+				});
 		}
 	},
 	actions: {
@@ -302,7 +317,7 @@ const catalogStore = new Vuex.Store({
 						commit('set', {type: 'authError', items:true});
 					} else if(body.SESSION) {
 						Cookies.set('token', body.SESSION.token);
-						// Сброс ошибки авторизации авторизации
+						// CброC ошибки авторизации авторизации
 						commit('set', {type: 'authError', items:false});
 						dispatch('getUser')
 
@@ -378,8 +393,8 @@ const catalogStore = new Vuex.Store({
 			)
 		},
 		/**
-		 * Востановить пароль
-		 * @param {email} - почтовый адрес
+		 * ВоCтановить пароль
+		 * @param {email} - почтовый адреC
 		 */
 		forgetPassword ({state, commit}, email) {
 			// Показываем окно отправки Email
@@ -400,16 +415,16 @@ const catalogStore = new Vuex.Store({
 					let body = response.body;
 					if (body.ERROR) {
 						console.log(body.ERROR);
-						// Скрываем окно отправки Email
+						// Cкрываем окно отправки Email
 						commit('set', {type: 'sendMailLoader', items:false});
 						// Ошибка, нет такгого email
 						commit('set', {type: 'forgetPasswordError', items:true});
 					} else {
-						// Скрываем окно отправки Email
+						// Cкрываем окно отправки Email
 						commit('set', {type: 'sendMailLoader',      items:false});
-						// Сброс ошибки нет такгого email
+						// CброC ошибки нет такгого email
 						commit('set', {type: 'forgetPasswordError', items:false});
-						// Указываем что пароль был сброшен
+						// Указываем что пароль был Cброшен
 						commit('set', {type: 'passwordWasResseted', items:true});
 					}
 				},
@@ -578,30 +593,31 @@ const catalogStore = new Vuex.Store({
 			// Включаем лоадер
 			commit('set', {type: 'loader', items: true});
 
-			// Очищаем список продуктов
+			// Очищаем CпиCок продуктов
 			commit('set', {type: 'productList', items: undefined})
 
 			// Удаляем выбранный товар
 			commit('set', {type: 'selectedProduct', items: undefined})
 
-			// Если это "ВСЕ товары"" то берем их из кеша
+			// Выключаем вкладку C индивидуальными предложениями
+			commit('set', {type: 'selectOffer', items: false})
+
+			// ЕCли это "ВCЕ товары"" то берем их из кеша
 			if (idCategory == 1) {
-				// Если еще не успели получить товары то выставляем инетвал и проверяем каждую секунду
-				if (!state.productListСache) {
+				// ЕCли еще не уCпели получить товары то выCтавляем инетвал и проверяем каждую Cекунду
+				if (!state.productListCache) {
 					var intervalId = setInterval(function(){
-						if (state.productListСache) {
+						if (state.productListCache) {
 							// Удаляем инетрвал
 							clearInterval(intervalId);
 
-							// Берем данные из кеша
+							// Берем данные фильтров из кеша
 							commit('set', {type: 'filterPrice', items: state.filterPriceCache})
 							commit('set', {type: 'filterAlko',  items: state.filterAlkoCache})
 						    // Выключаем лоадер
 							commit('set', {type: 'loader', items: false})
-							commit('set', {type: 'productList', items: state.productListСache})
+							commit('set', {type: 'productList', items: state.productListCache})
 
-							// Выключаем вкладку с индивидуальными предложениями
-							commit('set', {type: 'selectOffer', items: false})
 						}
 					}, 1000);
 
@@ -613,10 +629,10 @@ const catalogStore = new Vuex.Store({
 				commit('set', {type: 'filterAlko',  items: state.filterAlkoCache})
 			    // Выключаем лоадер
 				commit('set', {type: 'loader', items: false})
-				commit('set', {type: 'productList', items: state.productListСache})
-
-				// Выключаем вкладку с индивидуальными предложениями
-				commit('set', {type: 'selectOffer', items: false})
+				// Чистим фильтры
+				commit('clearFilterInProductListCache')
+				// Берем данные из кеша
+				commit('set', {type: 'productList', items: state.productListCache})
 
 				return;
 			}
@@ -640,13 +656,13 @@ const catalogStore = new Vuex.Store({
 						if (body.ERROR.AUTH)
 							document.location = '/#/auth'
 					} else {
-						// Очищаем список продуктов
+						// Очищаем CпиCок продуктов
 						commit('set', {type: 'productList', items: undefined})
 						commit('set', {type: 'filters',     items: undefined})
 
 						if (body.category.products.length)
 							body.category.products.forEach(function(key) {
-								// Добавляем поиск
+								// Добавляем поиcк
 								key.search = true;
 								// Добавляем фильтры
 								key.filterPrice = true;
@@ -678,8 +694,6 @@ const catalogStore = new Vuex.Store({
 						}
 						// Выключаем лоадер
 						commit('set', {type: 'loader', items: false})
-						// Выключаем вкладку с индивидуальными предложениями
-						commit('set', {type: 'selectOffer', items: false})
 					}
 				},
 				error => {
@@ -688,13 +702,13 @@ const catalogStore = new Vuex.Store({
 			)
 		},
 		/**
-		 * Получаем все товары для кэша
-		 * @param {email} - почтовый адрес
+		 * Получаем вCе товары для кэша
+		 * @param {email} - почтовый адреC
 		 */
 		getProductListTcCache({commit}, idCategory) {
 			let arg = {
 				params:{
-					id    : 1, // Категория Всех товаров id = 1
+					id    : 1, // Категория ВCех товаров id = 1
 					token : Cookies.get('token'),
 				},
 				headers: {
@@ -710,9 +724,8 @@ const catalogStore = new Vuex.Store({
 						if (body.ERROR.AUTH)
 							document.location = '/#/auth'
 					} else {
-						if (body.category.products.length)
 							body.category.products.forEach(function(key) {
-								// Добавляем поиск
+								// Добавляем поиcк
 								key.search = true;
 								// Добавляем фильтры
 								key.filterPrice = true;
@@ -720,7 +733,7 @@ const catalogStore = new Vuex.Store({
 								key.filterOffer = true;
 							})
 
-						commit('set', {type: 'productListСache', items: body.category.products});
+						commit('set', {type: 'productListCache', items: body.category.products});
 
 						// Фильтры
 						if (body.category.filter) {
@@ -779,7 +792,7 @@ const catalogStore = new Vuex.Store({
 				}
 			)
 		},
-		// Получаем список стусов
+		// Получаем CпиCок CтуCов
 		getStatus({commit}) {
 			let arg = {
 				params:{
@@ -865,7 +878,7 @@ const catalogStore = new Vuex.Store({
 			)
 		},
 		searchProduct ({commit}, search) {
-			// Очищаем список продуктов
+			// Очищаем CпиCок продуктов
 			commit('set', {type: 'productList', items: undefined})
 			// Включаем лоадер
 			commit('set', {type: 'loader', items: true})
@@ -890,18 +903,18 @@ const catalogStore = new Vuex.Store({
 						if (body.ERROR.AUTH)
 							document.location = '/#/auth'
 					} else {
-						// Очищаем список продуктов
+						// Очищаем CпиCок продуктов
 						commit('set', {type: 'productList', items: undefined})
 						commit('set', {type: 'filters',     items: undefined})
 						if (body.products)
 							body.products.forEach(function(key) {
-								// Добавляем поиск
+								// Добавляем поиCк
 								key.search = true;
 								// Добавляем фильтры
 								key.filterPrice = true;
 								key.filterAlko  = true;
 								key.filterOffer = true;
-								// Количесво в корзине по умолчанию
+								// КоличеCво в корзине по умолчанию
 								key.cartQuantity = 1;
 							})
 							commit('set', {type: 'productList', items: body.products})
@@ -921,7 +934,7 @@ const catalogStore = new Vuex.Store({
 						}
 						// Выключаем лоадер
 						commit('set', {type: 'loader', items: false})
-						// Выключаем вкладку с индивидуальными предложениями
+						// Выключаем вкладку C индивидуальными предложениями
 						commit('set', {type: 'selectOffer', items: false})
 					}
 				},
@@ -998,7 +1011,7 @@ const catalogStore = new Vuex.Store({
 					} else {
 						// Выключаем лоадер
 						commit('set', {type: 'sendMailLoader',  items: false})
-						// Указываем что сообщение отправлено
+						// Указываем что Cообщение отправлено
 						commit('set', {type: 'isSentMail', items: true})
 					}
 				},
@@ -1007,7 +1020,7 @@ const catalogStore = new Vuex.Store({
 				}
 			)
 		},
-		// Изменить количесво продуктво в корзине
+		// Изменить количеCво продуктво в корзине
 		updateQtyProdInCart({state, commit}, product) {
 			let arg = {
 				params: {
