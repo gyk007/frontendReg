@@ -41,7 +41,7 @@
 
 	</div>
 </div>
-<ProductImg v-if='showImageWnd && selectedOrderProduct.img_big'></ProductImg>
+<ProductImg v-if='showImageWnd && selectedOrderProduct.img_main'></ProductImg>
 </section>
 </template>
 
@@ -68,6 +68,10 @@
 						}
 						if (key.product.img_big) {
 							key.product.img_big = this.$data.imgUrl + "big/" + key.product.img_big
+						}
+
+						if (key.product.img_medium) {
+							key.product.img_main = this.$data.imgUrl + 'medium/' + key.product.img_medium;
 						}
 					})
 				}

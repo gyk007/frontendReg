@@ -114,6 +114,7 @@
 						product.id        = key.id_product;
 						product.img       = key.product.img_small ? conf.url.img + 'small/' +  key.product.img_small : 'pic/batle.png';
 						product.img_big   = key.product.img_big ? conf.url.img + 'big/' + key.product.img_big : undefined;
+						product.img_main  = key.product.img_medium ? conf.url.img + 'medium/' + key.product.img_medium : undefined;
 						product.name      = '<div class="webix_cell_midle" style="text-align: left"><span style="white-space: pre-wrap; font-size: 15px">' + key.product.name + '</span></div>';
 						product.qty       = key.quantity;
 						product.price     = parseFloat(key.product.price).toFixed(2);
