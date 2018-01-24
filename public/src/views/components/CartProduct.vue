@@ -354,7 +354,6 @@
 			return true;
 		}
 
-		console.log(lessEq)
 		if (moreEq) {
 	    	if (value >= filter) {
 	    		return true;

@@ -9,7 +9,7 @@
 			</div>
 
 			<a href="#" class="header__logo">
-				<img src="pic/logo.png" alt="logo">
+				<img src="pic/JTLogistic.svg" alt="logo">
 			</a>
 
 			<nav class="nav js-nav">

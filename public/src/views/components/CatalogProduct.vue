@@ -111,6 +111,13 @@
 		price : undefined,
 	}
 
+	// Эта переменная хранит значение фильтров котроые ввел пользователь
+	// Для того чтобы сохранить их значение при выборе другой категории
+	var SORT_IN_PRODUCT_TABLE = {
+		by  : undefined,
+		dir : undefined,
+	}
+
 	export default {
 		components: {ProductImg},
 		data() {
@@ -289,6 +296,11 @@
 						onAfterLoad: function() {
 							filterTable(this)
 						},
+						onAfterRender: function() {
+							if (SORT_IN_PRODUCT_TABLE.by) {
+								this.sort(SORT_IN_PRODUCT_TABLE.by, SORT_IN_PRODUCT_TABLE.dir);
+							};
+						},
 						onAfterFilter: function(){
 							// Устанавливаем фильтры
 							FILTERS_IN_PRODUCT_TABLE.name  = this.getFilter("name").value;
@@ -307,6 +319,7 @@
 						},
 						onItemClick: function(id, e, node) {
 							$this.$store.commit('set', {type: 'selectedProduct', items: this.getItem(id)})
+							let $thisDt = this;
 							// Добавить в корзину
 							if (e.target.id == 'add_to_cart') {
 								// Так как это работает асинхронно
@@ -334,7 +347,11 @@
 							if (code == 13 && $this.selectedProduct.img_big) {
 								$this.$store.commit('set', {type: 'showImageWnd', items: true})
 							}
-						}
+						},
+						onAfterSort: function(by, dir, as){
+     						SORT_IN_PRODUCT_TABLE.dir = dir
+     						SORT_IN_PRODUCT_TABLE.by  = by ? by : 'price';
+						},
 					}
 				}
 			}

@@ -626,3 +626,12 @@ select[readonly],
 	margin-top: 30px;
 	width: 69%
 }
+
+.header__logo {
+    margin-top: 8px !important;
+}
+
+.header__logo img {
+    margin-left: 15px;
+    height: 45px !important;
+}
