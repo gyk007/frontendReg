@@ -6,7 +6,7 @@
 
 				<div class="modal-container" v-if='!sendMailLoader && !passwordWasResseted'>
 					<a href="http://grd77.shop/" class="auth_logo">
-						<img src="pic/logo.png" alt="logo">
+						<img src="pic/JTLogistic.svg" alt="logo" style="height: 45px; margin-top: -10px;">
 					</a>
 					<div class="modal__hdr">Востановление пароля</div>
 					<div class="modal__hdr_error" v-if='forgetPasswordError'>Такого email адреса не существует</div>
