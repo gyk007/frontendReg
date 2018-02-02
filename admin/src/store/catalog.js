@@ -725,7 +725,7 @@ const store = new Vuex.Store({
 
 						commit('set', {type: 'order', items: body.order})
 						commit('set', {type: 'documents', items: body.documents})
-						document.location = '/#/order/' + body.order.id
+						document.location.hash = '/order/' + body.order.id;
 					};
 				},
 				error => {
