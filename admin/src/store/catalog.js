@@ -46,6 +46,7 @@ const store = new Vuex.Store({
 		showImageWnd           : false,     // true - показать окно с картинкой товра
 		showNetWnd             : false,     // Показать окно c данными сети
 		showDeleteMerchanttWnd : false,     // Показать окно для удалени клиента
+		showDeleteOrderWnd     : false,     // Показать окно для удалени заказа
 		ordersFilter    : {          // Фильтры заказа
 			dateTo    : moment(),                       // Начльная установка Даты До (сегодня)
 			dateFrom  : moment().subtract(1, 'months'), // Начальная установка Даты От (месяц назад)
@@ -161,6 +162,9 @@ const store = new Vuex.Store({
 		},
 		merchantList(state) {
 			return state.merchantList
+		},
+		showDeleteOrderWnd(state) {
+			return state.showDeleteOrderWnd
 		},
 	},
 	mutations: {
@@ -710,7 +714,7 @@ const store = new Vuex.Store({
 				}
 			}
 
-			Vue.http.post(Conf.url.order, null,  arg).then(
+			Vue.http.post(Conf.url.order, null, arg).then(
 				response => {
 					let body = response.body
 					if (body.ERROR) {
@@ -727,6 +731,37 @@ const store = new Vuex.Store({
 						commit('set', {type: 'documents', items: body.documents})
 						document.location.hash = '/order/' + body.order.id;
 					};
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		/**
+		 * Удалить заказ
+		 * @param {orderId} - id заказа
+		 */
+		deleteOrder({state, commit}, orderId) {
+			let arg = {
+				params:{
+					'order.id' : orderId,
+					action     : 'delete_order'
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.order, null, arg).then(
+				response => {
+					let body = response.body;
+					if (body.ERROR) {
+						console.log(body.ERROR);
+						commit('set', {type: 'error', items: body.ERROR});
+					} else {
+						commit('set', {type: 'showDeleteOrderWnd', items: false});
+						document.location.hash = '/orders';
+					}
 				},
 				error => {
 					console.log(error);
