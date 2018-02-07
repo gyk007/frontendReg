@@ -14,6 +14,9 @@
 			<div class="a-order__balance-sum negative" v-if='!order.debt'>Обрабатывается</div>
 		</div>
 
+		<div class="a-order__hdr-controls">
+			<div class="btn btn btn--edit" style='background-color: #f48c42; color: #FFF' @click="deleteOrder">Удалить заказ</div>
+		</div>
 	</div>
 
 	<div class="order-ls__container">
@@ -21,6 +24,8 @@
 		<OrderProducts></OrderProducts>
 	</div>
 </div>
+
+	<DeleteOrderWnd v-if='showDeleteOrderWnd'></DeleteOrderWnd>
 
   </section>
 </template>
@@ -30,20 +35,29 @@
 
 import OrderData     from './components/OrderData.vue'
 import OrderProducts from './components/OrderProducts.vue'
+import DeleteOrderWnd from './components/DeleteOrderWnd.vue'
 import Store         from '../store/catalog.js'
 import $             from 'jquery'
 
 export default {
 	name: 'order',
-	components: {OrderProducts, OrderData},
+	components: {OrderProducts, OrderData, DeleteOrderWnd},
 	store: Store,
 	computed: {
 		order() {
 			if(!this.$store.getters.order)
-				document.location = '/#/orders'
+				document.location.hash = 'orders'
 			else
 				return this.$store.getters.order
 		},
+		showDeleteOrderWnd(){
+			return this.$store.getters.showDeleteOrderWnd
+		}
+	},
+	methods: {
+		deleteOrder(){
+			this.$store.commit('set', {type: 'showDeleteOrderWnd', items: true});
+		}
 	},
 	beforeCreate: function (){
 		this.$store.dispatch('getOrder', this.$route.params.id)
