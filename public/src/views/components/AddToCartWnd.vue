@@ -53,9 +53,6 @@
 			this.$store.commit('set', {type: 'showAddToCartWnd', items: false})
 		}
 	},
-	beforeCreate:  function() {
-		document.onkeyup = undefined;
-	},
 	mounted: function() {
 		// По нажатию кнопки ESC закрываем окно,
 		// выполняем метод close()

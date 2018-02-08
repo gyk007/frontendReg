@@ -395,6 +395,12 @@
 							if (code === 13 && $this.selectedProduct) {
 								$this.addToCart($this.selectedProduct);
 							}
+
+							// По нажатию кнопки DEL или Backspase
+							// показываем окно удаления товара из корзины.
+							if (code == 46 && $this.selectedProduct && $this.selectedProduct.cartQuantity) {
+								$this.deleteFromCart();
+							}
 						},
 						onAfterSort: function(by, dir, as){
      						SORT_IN_PRODUCT_TABLE.dir = dir

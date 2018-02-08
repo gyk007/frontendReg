@@ -44,6 +44,11 @@
 			this.$store.commit('set', {type: 'showDelCartProdWnd', items: false})
 		},
 	},
+	beforeCreate:  function() {
+		document.removeEventListener('onkeyup', arguments.callee, false);
+		document.removeEventListener('onkeydown', arguments.callee, false);
+		document.removeEventListener('onkeypress', arguments.callee, false);
+	},
 	mounted: function() {
 		// По нажатию кнопки ESC закрываем окно,
 		// выполняем метод close()
