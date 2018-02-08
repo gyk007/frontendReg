@@ -188,7 +188,9 @@
 				}
 
 				// Функция фиксирует таблицу с товарами
-				fixProdTbl(proucts.length);
+				if (window.innerWidth > 1100) {
+					fixProdTbl(proucts.length)
+				}
 
 				return proucts;
 			},
@@ -461,7 +463,9 @@
 			}}, webix.ui.datafilter.summColumn);
 		},
 		mounted: function() {
-			fixProdTbl(this.productList.length)
+			if (window.innerWidth > 1100) {
+				fixProdTbl(this.productList.length)
+			}
 		},
 		updated: function() {
 			SORT_IN_PRODUCT_TABLE.isSort = false;
@@ -473,6 +477,7 @@
 	 * @param {isProducts} - количество товара в таблице
 	 */
 	function fixProdTbl (isProducts) {
+		console.log('FIXED');
 		let tblHeader = document.getElementById('prod_fixed');
 		if (tblHeader) {
 			if (isProducts > 0) {
