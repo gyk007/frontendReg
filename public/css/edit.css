@@ -638,7 +638,11 @@
 
 
 
-
+.filter_link {
+	color: #5e97e3;
+    text-decoration: underline;
+    cursor: pointer;
+}
 
 
 

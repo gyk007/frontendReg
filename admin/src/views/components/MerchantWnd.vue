@@ -96,7 +96,6 @@
 	},
 	created: function() {
 		if (!this.merchant) {
-			console.log(this.merchant)
 			this.$store.dispatch('getMerchant')
 		}
 	},

@@ -283,7 +283,16 @@
 			}}, webix.ui.datafilter.summColumn);
 		},
 		mounted: function() {
-			fixProdTbl()
+			fixProdTbl();
+			document.onkeyup = function (e) {
+				console.log(e);
+				e = e || window.event;
+				console.log(e.keyCode);
+				if (e.keyCode === 27) {
+
+				}
+				return false;
+			}
 		}
 	}
 

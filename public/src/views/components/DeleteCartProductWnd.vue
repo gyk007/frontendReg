@@ -28,7 +28,8 @@
   export default {
 	computed: {
 		selectedCartProduct() {
-			return this.$store.getters.selectedCartProduct;
+			if (this.$store.getters.selectedCartProduct) return this.$store.getters.selectedCartProduct;
+			if (this.$store.getters.selectedProduct)     return this.$store.getters.selectedProduct;
 		},
 		showDelCartProdWnd() {
 			return this.$store.getters.showDelCartProdWnd;
