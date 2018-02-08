@@ -14,7 +14,7 @@
 			<div class="a-order__balance-sum negative" v-if='!order.debt'>Обрабатывается</div>
 		</div>
 
-		<div class="a-order__hdr-controls">
+		<div class="a-order__hdr-controls" v-if="order.status.name == 'deleted'">
 			<div class="btn btn btn--edit" style='background-color: #f48c42; color: #FFF' @click="deleteOrder">Удалить заказ</div>
 		</div>
 	</div>

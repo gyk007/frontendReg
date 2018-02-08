@@ -204,7 +204,7 @@
 							id        : "pack",
 							sort      : "int",
 							header    : ["Фасовка", {content:"textFilter", compare:numerCompare}],
-							css    : 'product_price_middle',
+							css       : 'product_price_middle',
 							width     : 80,
 							minWidth  : 250,
 						},
