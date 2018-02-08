@@ -644,8 +644,9 @@
     cursor: pointer;
 }
 
-
-
+.catalog__nav-open{
+	left: -135px;
+}
 
 
 
