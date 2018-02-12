@@ -10,6 +10,7 @@ import Order      from './views/Order.vue'
 import Promotion  from './views/Promotion.vue'
 import Client     from './views/Client.vue'
 import Statistic  from './views/Statistic.vue'
+import Shops      from './views/Shops.vue'
 import moment     from 'moment'
 import store      from './store/catalog.js'
 
@@ -31,6 +32,7 @@ var router = new VueRouter({
 		{ path: '/client',       component: Client },
 		{ path: '/statistic',    component: Statistic },
 		{ path: '/merchants',    component: Managers },
+		{ path: '/shops',        component: Shops },
 	]
 })
 
@@ -41,6 +43,9 @@ new Vue({
 	computed: {
 		netList() {
 			return this.$store.getters.netList
+		},
+		shopsList() {
+			return this.$store.getters.shopsList
 		},
 	},
 	created: function() {
@@ -84,6 +89,10 @@ new Vue({
 		// Згружаем список клиентов в фоне
 		if (!this.netList) {
 			this.$store.dispatch('getNetList')
+		}
+		// Загружаем список магазинов в фоне
+		if (!this.shopsList) {
+			this.$store.dispatch('getShopsList')
 		}
 	}
 })

@@ -20,6 +20,7 @@ const store = new Vuex.Store({
 		netList                : undefined, // список сетей
 		net                    : undefined, // выбранная сеть  ( выбераем ее о вкладке Клиенты)
 		shop                   : undefined, // выбранный магазин ( выбераем его во вкладке Клиент, при нажатии на кнопку Торговые точки)
+		shopsList              : undefined, // список магазинов
 		order                  : undefined, // выбранный заказ
 		orders                 : undefined, // все заказы
 		documents              : undefined, // документы в заказе
@@ -27,8 +28,10 @@ const store = new Vuex.Store({
 		loader                 : false,     // отвечает за лоадер, если true - лодер включен
 		loaderNetList          : false,     // отвечает за лоадер для списка организаций
 		loaderMerchantList     : false,     // отвечает за лоадер для списка представителей
+		loaderShopsList        : false,     // отвечает за лоадер для списка магазинов
 		shopList               : undefined, // торговые точки длч выбранного клиента
 		showShopsWnd           : false,     // показать окно торговых точек
+		showShopWnd            : false,     // показать окно магазина
 		merchant               : undefined, // торговый пердставитель сети,
 		merchantList           : undefined, // все зарегестрированные менеджеры
 		merchantAlreadyReg     : undefined, // торговый пердставитель сети, который ужк зарегестрирован. Получаем его при регистрации нового представителя, когда такой емаил уже исспользует другой представитель
@@ -76,6 +79,9 @@ const store = new Vuex.Store({
 		netList(state) {
 			return  state.netList
 		},
+		shopsList(state) {
+			return  state.shopsList
+		},
 		net(state) {
 			return state.net
 		},
@@ -94,6 +100,9 @@ const store = new Vuex.Store({
 		loaderNetList(state){
 			return state.loaderNetList
 		},
+		loaderShopsList(state){
+			return state.loaderShopsList
+		},
 		product(state){
 			return state.product
 		},
@@ -105,6 +114,9 @@ const store = new Vuex.Store({
 		},
 		showShopsWnd(state){
 			return state.showShopsWnd
+		},
+		showShopWnd(state){
+			return state.showShopWnd
 		},
 		showMerchantWnd(state){
 			return state.showMerchantWnd
@@ -628,6 +640,45 @@ const store = new Vuex.Store({
 				}
 			)
 		},
+		getShopsList({commit}) {
+			// Включаем лоадер
+			commit('set', {type: 'loaderShopsList', items: true})
+			// // Очищаем спсок поиска киентов
+			// commit('set', {type: 'searchClient', items: undefined})
+			// Очищаем список магазинов
+			commit('set', {type: 'shopsList',  items: undefined})
+			// Убираем выделение магазина
+			commit('set', {type: 'shop', items: undefined})
+
+			let arg = {
+				params:{
+					action : 'shops_list'
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.get(Conf.url.clients, arg).then(
+				response => {
+					let body = response.body;
+					if (body.ERROR) {
+						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'error',   items: undefined})
+						commit('set', {type: 'shopsList', items: body.shops})
+						// Выключаем лоадер
+						commit('set', {type: 'loaderShopsList', items: false})
+					}
+				},
+				error => {
+				 	console.log(error);
+				}
+			)
+		},
+
+
 		getMerchant({state, commit}) {
 			let arg;
 			// Если есть выбранный магазин то берем представителя магазина
@@ -858,6 +909,7 @@ const store = new Vuex.Store({
 			Vue.http.get(Conf.url.category, arg).then(
 				response => {
 					let body = response.body
+
 					if (body.ERROR) {
 						commit('set', {type: 'error', items: body.ERROR})
 					} else {
