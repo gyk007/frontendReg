@@ -16,7 +16,7 @@ const notifierStore = new Vuex.Store({
 		managerList : undefined, // список менеджеров,
 		news        : undefined, // выбранная новость,
 		manager     : undefined, // выбранный менеджер,
-		error       : undefined, // ошибка		 
+		error       : undefined, // ошибка
 	},
 	getters: {
 		newsList(state){
@@ -43,32 +43,38 @@ const notifierStore = new Vuex.Store({
 		}
 	},
 	actions: {
-		addNews({state, commit, dispatch}) {
-			let arg = {				 
-				'news.title'       : state.news.title,
-				'news.text'        : state.news.text,
-				'news.description' : state.news.description,	 					 
-				action             : 'add'				 
-			}
+		addNews({state, commit, dispatch}, file) {
+			var arg = new FormData();
 
-			$.post(Conf.url.news, arg, function(data) {
-				if (data.ERROR) {
-					console.log(data.ERROR)
-					commit('set', {type: 'error', items: data.ERROR})
-				} else {
+			arg.append('news.title',       state.news.title);
+			arg.append('news.text',        state.news.text);
+			arg.append('news.description', state.news.description);
+			arg.append('upload', file);
+			arg.append('action', 'add');
+
+			$.ajax({
+				url:  Conf.url.news,
+				type: 'POST',
+				data: arg,
+				processData: false,
+				contentType: false,
+				beforeSend : function(){
+
+				},
+				success : function(json){
 					dispatch('newsList')
-				}				 
-			}, 'json');
+				}
+			});
 		},
 		addManager({state, commit, dispatch}) {
 			console.log('addManager')
 			console.log(state.manager)
 			let arg = {
-				params:{			 
+				params:{
 					'manager.name'     : state.manager.name,
 					'manager.email'    : state.manager.email,
 					'manager.password' : state.manager.password,
-					'manager.phone'    : state.manager.phone,			 				 
+					'manager.phone'    : state.manager.phone,
 					action             : 'add'
 				},
 				headers: {
@@ -93,7 +99,7 @@ const notifierStore = new Vuex.Store({
 		},
 		deleteNews({state, commit, dispatch}) {
 			let arg = {
-				params:{					 
+				params:{
 					action    : 'delete',
 					'news.id' : state.news.id,
 				},
@@ -120,7 +126,7 @@ const notifierStore = new Vuex.Store({
 		},
 		deleteManager({state, commit, dispatch}) {
 			let arg = {
-				params:{					 
+				params:{
 					action    : 'delete',
 					'manager.id' : state.manager.id,
 				},
@@ -150,7 +156,7 @@ const notifierStore = new Vuex.Store({
 			commit('set', {type: 'newsList', items: undefined})
 
 			let arg = {
-				params:{					 
+				params:{
 					action : 'list'
 				},
 				headers: {
@@ -178,7 +184,7 @@ const notifierStore = new Vuex.Store({
 			commit('set', {type: 'newsList', items: undefined})
 
 			let arg = {
-				params:{					 
+				params:{
 					action : 'list'
 				},
 				headers: {
@@ -204,7 +210,7 @@ const notifierStore = new Vuex.Store({
 		},
 		sendNotification({state, commit}) {
 			let arg = {
-				params:{					 
+				params:{
 					action : 'send_to',
 					id_news: state.news.id,
 				},
@@ -220,7 +226,7 @@ const notifierStore = new Vuex.Store({
 						console.log(body.ERROR)
 						commit('set', {type: 'error', items: body.ERROR})
 					} else {
-						alert('sdfdsf')						 
+						alert('sdfdsf')
 					}
 				},
 				error => {
