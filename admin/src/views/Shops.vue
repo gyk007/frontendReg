@@ -1,7 +1,7 @@
 <template>
   <section>
     <div class="a-catalog__hdr">
-      <div class="a-catalog__hdr-title">Клиенты</div>
+      <div class="a-catalog__hdr-title">Магазины</div>
       <div class="catalog__controls">
 
         <div class="a-catalog__hdr-controls" style="margin-right:10px" v-if='shop'>

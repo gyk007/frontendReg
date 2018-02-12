@@ -90,7 +90,7 @@ new Vue({
 		if (!this.netList) {
 			this.$store.dispatch('getNetList')
 		}
-		// Загружаем список клиентов в фоне
+		// Загружаем список магазинов в фоне
 		if (!this.shopsList) {
 			this.$store.dispatch('getShopsList')
 		}

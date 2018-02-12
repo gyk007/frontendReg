@@ -69,8 +69,8 @@
 					return undefined
 				}
 			},
-			loaderNetList() {
-				return this.$store.getters.loaderNetList
+			loaderShopsList() {
+				return this.$store.getters.loaderShopsList
 			},
 			table(){
 				let $this = this;

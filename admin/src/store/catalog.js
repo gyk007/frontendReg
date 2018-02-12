@@ -648,7 +648,7 @@ const store = new Vuex.Store({
 
 			let arg = {
 				params:{
-					action : 'shops'
+					action : 'shops_list'
 				},
 				headers: {
 					'Content-Type': 'text/plain'
