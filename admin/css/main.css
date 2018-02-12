@@ -7735,9 +7735,14 @@ input[type="file"] {
             transform: rotate(90deg);
     font-weight: 400; }
 
-.a-order__balance {
+.a-order__hdr-controls {
   float: right;
   margin: 33px 0; }
+
+.a-order__balance {
+  float: right;
+  margin: 33px 0;
+  margin-left: 33px; }
   .a-order__balance-txt {
     font-size: 30px; }
   .a-order__balance-sum {

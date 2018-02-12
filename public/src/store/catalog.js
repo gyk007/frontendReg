@@ -51,6 +51,7 @@ const catalogStore = new Vuex.Store({
 		merchant            : undefined, // представитель
 		regError            : false,     // указывает на ошибку при регистрации
 		isSentMail          : false,     // указывает отправлино ли письмо
+		showAddToCartWnd    : false,     // показать окно добавления товара в корзину
 		ordersFilter : {          // Фильтры заказа
 			dateTo    : moment(),                       // Начльная установка Даты До (сегодня)
 			dateFrom  : moment().subtract(1, 'months'), // Начальная усановка Даты От (месяц назад)
@@ -166,6 +167,9 @@ const catalogStore = new Vuex.Store({
 		},
 		passwordWasResseted(state){
 			return state.passwordWasResseted
+		},
+		showAddToCartWnd(state){
+			return state.showAddToCartWnd
 		},
 	},
 	mutations: {

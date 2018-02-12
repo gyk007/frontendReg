@@ -83,22 +83,26 @@
 					</div>
 				</div> -->
 
-				<webix-ui :config='table' v-model='productList' v-if='productList.length'/>
+				<webix-ui id='DtWebixProd' :config='table' v-model='productList' v-if='productList.length'/>
 		</div>
 		<!-- Лоадер -->
 		<div class='product_loader fixed-loader'   v-if='loader'><img src="pic/loading.gif"></div>
 		<div class='text-no-category'      v-if='!productList && !loader && idActiveCat'>В категории нет товаров</div>
 		<div class='text-no-category'      v-if='!idActiveCat && !loader && !productList.length'>Выберите категорию</div>
 		<div class='text-no-category-long' v-if='!isOffers    && selectOffer && !loader'>В данной категории у Вас нет индивидуальных предложений </div>
-		<ProductImg v-if='showImageWnd && selectedProduct.img_big'></ProductImg>
+		<ProductImg   v-if='showImageWnd && selectedProduct.img_big'></ProductImg>
+		<AddToCartWnd v-if='showAddToCartWnd'></AddToCartWnd>
+		<DeletWnd     v-if='showDelCartProdWnd'></DeletWnd>
 	</section>
 </template>
 
 <script>
-	import store      from '../../store/catalog.js'
-	import $          from 'jquery'
-	import conf       from '../../conf/conf.js'
-	import ProductImg from './ProductImg.vue'
+	import store        from '../../store/catalog.js'
+	import $            from 'jquery'
+	import conf         from '../../conf/conf.js'
+	import ProductImg   from './ProductImg.vue'
+	import AddToCartWnd from './AddToCartWnd.vue'
+	import DeletWnd     from './DeleteCartProductWnd.vue'
 	import 'webix'
 	import 'vue-webix'
 
@@ -111,21 +115,24 @@
 		price : undefined,
 	}
 
-	// Эта переменная хранит значение фильтров котроые ввел пользователь
+	// Эта переменная хранит значение сортировок котроые ввел пользователь
 	// Для того чтобы сохранить их значение при выборе другой категории
 	var SORT_IN_PRODUCT_TABLE = {
-		by  : undefined,
-		dir : undefined,
+		by     : undefined, // Название поля дял сортировки
+		dir    : undefined, // Направление сортировки
+		isSort : false,     // Указывает что уже отсортировали при (нам нужно отсортировать только превый раз при первом рендеринге)
 	}
 
 	export default {
-		components: {ProductImg},
+		components: {ProductImg, AddToCartWnd, DeletWnd},
 		data() {
 			return {
 				// указывает на вкладку с индивидуальными предложениями
 				isOffers : false,
 				// id выбранной строки
-				rowId    : undefined
+				rowId    : undefined,
+				// сораняем id для выбора строчки после того как добавили товар к корзину
+				selectedRowId : undefined,
 			}
 		},
 		computed: {
@@ -134,6 +141,12 @@
 			},
 			showImageWnd() {
 				return this.$store.getters.showImageWnd
+			},
+			showDelCartProdWnd() {
+				return this.$store.getters.showDelCartProdWnd;
+			},
+			showAddToCartWnd() {
+				return this.$store.getters.showAddToCartWnd
 			},
 			selectedProduct () {
 				return this.$store.getters.selectedProduct
@@ -148,8 +161,8 @@
 						prod.Litr  = parseFloat(prod.Litr).toFixed(2);
 						prod.price = parseFloat(prod.price).toFixed(2);
 
-						// Количество товара которое нужно добавить в корзину
-						prod.cartQuantity = 1;
+						// Количество товара которое в корзине
+						prod.cartQuantity = 0;
 
 						// Указывает находится ли товар в корзине
 						prod.inCart = false;
@@ -158,6 +171,7 @@
 								if (prod.id === podInCart.id_product) {
 									// Количество товара в корзине
 									prod.inCart = true;
+									prod.cartQuantity = podInCart.quantity;
 								}
 							});
 						}
@@ -174,7 +188,9 @@
 				}
 
 				// Функция фиксирует таблицу с товарами
-				fixProdTbl(proucts.length);
+				if (window.innerWidth > 1100) {
+					fixProdTbl(proucts.length)
+				}
 
 				return proucts;
 			},
@@ -208,7 +224,7 @@
 							header    : "",
 							css       : 'cell_img',
 							width     : 75,
-							footer    : {content:"countColumn", colspan: 9}
+							footer    : {content:"countColumn", colspan: 8}
 						},
 						{
 							id        : "name",
@@ -218,7 +234,7 @@
 							fillspace : true,
 							minWidth  : 300,
 							format  : function(value) {
-								return "<div class='webix_cell_midle' style='text-align: left'><span style='white-space: pre-wrap; font-size: 15px'>"+value+"</span></div>";
+								return "<div class='webix_cell_midle' style='text-align: left' id='name_product'><span style='white-space: pre-wrap; font-size: 15px' id='name_product'>"+value+"</span></div>";
 							}
 						},
 						{
@@ -228,8 +244,9 @@
 							css    : 'product_price_middle',
 							width  : 90,
 							format  : function(value) {
-								if (value)
+								if (value) {
 									return '<div class="webix_cell_midle"><span class="js-benefit offer" style="font-size: 15px">' + value + '%</span></div>'
+								}
 							}
 						},
 						{
@@ -239,25 +256,28 @@
 							css       : 'product_price_middle',
 							width     : 80,
 							minWidth  : 250,
-						},
-						{
-							id     : "Litr",
-							sort   : "int",
-							header : ["Емкость", {content:"textFilter", compare:numerCompare}],
-							css    : 'product_price_middle',
-							width  : 80,
-							format  : function(value) {
-								if (value) return Number(value).toLocaleString('ru-RU');
+							template :function(obj) {
+								return '<span class="filter_link" id="filter_link_pack" title='+obj.Pack+'>' +   obj.Pack + '</span>'
 							}
 						},
 						{
-							id     : "price",
-							sort   : priceSort,
-							header : ["Цена <i class='rub'>a</i>&nbsp;/&nbsp;шт ", {content:"textFilter", compare:numerCompare}],
-							css    : 'product_price_middle',
-							width  : 110,
-							format  : function(value) {
-								if (value) return Number(value).toLocaleString('ru-RU');
+							id       : "Litr",
+							sort     : "int",
+							header   : ["Емкость", {content:"textFilter", compare:numerCompare}],
+							css      : 'product_price_middle',
+							width    : 80,
+							template :function(obj) {
+								return '<span class="filter_link" id="filter_link_litr" title='+obj.Litr+'>' +  Number(obj.Litr).toLocaleString('ru-RU') + '</span>'
+							}
+						},
+						{
+							id       : "price",
+							sort     : priceSort,
+							header   : ["Цена <i class='rub'>a</i>&nbsp;/&nbsp;шт ", {content:"textFilter", compare:numerCompare}],
+							css      : 'product_price_middle',
+							width    : 110,
+							template :function(obj) {
+								return '<span class="filter_link" id="filter_link_price" title='+obj.price+'>' +  Number(obj.price).toLocaleString('ru-RU') + '</span>'
 							}
 						},
 						{
@@ -276,17 +296,16 @@
 						},
 						{
 							id      : "cartQuantity",
-							template:"<input type='number' aria-label='Шт.' name='cartQuantity' id='cartQuantity' min='1' max='9999'value='#cartQuantity#' class='input table_input cartQty' style='width:60px;'>",
 							editor  :"inline-text",
 							sort    : "int",
-							header  : ["Шт."],
+							header  : "В Корзине",
 							css     : 'product_qty_middle',
-							width   : 80,
+							width   : 100,
 						},
 						{
 							id     : "inCart",
-							sort   : "string",
-							template:"<div class='webix_cell_midle' id='add_to_cart'><button  id='add_to_cart' class='btn__sell btn_in_cart_#inCart#' title='Добавить в корзину'><span id='add_to_cart'>+</span>&nbsp;<svg id='add_to_cart'><use xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='#bag'></use></svg></button></div>",
+							sort   : inCartSort,
+							template:"<div class='webix_cell_midle' id='add_to_cart_#inCart#'><button  id='add_to_cart_#inCart#' class='btn__sell btn_in_cart_#inCart#' title='Добавить в корзину'><span id='add_to_cart_#inCart#'>+</span>&nbsp;<svg id='add_to_cart_#inCart#'><use xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='#bag'></use></svg></button></div>",
 							header : '',
 							css    : 'product_price_middle',
 							width  : 100,
@@ -294,10 +313,20 @@
 
 					], on:{
 						onAfterLoad: function() {
-							filterTable(this)
+							filterTable(this);
+							this.filterByAll();
+							if($this.$data.selectedRowId) {
+								this.eachRow( function (row){
+							        if (this.getItem(row).id == $this.$data.selectedRowId.id) {
+							        	this.select($this.$data.selectedRowId.id);
+							        }
+								})
+							}
 						},
 						onAfterRender: function() {
-							if (SORT_IN_PRODUCT_TABLE.by) {
+							if (SORT_IN_PRODUCT_TABLE.by && !SORT_IN_PRODUCT_TABLE.isSort) {
+								// Указываем что отсортировали
+								SORT_IN_PRODUCT_TABLE.isSort = true;
 								this.sort(SORT_IN_PRODUCT_TABLE.by, SORT_IN_PRODUCT_TABLE.dir);
 							};
 						},
@@ -309,43 +338,70 @@
 							FILTERS_IN_PRODUCT_TABLE.price = this.getFilter("price").value;
 						},
 						onAfterSelect: function(id, e, node){
+
 							$this.$data.rowId = id;
 							// Выбрали товар
 							$this.$store.commit('set', {type: 'selectedProduct', items: this.getItem(id)})
 						},
 						onAfterUnSelect:function(id, e, node){
+							$this.$data.selectedRowId = $this.$data.rowId;
 							$this.$data.rowId = undefined;
 							$this.$store.commit('set', {type: 'selectedProduct', items: undefined})
 						},
 						onItemClick: function(id, e, node) {
-							$this.$store.commit('set', {type: 'selectedProduct', items: this.getItem(id)})
-							let $thisDt = this;
-							// Добавить в корзину
-							if (e.target.id == 'add_to_cart') {
-								// Так как это работает асинхронно
-								// Необходимо усановить таймер
-								setTimeout(function(){
-									$this.addToCart($this.selectedProduct);
-								},200);
+							$this.$store.commit('set', {type: 'selectedProduct', items: this.getItem(id)});
+							if (e.target.id == 'add_to_cart_true') {
+								$this.deleteFromCart();
+							}
+
+							if (e.target.id == 'add_to_cart_false') {
+								$this.addToCart($this.selectedProduct);
 							}
 
 							// Показать картинку
 							if (e.target.id == 'show_image') {
 								$this.$store.commit('set', {type: 'showImageWnd', items: true})
 							}
+
+							// Фильтры
+							if (e.target.id == 'filter_link_pack') {
+								FILTERS_IN_PRODUCT_TABLE.pack  = e.target.title;
+								filterTable(this)
+								this.filterByAll();
+							}
+							if (e.target.id == 'filter_link_litr') {
+								FILTERS_IN_PRODUCT_TABLE.litr = e.target.title;
+								filterTable(this)
+								this.filterByAll();
+							}
+							if (e.target.id == 'filter_link_price') {
+								FILTERS_IN_PRODUCT_TABLE.price = e.target.title;
+								filterTable(this)
+								this.filterByAll();
+							}
+
+						},
+						onItemDblClick: function(id, e, node) {
+							$this.$store.commit('set', {type: 'selectedProduct', items: this.getItem(id)})
+							if (e.target.id == 'name_product') {
+								$this.addToCart($this.selectedProduct);
+							}  else {
+								$this.addToCart($this.selectedProduct);
+							}
 						},
 						onDataUpdate: function(id, product){
 							$this.$store.commit('set', {type: 'selectedProduct', items: this.getItem(id)})
 						},
 						onKeyPress: function(code, e) {
-							if (e.target.id == 'cartQuantity') {
-								// В inpute выставляем максимальное число символов = 4
-								inputMaxLength(e.target);
+							// По нажатию кнопки Enter показываем картинку
+							if (code === 13 && $this.selectedProduct) {
+								$this.addToCart($this.selectedProduct);
 							}
 
-							// По нажатию кнопки Enter показываем картинку
-							if (code == 13 && $this.selectedProduct.img_big) {
-								$this.$store.commit('set', {type: 'showImageWnd', items: true})
+							// По нажатию кнопки DEL или Backspase
+							// показываем окно удаления товара из корзины.
+							if (code == 46 && $this.selectedProduct && $this.selectedProduct.cartQuantity) {
+								$this.deleteFromCart();
 							}
 						},
 						onAfterSort: function(by, dir, as){
@@ -358,7 +414,10 @@
 		},
 		methods: {
 			addToCart(product){
-				this.$store.dispatch('addToCart', product)
+				this.$store.commit('set', {type: 'showAddToCartWnd', items: true});
+			},
+			deleteFromCart() {
+				this.$store.commit('set', {type: 'showDelCartProdWnd', items: true})
 			},
 			offers(showOffer){
 				let isOffers = false;
@@ -404,9 +463,13 @@
 			}}, webix.ui.datafilter.summColumn);
 		},
 		mounted: function() {
-			fixProdTbl(this.productList.length)
+			if (window.innerWidth > 1100) {
+				fixProdTbl(this.productList.length)
+			}
+		},
+		updated: function() {
+			SORT_IN_PRODUCT_TABLE.isSort = false;
 		}
-
 	}
 
 	/**
@@ -414,6 +477,7 @@
 	 * @param {isProducts} - количество товара в таблице
 	 */
 	function fixProdTbl (isProducts) {
+		console.log('FIXED');
 		let tblHeader = document.getElementById('prod_fixed');
 		if (tblHeader) {
 			if (isProducts > 0) {
@@ -433,21 +497,15 @@
 		}
 	}
 
-	/**
-	 * Функция устанавливает максимальное число символов для Input type="number"
-	 * @param {input} - объект Input
-	 */
-	function inputMaxLength(input) {
-		if (input) {
-			let maxLength = 3;
-			let field = $(input);
-			let val    = input.value;
-
-			if(val.length > maxLength) {
-				val = val.slice(0, maxLength);
-				field.val(val);
-			}
-		}
+	// Сортировка по нахождению в корзине
+	function inCartSort(a,b) {
+		a = a.inCart;
+		b = b.inCart;
+		console.log(a);
+		console.log(b);
+		if (a && b) return 0;
+		if (a && !b) return 1;
+		if (!a && b) return -1;
 	}
 
 	// Сортировка по цене
@@ -559,13 +617,13 @@
 
 		if (FILTERS_IN_PRODUCT_TABLE.pack){
 			table.filter(function(obj){
-				return numerCompare(obj.pack, FILTERS_IN_PRODUCT_TABLE.pack);
+				return numerCompare(obj.Pack, FILTERS_IN_PRODUCT_TABLE.pack);
 			})
 		}
 
 		if (FILTERS_IN_PRODUCT_TABLE.litr){
 			table.filter(function(obj){
-				return numerCompare(obj.litr, FILTERS_IN_PRODUCT_TABLE.litr);
+				return numerCompare(obj.Litr, FILTERS_IN_PRODUCT_TABLE.litr);
 			})
 		}
 

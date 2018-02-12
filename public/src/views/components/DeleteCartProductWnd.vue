@@ -28,7 +28,8 @@
   export default {
 	computed: {
 		selectedCartProduct() {
-			return this.$store.getters.selectedCartProduct;
+			if (this.$store.getters.selectedCartProduct) return this.$store.getters.selectedCartProduct;
+			if (this.$store.getters.selectedProduct)     return this.$store.getters.selectedProduct;
 		},
 		showDelCartProdWnd() {
 			return this.$store.getters.showDelCartProdWnd;
@@ -42,6 +43,11 @@
 			this.$store.dispatch('deletProdInCart', this.selectedCartProduct.id)
 			this.$store.commit('set', {type: 'showDelCartProdWnd', items: false})
 		},
+	},
+	beforeCreate:  function() {
+		document.removeEventListener('onkeyup', arguments.callee, false);
+		document.removeEventListener('onkeydown', arguments.callee, false);
+		document.removeEventListener('onkeypress', arguments.callee, false);
 	},
 	mounted: function() {
 		// По нажатию кнопки ESC закрываем окно,

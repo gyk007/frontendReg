@@ -638,10 +638,15 @@
 
 
 
+.filter_link {
+	color: #5e97e3;
+    text-decoration: underline;
+    cursor: pointer;
+}
 
-
-
-
+.catalog__nav-open{
+	left: -135px;
+}
 
 
 
