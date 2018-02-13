@@ -12,6 +12,16 @@
 					<h5>Новость</h5>
 
 					<q-input stack-label="Заголовок"        v-model="news.title"        class='modal_input' />
+
+					<q-select
+						multiple
+						chips
+						color="purple"
+						float-label="Теги"
+						v-model="news.tags"
+						:options="tagList"
+					/>
+
 					<q-input stack-label="Краткое описание" v-model="news.description"  color="purple" :min-rows="3"   type="textarea" class='modal_input' />
 					<q-input stack-label="Текст"            v-model="news.text"         color="purple" :min-rows="5"   type="textarea" class='modal_input'/>
 
@@ -37,36 +47,52 @@
 import NewsTable   from './views/NewsTable.vue'
 import store       from '../store/store.js'
 
-import {QModal, QBtn, QIcon, QInput, QField} from 'quasar'
+import {QModal, QBtn, QIcon, QInput, QField, QSelect} from 'quasar'
 
 export default {
 	name: 'news',
 	store: store,
-	components: {NewsTable, QModal, QBtn, QIcon, QInput, QField},
+	components: {NewsTable, QModal, QBtn, QIcon, QInput, QField, QSelect},
 	data() {
 		return {
 			news: {
 				title      : undefined,
 				text       : undefined,
 				description: undefined,
+				tags       : []
 			},
-			file : undefined
+			file : undefined,
 		}
+	},
+	computed: {
+		tagList() {
+			let  list = []
+			if (this.$store.getters.tagList) {
+				this.$store.getters.tagList.forEach(tag => {
+					let listItem = {
+						label: tag.name,
+						value: tag.id
+					}
+
+					list.push(listItem)
+				})
+			}
+
+			return list
+		},
 	},
 	methods: {
 		add() {
-			console.log(this.news)
 			this.$refs.addEditNews.close()
 			this.$store.commit('set', {type: 'news', items: this.news})
-			console.log(this.file)
-
 			this.$store.dispatch('addNews', this.file)
 			this.file = undefined
 			this.news = {
 				title      : undefined,
 				text       : undefined,
 				description: undefined,
-				file       : undefined
+				file       : undefined,
+				tags       : []
 			}
 		},
 		handleFileChange(e) {

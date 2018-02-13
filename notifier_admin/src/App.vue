@@ -36,14 +36,21 @@
 		</q-item>
 		</span>
 
-		<span @click="openPage('/managers')" style="cursor: pointer">	 
+		<span @click="openPage('/managers')" style="cursor: pointer">
 		<q-item>
 			<q-item-side icon="account circle" />
 			<q-item-main label="Торговые представители"/>
 		</q-item>
 		</span>
 
-		 
+		<span @click="openPage('/tag')" style="cursor: pointer">
+		<q-item>
+			<q-item-side icon="group add" />
+			<q-item-main label="Теги"/>
+		</q-item>
+		</span>
+
+
 
 		<!-- <router-link to="/feedback" active-class='active'>
 		<q-item>
@@ -61,6 +68,9 @@
 </template>
 
 <script>
+
+import store from './store/store.js'
+
 import {
 	QLayout,
 	QToolbar,
@@ -73,9 +83,10 @@ import {
 	QItemSide,
 	QItemMain
 } from 'quasar'
- 
-export default { 
+
+export default {
 	name: 'index',
+	store: store,
 	components: {
 		QLayout,
 		QToolbar,
@@ -88,11 +99,14 @@ export default {
 		QItemSide,
 		QItemMain
 	},
-	methods: {		 
-		openPage(url) {			 
+	methods: {
+		openPage(url) {
 			this.$refs.layout.hideLeft()
 			document.location.hash = url
 		}
+	},
+	mounted: function() {
+		this.$store.dispatch('tagList')
 	}
 }
 </script>

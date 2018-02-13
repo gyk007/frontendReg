@@ -3,7 +3,7 @@
 
 		 <q-data-table
 			ref="dtNews"
-			:data="newsList"
+			:data="tagList"
 			:config="config"
 			:columns="columns"
 			@selection="selection"
@@ -18,17 +18,15 @@
 			</template>
 
 			<template slot="selection" slot-scope="props">
-				<q-btn flat color="primary" @click="sendNotification()">
-					<q-icon name="textsms" />
+				<q-btn flat color="primary" @click="showEditWnd">
+					<q-icon name="edit" />
 				</q-btn>
-					<q-btn flat color="primary" @click="showEditWnd">
-						<q-icon name="edit" />
-					</q-btn>
 				<q-btn flat color="primary" @click="deleteRow(props)">
 					<q-icon name="delete" />
 				</q-btn>
 			</template>
 		</q-data-table>
+
 	</div>
 </template>
 
@@ -44,17 +42,15 @@ import {
 	QIcon,
 	QTooltip,
 	QCollapsible,
-	Dialog,
-	QModal
+	Dialog
 } from 'quasar'
 
 import store from '../../store/store.js'
 import $     from 'jquery'
 
 export default {
-	name: 'newsTable',
+	name: 'managerTable',
 	store: store,
-	props: ['editWnd'],
 	components: {
 		QDataTable,
 		QField,
@@ -66,12 +62,11 @@ export default {
 		QIcon,
 		QTooltip,
 		QCollapsible,
-		QModal
 	},
 	data () {
 		return {
 			config: {
-				title: 'Таблица новостей',
+				title: 'Таблица Тегов',
 				refresh: false,
 				noHeader: false,
 				columnPicker: true,
@@ -94,8 +89,8 @@ export default {
 					allCols: 'Все',
 					rows: 'Коичесвто строк',
 					selected: {
-						singular: 'Выбрана новость',
-						plural: 'Выбрана новость'
+						singular: 'Выбран тег',
+						plural: 'Выбран тег'
 					},
 					clear: 'Отмена',
 					search: 'Поиск',
@@ -104,24 +99,20 @@ export default {
 			},
 			columns: [
 				{
-					label: 'Дата создания',
-					field: 'ctime',
-					width: '100px',
-					filter: true,
-					sort (a, b) {
-						return (new Date(a)) - (new Date(b))
-					},
-					format (value) {
-						return new Date(value).toLocaleString()
-					}
-				},
-				{
-					label: 'Заголовок',
-					field: 'title',
+					label: 'Название',
+					field: 'name',
 					filter: true,
 					sort: true,
 					type: 'string',
-					width: '500px'
+					width: '150px'
+				},
+				{
+					label: 'Описание',
+					field: 'description',
+					filter: true,
+					sort: true,
+					type: 'string',
+					width: '150px'
 				}
 			],
 			pagination: true,
@@ -131,48 +122,30 @@ export default {
 		}
 	},
 	computed: {
-		newsList() {
-			return this.$store.getters.newsList
-		},
-		news() {
-			return this.$store.getters.news
-		},
 		tagList() {
 			return this.$store.getters.tagList
+		},
+		tag() {
+			return this.$store.getters.tag
 		},
 	},
 	methods: {
 		showEditWnd () {
-			if (this.news) {
-				this.$parent.$data.news = Object.assign({}, this.news)
-				this.$parent.$refs.addEditNews.open()
+			if (this.tag) {
+				this.$parent.$data.tag = Object.assign({}, this.tag)
+				this.$parent.$refs.addTag.open()
 			}
-		},
-		sendNotification () {
-			let $this = this;
-			Dialog.create({
-				title: 'Отправить сообщение ?',
-				buttons: [
-					'Отмена',
-					{
-						label: 'Отправить',
-						handler () {
-							$this.$store.dispatch('sendNotification')
-						}
-					}
-				]
-			})
 		},
 		deleteRow (props) {
 			let $this = this;
 			Dialog.create({
-				title: 'Удалить новость ?',
+				title: 'Удалить тег ?',
 				buttons: [
 					'Отмена',
 					{
 						label: 'Удалить',
 						handler () {
-							$this.$store.dispatch('deleteNews')
+							$this.$store.dispatch('deleteTag')
 						}
 					}
 				]
@@ -180,13 +153,12 @@ export default {
 		},
 		selection (number, rows) {
 			if (rows.length) {
-				this.$store.commit('set', {type: 'news', items: rows[0].data})
+				this.$store.commit('set', {type: 'tag', items: rows[0].data})
 			}
-			// console.log(`selected ${number}: ${rows}`)
 		},
 	},
 	mounted: function() {
-		this.$store.dispatch('newsList')
+		this.$store.dispatch('tagList')
 	}
 }
 </script>

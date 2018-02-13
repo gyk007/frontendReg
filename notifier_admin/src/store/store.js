@@ -1,7 +1,7 @@
 import Vue         from 'vue'
 import Vuex        from 'vuex'
 import VueResource from 'vue-resource'
-import Conf        from '../../config/url.js' 
+import Conf        from '../../config/url.js'
 import $           from 'jquery-ajax'
 import 'moment/locale/ru'
 
@@ -13,8 +13,10 @@ const notifierStore = new Vuex.Store({
 	state: {
 		newsList    : undefined, // список новостей,
 		managerList : undefined, // список менеджеров,
+		tagList     : undefined, // список тегов,
 		news        : undefined, // выбранная новость,
 		manager     : undefined, // выбранный менеджер,
+		tag         : undefined, // тег,
 		error       : undefined, // ошибка
 	},
 	getters: {
@@ -29,6 +31,12 @@ const notifierStore = new Vuex.Store({
 		},
 		manager(state){
 			return state.manager
+		},
+		tagList(state){
+			return state.tagList
+		},
+		tag(state){
+			return state.tag
 		},
 	},
 	mutations: {
@@ -50,11 +58,12 @@ const notifierStore = new Vuex.Store({
 
 			if (state.news.id) {
 				arg.append('news.id', state.news.id);
-			} 
+			}
 
 			arg.append('news.title',       state.news.title);
 			arg.append('news.text',        state.news.text);
 			arg.append('news.description', state.news.description);
+			arg.append('news.tags',        state.news.tags);
 			arg.append('upload', file);
 			arg.append('action', 'add');
 
@@ -73,15 +82,45 @@ const notifierStore = new Vuex.Store({
 			});
 		},
 		addManager({state, commit, dispatch}) {
-			console.log('addManager')
-			console.log(state.manager)
+			var arg = new FormData();
+
+			if (state.manager.id) {
+				arg.append('manager.id', state.manager.id);
+			}
+
+			arg.append('manager.name',     state.manager.name);
+			arg.append('manager.email',    state.manager.email);
+			arg.append('manager.password', state.manager.password);
+			arg.append('manager.phone',    state.manager.phone);
+			arg.append('manager.tags',     state.manager.tags);
+			arg.append('action',           'add');
+
+			$.ajax({
+				url:  Conf.url.manager,
+				type: 'POST',
+				data: arg,
+				processData: false,
+				contentType: false,
+				error : function() {
+				},
+				success : function(json){
+					let body = JSON.parse(json)
+					if (body.ERROR) {
+						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						dispatch('managerList')
+					}
+				}
+			});
+		},
+		addTag({state, commit, dispatch}) {
 			let arg = {
 				params:{
-					'manager.id'       : state.manager.id ? state.manager.id : undefined,
-					'manager.name'     : state.manager.name,
-					'manager.email'    : state.manager.email,
-					'manager.password' : state.manager.password,
-					'manager.phone'    : state.manager.phone,
+					'tag.id'          : state.tag.id ? state.tag.id : undefined,
+					'tag.name'        : state.tag.name,
+					'tag.description' : state.tag.description,
+
 					action             : 'add'
 				},
 				headers: {
@@ -89,14 +128,14 @@ const notifierStore = new Vuex.Store({
 				}
 			}
 
-			Vue.http.post(Conf.url.manager, null, arg).then(
+			Vue.http.post(Conf.url.tag, null, arg).then(
 				response => {
 					let body = response.body
 					if (body.ERROR) {
 						console.log(body.ERROR)
 						commit('set', {type: 'error', items: body.ERROR})
 					} else {
-						dispatch('managerList')
+						dispatch('tagList')
 					}
 				},
 				error => {
@@ -158,6 +197,33 @@ const notifierStore = new Vuex.Store({
 				}
 			)
 		},
+		deleteTag({state, commit, dispatch}) {
+			let arg = {
+				params:{
+					action   : 'delete',
+					'tag.id' : state.tag.id,
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.tag, null, arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'tag', items: undefined})
+						dispatch('tagList')
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
 		newsList({state, commit}) {
 			// Очищаем список новостей
 			commit('set', {type: 'newsList', items: undefined})
@@ -203,11 +269,35 @@ const notifierStore = new Vuex.Store({
 				response => {
 					let body = response.body
 					if (body.ERROR) {
-						console.log(body.ERROR) 
+						console.log(body.ERROR)
 						commit('set', {type: 'error', items: body.ERROR})
 					} else {
 						commit('set', {type: 'managerList', items: body.manager_list})
-						console.log(body);
+					}
+				},
+				error => {
+					console.log(error);
+				}
+			)
+		},
+		tagList({state, commit, dispatch}) {
+			let arg = {
+				params:{
+					action : 'list'
+				},
+				headers: {
+					'Content-Type': 'text/plain'
+				}
+			}
+
+			Vue.http.post(Conf.url.tag, null, arg).then(
+				response => {
+					let body = response.body
+					if (body.ERROR) {
+						console.log(body.ERROR)
+						commit('set', {type: 'error', items: body.ERROR})
+					} else {
+						commit('set', {type: 'tagList', items: body.tag_list})
 					}
 				},
 				error => {
@@ -218,7 +308,7 @@ const notifierStore = new Vuex.Store({
 		sendNotification({state, commit}) {
 			let arg = {
 				params:{
-					action : 'send_all', 
+					action : 'send_all',
 					id_news: state.news.id,
 				},
 				headers: {
