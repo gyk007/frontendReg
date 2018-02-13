@@ -25,10 +25,10 @@ export default new VueRouter({
   scrollBehavior: () => ({ y: 0 }),
 
   routes: [
-    { path: '/',         component: load('PageNews') },
+    { path: '/',         redirect: '/news' },
     { path: '/managers', component: load('PageManager') },
     { path: '/news',     component: load('PageNews') },
-    { path: '/feedback', component: load('PageNotifier') },
+    { path: '/tag',      component: load('PageTag') },
     // Always leave this last one
     { path: '*', component: load('Error404') } // Not found
   ]

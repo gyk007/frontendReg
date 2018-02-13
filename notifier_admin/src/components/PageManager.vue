@@ -13,6 +13,16 @@
 
 			<q-input stack-label="Email"   v-model="manager.email"        class='modal_input' />
 			<q-input stack-label="Пароль"  v-model="manager.password"        class='modal_input' />
+
+			<q-select
+				multiple
+				chips
+				color="purple"
+				float-label="Теги"
+				v-model="manager.tags"
+				:options="tagList"
+			/>
+
 			<q-input stack-label="Имя"     v-model="manager.name"        class='modal_input' />
 			<q-input stack-label="Телефон" v-model="manager.phone"        class='modal_input' />
 
@@ -31,12 +41,12 @@
 import ManagerTable from './views/ManagerTable.vue'
 import store        from '../store/store.js'
 
-import {QModal, QBtn, QIcon, QInput, QField} from 'quasar'
+import {QModal, QBtn, QIcon, QInput, QField, QSelect} from 'quasar'
 
 export default {
   name: 'manager',
   store: store,
-  components: {ManagerTable, QModal, QBtn, QIcon, QInput, QField},
+  components: {ManagerTable, QModal, QBtn, QIcon, QInput, QField, QSelect},
   data() {
 		return {
 			manager: {
@@ -44,8 +54,26 @@ export default {
 				email    : undefined,
 				password : undefined,
 				phone    : undefined,
+				tags     : []
 			}
 		}
+	},
+	computed: {
+		tagList() {
+			let  list = []
+			if (this.$store.getters.tagList) {
+				this.$store.getters.tagList.forEach(tag => {
+					let listItem = {
+						label: tag.name,
+						value: tag.id
+					}
+
+					list.push(listItem)
+				})
+			}
+
+			return list
+		},
 	},
 	methods: {
 		add() {
@@ -58,6 +86,7 @@ export default {
 				email    : undefined,
 				password : undefined,
 				phone    : undefined,
+				tags     : []
 			}
 		}
 	}
