@@ -6,6 +6,7 @@
 	   		<img :src="conf.url.img + news.img">
 	   	</div>
 	   	<h2>{{news.title}}</h2>
+	   	<div class='newsDate'>{{news.ctime.format('L')}}</div>
 	   	<div class='text'>{{news.text}}</div>
 	  </div>
   </div>
@@ -47,5 +48,10 @@ export default {
 	    width: 320px;
 	    margin: 0 auto;
 	    border: solid 1px #009688;
+	}
+	.newsDate {
+		text-align: right;
+	    margin-bottom: 10px;
+	    font-size: 120%;
 	}
 </style>
