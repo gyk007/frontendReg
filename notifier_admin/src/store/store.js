@@ -1,8 +1,7 @@
 import Vue         from 'vue'
 import Vuex        from 'vuex'
 import VueResource from 'vue-resource'
-import Conf        from '../../config/url.js'
-import Cookies     from 'quasar'
+import Conf        from '../../config/url.js' 
 import $           from 'jquery-ajax'
 import 'moment/locale/ru'
 
@@ -28,6 +27,9 @@ const notifierStore = new Vuex.Store({
 		news(state){
 			return state.news
 		},
+		manager(state){
+			return state.manager
+		},
 	},
 	mutations: {
 		set(state, {type, items}) {
@@ -45,6 +47,10 @@ const notifierStore = new Vuex.Store({
 	actions: {
 		addNews({state, commit, dispatch}, file) {
 			var arg = new FormData();
+
+			if (state.news.id) {
+				arg.append('news.id', state.news.id);
+			} 
 
 			arg.append('news.title',       state.news.title);
 			arg.append('news.text',        state.news.text);
@@ -71,6 +77,7 @@ const notifierStore = new Vuex.Store({
 			console.log(state.manager)
 			let arg = {
 				params:{
+					'manager.id'       : state.manager.id ? state.manager.id : undefined,
 					'manager.name'     : state.manager.name,
 					'manager.email'    : state.manager.email,
 					'manager.password' : state.manager.password,
@@ -196,7 +203,7 @@ const notifierStore = new Vuex.Store({
 				response => {
 					let body = response.body
 					if (body.ERROR) {
-						console.log(body.ERROR)
+						console.log(body.ERROR) 
 						commit('set', {type: 'error', items: body.ERROR})
 					} else {
 						commit('set', {type: 'managerList', items: body.manager_list})
@@ -211,7 +218,7 @@ const notifierStore = new Vuex.Store({
 		sendNotification({state, commit}) {
 			let arg = {
 				params:{
-					action : 'send_to',
+					action : 'send_all', 
 					id_news: state.news.id,
 				},
 				headers: {
@@ -225,8 +232,6 @@ const notifierStore = new Vuex.Store({
 					if (body.ERROR) {
 						console.log(body.ERROR)
 						commit('set', {type: 'error', items: body.ERROR})
-					} else {
-						alert('sdfdsf')
 					}
 				},
 				error => {

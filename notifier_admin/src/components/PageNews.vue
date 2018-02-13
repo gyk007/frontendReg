@@ -9,16 +9,16 @@
 
 			<q-modal ref="addEditNews">
 				<div class='modal_body'>
-					<h5>Добавить Новость</h5>
+					<h5>Новость</h5>
 
 					<q-input stack-label="Заголовок"        v-model="news.title"        class='modal_input' />
-					<q-input stack-label="Краткое описание" v-model="news.description"  color="purple" :min-rows="5"   type="textarea" class='modal_input' />
-					<q-input stack-label="Текст"            v-model="news.text"         color="purple" :min-rows="10"  type="textarea" class='modal_input'/>
+					<q-input stack-label="Краткое описание" v-model="news.description"  color="purple" :min-rows="3"   type="textarea" class='modal_input' />
+					<q-input stack-label="Текст"            v-model="news.text"         color="purple" :min-rows="5"   type="textarea" class='modal_input'/>
 
 					<label class="file-select">
 							<div class="select-button">
-								<span v-if="file">Selected File: {{file.name}}</span>
-								<span v-else>Select File</span>
+								<span v-if="file">Selected Image: {{file.name}}</span>
+								<span v-else><q-icon name="insert photo" style='font-size: 40px; padding-rght: 20px'/>Select Image</span>
 							</div>
 							<input type="file" @change="handleFileChange"  accept="image/x-png,image/gif,image/jpeg"/>
 					</label>
@@ -114,7 +114,9 @@ export default {
 	text-align: center;
 	font-weight: bold;
 }
-
+.file-select {
+	cursor: pointer;
+}
 .file-select > input[type="file"] {
 	display: none;
 }

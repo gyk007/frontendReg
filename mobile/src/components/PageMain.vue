@@ -102,6 +102,7 @@ export default {
 	},
 	mounted: function() {
 		this.$store.dispatch('newsList')
+		this.$store.commit('set', {type: 'news', items: undefined})
 	}
 
 }

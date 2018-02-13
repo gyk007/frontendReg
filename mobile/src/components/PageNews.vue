@@ -2,7 +2,7 @@
   <!-- if you want automatic padding use "layout-padding" class -->
   <div class="layout-padding">
 	  <div class='news_content'>
-	   	<div class='img_block'>
+	   	<div class='img_block' v-if='news.img'>
 	   		<img :src="conf.url.img + news.img">
 	   	</div>
 	   	<h2>{{news.title}}</h2>
