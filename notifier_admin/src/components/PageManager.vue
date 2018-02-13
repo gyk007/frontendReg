@@ -9,7 +9,7 @@
 
 	<q-modal ref="addManager">
 		<div class='modal_body'>
-			<h5>Добавить Менеджера</h5>
+			<h5>Пользователь</h5>
 
 			<q-input stack-label="Email"   v-model="manager.email"        class='modal_input' />
 			<q-input stack-label="Пароль"  v-model="manager.password"        class='modal_input' />

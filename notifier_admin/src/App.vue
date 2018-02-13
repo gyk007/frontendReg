@@ -13,8 +13,8 @@
 		</q-btn>
 
 		<q-toolbar-title>
-		Административная панель
-		<div slot="subtitle">Для мобильного приложения</div>
+		Вымпел
+		<div slot="subtitle">Административная панель</div>
 		</q-toolbar-title>
 	</q-toolbar>
 
@@ -29,19 +29,19 @@
 		</q-item>
 		</router-link> -->
 
-		<router-link to="/news" active-class='active'>
+		<span @click="openPage('/news')" style="cursor: pointer">
 		<q-item>
 			<q-item-side icon="library books" />
 			<q-item-main label="Новости"/>
 		</q-item>
-		</router-link>
+		</span>
 
-		<router-link to="/managers" active-class='active'>
+		<span @click="openPage('/managers')" style="cursor: pointer">	 
 		<q-item>
 			<q-item-side icon="account circle" />
 			<q-item-main label="Торговые представители"/>
 		</q-item>
-		</router-link>
+		</span>
 
 		 
 
@@ -73,20 +73,26 @@ import {
 	QItemSide,
 	QItemMain
 } from 'quasar'
-
-export default {
+ 
+export default { 
 	name: 'index',
 	components: {
-	QLayout,
-	QToolbar,
-	QToolbarTitle,
-	QBtn,
-	QIcon,
-	QList,
-	QListHeader,
-	QItem,
-	QItemSide,
-	QItemMain
+		QLayout,
+		QToolbar,
+		QToolbarTitle,
+		QBtn,
+		QIcon,
+		QList,
+		QListHeader,
+		QItem,
+		QItemSide,
+		QItemMain
+	},
+	methods: {		 
+		openPage(url) {			 
+			this.$refs.layout.hideLeft()
+			document.location.hash = url
+		}
 	}
 }
 </script>

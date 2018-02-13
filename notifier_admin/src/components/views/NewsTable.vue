@@ -21,6 +21,9 @@
 				<q-btn flat color="primary" @click="sendNotification()">
 					<q-icon name="textsms" />
 				</q-btn>
+					<q-btn flat color="primary" @click="showEditWnd">
+						<q-icon name="edit" />
+					</q-btn>
 				<q-btn flat color="primary" @click="deleteRow(props)">
 					<q-icon name="delete" />
 				</q-btn>
@@ -41,7 +44,8 @@ import {
 	QBtn,
 	QIcon,
 	QTooltip,
-	QCollapsible
+	QCollapsible,
+	Dialog
 } from 'quasar'
  
 import store from '../../store/store.js'
@@ -50,6 +54,7 @@ import $     from 'jquery'
 export default {
 	name: 'newsTable',
 	store: store,
+	props: ['editWnd'],
 	components: {
 		QDataTable,
 		QField,
@@ -60,7 +65,7 @@ export default {
 		QBtn,
 		QIcon,
 		QTooltip,
-		QCollapsible
+		QCollapsible		   
 	},
 	data () {
 		return {			 
@@ -127,14 +132,47 @@ export default {
 	computed: {
 		newsList() {
 			return this.$store.getters.newsList
+		},
+		news() {
+			return this.$store.getters.news
 		}		 
 	},
 	methods: {
-		sendNotification () {			 	
-			this.$store.dispatch('sendNotification')
+		showEditWnd () {
+			if (this.news) {
+				this.$parent.$data.news = Object.assign({}, this.news)				  
+				this.$parent.$refs.addEditNews.open()
+			}			 
+		},
+		sendNotification () {
+			let $this = this;	
+			Dialog.create({
+				title: 'Отправить сообщение ?',				 
+				buttons: [
+					'Отмена',
+					{
+						label: 'Отправить',
+						handler () {
+							$this.$store.dispatch('sendNotification')
+						}
+					}
+				]
+			})			 
 		},
 		deleteRow (props) {
-			this.$store.dispatch('deleteNews')
+			let $this = this;
+			Dialog.create({
+				title: 'Удалить новость ?',				 
+				buttons: [
+					'Отмена',
+					{
+						label: 'Удалить',
+						handler () {
+							$this.$store.dispatch('deleteNews')
+						}
+					}
+				]
+			})			 
 		},		 
 		selection (number, rows) {
 			if (rows.length) {

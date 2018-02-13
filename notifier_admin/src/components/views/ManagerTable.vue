@@ -18,8 +18,8 @@
 			</template>
 
 			<template slot="selection" slot-scope="props">			 
-				<q-btn flat color="primary" @click="sendPush(props)">
-					<q-icon name="textsms" />
+				<q-btn flat color="primary" @click="showEditWnd">
+					<q-icon name="edit" />
 				</q-btn>
 				<q-btn flat color="primary" @click="deleteRow(props)">
 					<q-icon name="delete" />
@@ -41,7 +41,8 @@ import {
 	QBtn,
 	QIcon,
 	QTooltip,
-	QCollapsible
+	QCollapsible,
+	Dialog
 } from 'quasar'
  
 import store from '../../store/store.js'
@@ -60,7 +61,7 @@ export default {
 		QBtn,
 		QIcon,
 		QTooltip,
-		QCollapsible
+		QCollapsible,		 
 	},
 	data () {
 		return {			 
@@ -88,8 +89,8 @@ export default {
 					allCols: 'Все',
 					rows: 'Коичесвто строк',
 					selected: {
-						singular: 'Выбрана новость',
-						plural: 'Выбрана новость'
+						singular: 'Выбран представитель',
+						plural: 'Выбран представитель'
 					},
 					clear: 'Отмена',
 					search: 'Поиск',
@@ -104,15 +105,7 @@ export default {
 					sort: true,
 					type: 'string',
 					width: '150px'
-				},
-				{
-					label: 'Пароль',
-					field: 'password',
-					filter: true,
-					sort: true,
-					type: 'string',
-					width: '150px'
-				},			
+				},				 			
 				{
 					label: 'Имя', 
 					field: 'name',
@@ -120,7 +113,15 @@ export default {
 					sort: true,
 					type: 'string',
 					width: '150px'
-				},						 
+				},
+				{
+					label: 'Пароль', 
+					field: 'password',
+					filter: true,
+					sort: true,
+					type: 'string',
+					width: '150px'
+				},
 				{
 					label: 'Телефон',
 					field: 'phone',
@@ -128,7 +129,23 @@ export default {
 					sort: true,
 					type: 'string',
 					width: '150px'
-				}				 
+				},
+				{
+					label: 'Мобильное приложение',
+					field: 'firebase',
+					filter: true,
+					sort: true,
+					type: 'string',
+					width: '150px',
+					format (value) {
+						if (value) {
+							return 'Установлено'
+						} else {
+							return 'Не установлено'
+						}
+					}
+				},
+
 			],
 			pagination: true,
 			rowHeight: 50,
@@ -139,16 +156,32 @@ export default {
 	computed: {
 		managerList() {
 			return this.$store.getters.managerList
-		}		 
+		},
+		manager() {
+			return this.$store.getters.manager
+		},		 
 	},
 	methods: {
-		sendPush (props) {
-			props.rows.forEach(row => {
-				console.log(row);
-			})
+		showEditWnd () {
+			if (this.manager) {
+				this.$parent.$data.manager = Object.assign({}, this.manager)				  
+				this.$parent.$refs.addManager.open()
+			}			 
 		},
 		deleteRow (props) {
-			this.$store.dispatch('deleteManager')
+			let $this = this;
+			Dialog.create({
+				title: 'Удалить пользователя ?',				 
+				buttons: [
+					'Отмена',
+					{
+						label: 'Удалить',
+						handler () {
+							$this.$store.dispatch('deleteManager')
+						}
+					}
+				]
+			})			 
 		},		 
 		selection (number, rows) {
 			if (rows.length) {

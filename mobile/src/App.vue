@@ -5,7 +5,7 @@
 		:left-class="{'bg-grey-2': true}"
 	>
 	    <q-toolbar slot="header" class="glossy">
-		<q-btn
+			<q-btn
 				flat
 				@click="$refs.layout.toggleLeft()"
 			>
@@ -16,6 +16,13 @@
 				Вымпел
 				<div slot="subtitle"></div>
 			</q-toolbar-title>
+
+			<q-btn v-if="!news"
+				flat
+				@click="replay"
+			>
+				<q-icon name="replay" />
+			</q-btn>  
 		</q-toolbar>
 
 		<div slot="left">  
@@ -42,7 +49,11 @@
 				<q-item @click="sortNews('favorite')">
 					<q-item-side icon="star" />
 					<q-item-main label="Избранное"/>
-				</q-item>				 
+				</q-item>
+				<q-item @click="exit">
+					<q-item-side icon="exit to app" />
+					<q-item-main label="Выход"/>
+				</q-item>					 
 			</q-list>
 		</div> 
 
@@ -69,7 +80,8 @@ import {
 	QItemSide,
 	QItemMain
 } from 'quasar'
-import store from './store/store.js' 
+import store   from './store/store.js' 
+import Cookies from 'js-cookie'
 
 export default {
 	name: 'index',
@@ -86,11 +98,30 @@ export default {
 		QItemSide,
 		QItemMain
 	},
+	data() {
+		return {
+			sortType: 'month',
+		}
+	},
+	computed: {
+		news() {
+			return this.$store.getters.news
+		}
+	},
 	methods: {
-		sortNews (sortType) {
+		sortNews(sortType) {
 			this.$store.dispatch('newsList', sortType)
+			this.$data.sortType = sortType
 			this.$refs.layout.hideLeft()
 		},
+		replay() {
+			this.$store.dispatch('newsList', this.$data.sortType)
+		},
+		exit() {
+			Cookies.remove('token')
+			this.$refs.layout.hideLeft()
+			document.location.hash = '/auth'
+		}
 	}
 }
 </script>
