@@ -305,10 +305,10 @@ const notifierStore = new Vuex.Store({
 				}
 			)
 		},
-		sendNotification({state, commit}) {
+		sendNotification({state, commit}, action) {
 			let arg = {
 				params:{
-					action : 'send_all',
+					action : action,
 					id_news: state.news.id,
 				},
 				headers: {

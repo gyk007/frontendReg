@@ -16,6 +16,7 @@ const notifierStore = new Vuex.Store({
 		news        : undefined, // выбранная новость,
 		error       : undefined, // ошибка
 		authError   : undefined, // ошибка авторизации
+		session     : undefined, // объект Сессии
 	},
 	getters: {
 		newsList(state){
@@ -29,6 +30,9 @@ const notifierStore = new Vuex.Store({
 		},
 		authError(state){
 			return state.authError
+		},
+		session(state){
+			return state.session
 		},
 	},
 	mutations: {
@@ -77,10 +81,12 @@ const notifierStore = new Vuex.Store({
 		addFirebaseToken({state, commit}) {
 			var firebaseToken;
 			if (window.FirebasePlugin) {
+				window.FirebasePlugin.unregister();
 				// Обновляем токен для надежности
 				window.FirebasePlugin.onTokenRefresh(function(token) {
 					// Подписываемся на группу
-					window.FirebasePlugin.subscribe('all')
+					window.FirebasePlugin.subscribe('all');
+
 					let arg = {
 					params:{
 						action         : 'add_firebase_token',
@@ -95,7 +101,6 @@ const notifierStore = new Vuex.Store({
 					Vue.http.post(Conf.url.manager, null, arg).then(
 						response => {
 							let body = response.body
-							console.log(body);
 							if (body.ERROR) {
 								console.log(body.ERROR)
 								commit('set', {type: 'error', items: body.ERROR})
@@ -103,14 +108,11 @@ const notifierStore = new Vuex.Store({
 									document.location.hash = '/auth'
 								}
 							} else {
-								body.news_list.forEach(news => {
-									if (news.ctime){
-										news.ctime = moment(news.ctime);
-									}
-									console.log(news);
-								})
+								commit('set', {type: 'session', items: body.SESSION})
 
-								commit('set', {type: 'newsList', items: body.news_list})
+								state.session.users_tag.forEach(tag => {
+									window.FirebasePlugin.subscribe(tag.id);
+								})
 							}
 						},error => {
 							console.log(error);
@@ -169,8 +171,7 @@ const notifierStore = new Vuex.Store({
 
 			Vue.http.get(Conf.url.news, arg).then(
 				response => {
-					let body = response.body
-					console.log(body);
+					let body = response.body;
 					if (body.ERROR) {
 						console.log(body.ERROR)
 						commit('set', {type: 'error', items: body.ERROR})

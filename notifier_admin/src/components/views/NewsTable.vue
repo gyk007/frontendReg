@@ -121,8 +121,8 @@ export default {
 					filter: true,
 					sort: true,
 					type: 'string',
-					width: '500px'
-				}
+					width: '200px'
+				},
 			],
 			pagination: true,
 			rowHeight: 50,
@@ -155,9 +155,15 @@ export default {
 				buttons: [
 					'Отмена',
 					{
-						label: 'Отправить',
+						label: 'Отправить Всем',
 						handler () {
-							$this.$store.dispatch('sendNotification')
+							$this.$store.dispatch('sendNotification', 'send_all')
+						}
+					},
+					{
+						label: 'Отправить по подисаным тегам',
+						handler () {
+							$this.$store.dispatch('sendNotification', 'send_to')
 						}
 					}
 				]

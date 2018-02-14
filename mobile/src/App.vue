@@ -10,7 +10,7 @@
 				@click="$refs.layout.toggleLeft()"
 			>
 				<q-icon name="menu" />
-			</q-btn>  
+			</q-btn>
 
 			<q-toolbar-title>
 				Вымпел
@@ -22,10 +22,10 @@
 				@click="replay"
 			>
 				<q-icon name="replay" />
-			</q-btn>  
+			</q-btn>
 		</q-toolbar>
 
-		<div slot="left">  
+		<div slot="left">
 			<!--
 				Use <q-side-link> component
 				instead of <q-item> for
@@ -53,14 +53,14 @@
 				<q-item @click="exit">
 					<q-item-side icon="exit to app" />
 					<q-item-main label="Выход"/>
-				</q-item>					 
+				</q-item>
 			</q-list>
-		</div> 
-
-		<div>  
-			<router-view />  
 		</div>
-		 
+
+		<div>
+			<router-view />
+		</div>
+
 	</q-layout>
 </template>
 
@@ -73,14 +73,14 @@ import {
 	QToolbar,
 	QToolbarTitle,
 	QBtn,
-	QIcon, 
+	QIcon,
 	QList,
 	QListHeader,
 	QItem,
 	QItemSide,
 	QItemMain
 } from 'quasar'
-import store   from './store/store.js' 
+import store   from './store/store.js'
 import Cookies from 'js-cookie'
 
 export default {
@@ -106,6 +106,9 @@ export default {
 	computed: {
 		news() {
 			return this.$store.getters.news
+		},
+		session() {
+			return this.$store.getters.session
 		}
 	},
 	methods: {
@@ -120,7 +123,10 @@ export default {
 		exit() {
 			Cookies.remove('token')
 			this.$refs.layout.hideLeft()
-			document.location.hash = '/auth'
+			if (window.FirebasePlugin) {
+				window.FirebasePlugin.unregister();
+			}
+			this.$store.dispatch('newsList', this.$data.sortType)
 		}
 	}
 }
