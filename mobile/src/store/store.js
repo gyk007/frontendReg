@@ -81,6 +81,7 @@ const notifierStore = new Vuex.Store({
 		addFirebaseToken({state, commit}) {
 			var firebaseToken;
 			if (window.FirebasePlugin) {
+				window.FirebasePlugin.unregister();
 				// Обновляем токен для надежности
 				window.FirebasePlugin.onTokenRefresh(function(token) {
 					// Подписываемся на группу
@@ -110,7 +111,7 @@ const notifierStore = new Vuex.Store({
 								commit('set', {type: 'session', items: body.SESSION})
 
 								state.session.users_tag.forEach(tag => {
-									window.FirebasePlugin.subscribe(tag.name);
+									window.FirebasePlugin.subscribe(tag.id);
 								})
 							}
 						},error => {

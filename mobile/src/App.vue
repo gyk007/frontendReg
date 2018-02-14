@@ -124,10 +124,7 @@ export default {
 			Cookies.remove('token')
 			this.$refs.layout.hideLeft()
 			if (window.FirebasePlugin) {
-				window.FirebasePlugin.unsubscribe('all');
-				this.session.users_tag.forEach(tag => {
-					window.FirebasePlugin.unsubscribe(tag.name)
-				})
+				window.FirebasePlugin.unregister();
 			}
 			this.$store.dispatch('newsList', this.$data.sortType)
 		}
