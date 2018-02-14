@@ -1,9 +1,9 @@
 const conf = {
 	url: {
-		news     : 'http://localhost:9888/mob/admin/news/',
-		manager  : 'http://localhost:9888/mob/admin/manager/',
-		firebase : 'http://localhost:9888/mob/admin/firebase/',
-		tag      : 'http://localhost:9888/mob/admin/tag/',
+		news     : 'http://admin.grd77.shop/mob/admin/news/',
+		manager  : 'http://admin.grd77.shop/mob/admin/manager/',
+		firebase : 'http://admin.grd77.shop/mob/admin/firebase/',
+		tag      : 'http://admin.grd77.shop/mob/admin/tag/',
 	}
 }
 export default conf
