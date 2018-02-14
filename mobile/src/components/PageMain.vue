@@ -18,6 +18,9 @@
 				</span>
 			</q-card-title>
 			<div class='clear'></div>
+			<div class="tags_block">
+				<span class='news_tag' v-for='(tag, index) in news.tags'> #{{tag.name}} </span> 
+			</div>
 			<q-card-main @click="openNews(news)">
 				{{news.description}}
 			</q-card-main>
@@ -126,4 +129,16 @@ export default {
 		.q-card
 			width 100%
 			margin 0px
+
+.tags_block  
+	margin-top 15px
+	margin-bottom 15px 
+	 
+	.news_tag  
+		font-size 100%
+		background #027be3
+		color  #FFF
+		padding 5px
+		margin 10px
+ 
 </style>
