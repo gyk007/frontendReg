@@ -1,8 +1,8 @@
 const conf = {
-	url: {
-		news    : 'http://localhost:9888/mob/news/',
-		manager : 'http://localhost:9888/mob/manager/',
-		img     : 'http://localhost:9888/files/news/',
+	url: { 
+		news    : 'http://admin.grd77.shop/mob/news/',
+		manager : 'http://admin.grd77.shop/mob/manager/',
+		img     : 'http://admin.grd77.shop/files/news/',
 	}
 }
 
